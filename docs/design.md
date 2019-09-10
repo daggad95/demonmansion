@@ -1,5 +1,69 @@
 # Demon Mansion Design Specification
 
+from codeshare.io:
+Scene spec:
+
+## GUI / Menus
+
+## Game
+   * multiple waves
+	* wave composition
+  	* enemy dmg, enemy speed, spawn rate, enemy area density that is maintained
+   * types of enemies, # of types of enemies
+   * boss spawns ever x rounds gains new skill each time (until we run out)
+    	* sprite changes as gets stronger
+      * grotesque like halo flood
+      * splits but loses proportional amount of health, sprite gets smaller
+      * merges to combine health, sprite get thicc
+	* UI stuff
+  	   
+## Player
+   * Health
+	* Player Controls  custom!
+   * Inventory: pistol infinite ammo + 1 primary weapon
+   * Money
+   * primary/secondary show on model
+   * 4 different models
+   * unique colored gun and proj
+   * functions
+      * add_to_inventory(item)
+      * get_inventory()
+      * get_money()
+	   * set_money()
+  
+## Weapons
+   * Sprite animation
+	* clip size
+   * Projectile parameters
+   * cost
+   * color, proj color
+
+## Enemy
+   * randomly select spawn point from set 
+  
+## Projectiles
+   * shoot weapon, create projectiles
+   * kinematic body instance
+   * has (animated) sprite, range, speed, damage, direction(?)
+   * color
+ 
+## Map
+   * walls, non-walls
+   * spawn points
+   * store
+  
+## Store
+   * accessed between rounds with a button press
+   * clerk random dialogue
+   * ui menu opens with purchase
+   * store needs to know which player
+  
+## Camera 
+   * average view of all players, tug of war lego star wars style
+  
+====================================
+## Old design.md:
+
 ## Gameplay
 
 * Top down 2d shooter
@@ -48,3 +112,5 @@
 * Sniper
     * High pen
 * Grenade Launcher
+
+======================================
