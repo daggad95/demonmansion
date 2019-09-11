@@ -26,6 +26,9 @@ func get_money():
 func get_inventory():
 	return inventory
 
+func _ready():
+	inventory.append(Pistol.new())
+
 func _physics_process(delta):
 	get_input()
 	move_and_slide(velocity)
