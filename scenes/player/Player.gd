@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 class_name Player
+signal player_moved
 
 var health    = 100
 var money     = 0
@@ -31,4 +32,7 @@ func _ready():
 
 func _physics_process(delta):
 	get_input()
-	move_and_slide(velocity)
+	
+	if velocity.length() > 0:
+		move_and_slide(velocity)
+		emit_signal('player_moved', position)
