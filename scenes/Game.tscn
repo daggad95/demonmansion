@@ -17,18 +17,12 @@ zoom = Vector2( 0.5, 0.5 )
 
 [node name="Map" parent="." instance=ExtResource( 2 )]
 
-[node name="Enemy" parent="." instance=ExtResource( 3 )]
-position = Vector2( 45.504, 85.6194 )
+[node name="Enemy3" parent="." instance=ExtResource( 3 )]
+position = Vector2( 92.8538, 78.152 )
 
 [node name="Enemy2" parent="." instance=ExtResource( 3 )]
-position = Vector2( 50.4031, 54.1493 )
+position = Vector2( 44.8794, 85.8898 )
 
-[node name="Enemy3" parent="." instance=ExtResource( 3 )]
-position = Vector2( 81.0536, 78.6697 )
-
-[node name="Enemy4" parent="." instance=ExtResource( 3 )]
-position = Vector2( 43.0861, 139.914 )
-
-[node name="Enemy5" parent="." instance=ExtResource( 3 )]
-position = Vector2( 76.4431, 119.529 )
+[node name="Enemy" parent="." instance=ExtResource( 3 )]
+position = Vector2( 41.094, 149.539 )
 [connection signal="player_moved" from="Player" to="Map" method="_on_Player_player_moved"]
