@@ -104,16 +104,21 @@ func _get_neighbors(x, y, map):
 func _gen_vector_field(dist_map):
 	var field = _gen_null_map()
 	
+	var x = 10
+	var y = 10
+	var n = _get_neighbors(x, y, dist_map)
+	
 	for x in range(0, len(dist_map)):
 		for y in range(0, len(dist_map[0])):
 			var neighbors = _get_neighbors(x, y, dist_map)
+
 			var xcomp = neighbors['left'] - neighbors['right']
 			var ycomp = neighbors['top'] - neighbors['bottom']
 			
 			if xcomp != 0:
-				xcomp /= abs(xcomp)
+				xcomp = xcomp / abs(xcomp)
 			if ycomp != 0:
-				ycomp /= abs(ycomp)
+				ycomp = ycomp / abs(ycomp)
 			
 			field[x][y] = Vector2(xcomp, ycomp).normalized()
 	return field

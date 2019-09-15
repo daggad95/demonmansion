@@ -7,8 +7,7 @@
 [node name="Game" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
-editor/display_folded = true
-position = Vector2( 220.765, 173.316 )
+position = Vector2( 220.325, 173.316 )
 
 [node name="camera" type="Camera2D" parent="Player"]
 position = Vector2( 1.38538, 3.75284 )
