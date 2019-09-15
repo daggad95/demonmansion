@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "RigidBody2D",
+"class": "Enemy",
+"language": "GDScript",
+"path": "res://scenes/enemy/Enemy.gd"
+}, {
 "base": "Weapon",
 "class": "Pistol",
 "language": "GDScript",
@@ -30,6 +35,7 @@ _global_script_classes=[ {
 "path": "res://scenes/weapon/Weapon.gd"
 } ]
 _global_script_class_icons={
+"Enemy": "",
 "Pistol": "",
 "Player": "",
 "VectorArrow": "",
