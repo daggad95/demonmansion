@@ -1,10 +1,13 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://scenes/enemy/RigidBody2D.gd" type="Script" id=1]
+[ext_resource path="res://scenes/enemy/Enemy.gd" type="Script" id=1]
 [ext_resource path="res://assets/PIPOYA FREE RPG Character Sprites 32x32/Enemy/Enemy 08-1.png" type="Texture" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 6.259, 6.85281 )
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 16.1285
 
 [node name="Enemy" type="RigidBody2D"]
 script = ExtResource( 1 )
@@ -17,3 +20,8 @@ hframes = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
+
+[node name="Bubble" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bubble"]
+shape = SubResource( 2 )
