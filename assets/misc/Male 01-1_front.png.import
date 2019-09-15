@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/characters.png-c6a9fe63f07b2b8f6a27e7313e307fb4.stex"
+path="res://.import/Male 01-1_front.png-b9a1321206c5aee1a9996bd9488efd83.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/main_menu/characters.png"
-dest_files=[ "res://.import/characters.png-c6a9fe63f07b2b8f6a27e7313e307fb4.stex" ]
+source_file="res://assets/misc/Male 01-1_front.png"
+dest_files=[ "res://.import/Male 01-1_front.png-b9a1321206c5aee1a9996bd9488efd83.stex" ]
 
 [params]
 
