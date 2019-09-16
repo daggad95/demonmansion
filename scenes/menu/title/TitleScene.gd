@@ -13,6 +13,5 @@ func _on_Continue_pressed():
 func _on_Options_pressed():
 	get_tree().change_scene("res://scenes/menu/options/OptionsScene.tscn")
 	
-
-func _on_Exit_pressed():
-	get_tree().exit()
+func _on_ConfirmationDialog_confirmed():
+	get_tree().quit()

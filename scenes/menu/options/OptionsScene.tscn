@@ -33,7 +33,7 @@ text = "Options Scene"
 editor/display_folded = true
 margin_top = 141.0
 margin_right = 1040.0
-margin_bottom = 428.0
+margin_bottom = 413.0
 size_flags_vertical = 3
 custom_constants/vseparation = 15
 custom_constants/hseparation = 15
@@ -69,8 +69,8 @@ margin_right = 321.0
 margin_bottom = 20.0
 
 [node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer"]
-margin_top = 528.0
-margin_right = 60.0
+margin_top = 513.0
+margin_right = 88.0
 margin_bottom = 560.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
