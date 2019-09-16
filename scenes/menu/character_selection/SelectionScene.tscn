@@ -1,0 +1,93 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/menu/character_selection/SelectionScene.gd" type="Script" id=1]
+[ext_resource path="res://assets/fonts/source-code-pro/SourceCodePro.tres" type="DynamicFont" id=2]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 120
+custom_constants/margin_top = 80
+custom_constants/margin_left = 120
+custom_constants/margin_bottom = 80
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+margin_left = 120.0
+margin_top = 80.0
+margin_right = 670.0
+margin_bottom = 410.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_constants/separation = 100
+
+[node name="SceneName" type="Label" parent="MarginContainer/VBoxContainer"]
+margin_right = 550.0
+margin_bottom = 41.0
+custom_fonts/font = ExtResource( 2 )
+text = "Character Selection Scene"
+
+[node name="Characters" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+margin_top = 141.0
+margin_right = 550.0
+margin_bottom = 165.0
+
+[node name="CharactersColumns" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Characters"]
+margin_right = 550.0
+margin_bottom = 24.0
+size_flags_stretch_ratio = 0.0
+custom_constants/separation = 50
+alignment = 1
+
+[node name="Character1Box" type="CheckBox" parent="MarginContainer/VBoxContainer/Characters/CharactersColumns"]
+margin_right = 100.0
+margin_bottom = 24.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Character 1"
+
+[node name="Character2Box" type="CheckBox" parent="MarginContainer/VBoxContainer/Characters/CharactersColumns"]
+margin_left = 150.0
+margin_right = 250.0
+margin_bottom = 24.0
+text = "Character 2"
+
+[node name="Character3Box" type="CheckBox" parent="MarginContainer/VBoxContainer/Characters/CharactersColumns"]
+margin_left = 300.0
+margin_right = 400.0
+margin_bottom = 24.0
+text = "Character 3"
+
+[node name="Character4Box" type="CheckBox" parent="MarginContainer/VBoxContainer/Characters/CharactersColumns"]
+margin_left = 450.0
+margin_right = 550.0
+margin_bottom = 24.0
+text = "Character 4"
+
+[node name="Buttons" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+margin_top = 265.0
+margin_right = 111.0
+margin_bottom = 330.0
+size_flags_horizontal = 0
+size_flags_vertical = 3
+custom_constants/separation = 25
+
+[node name="StartButton" type="Button" parent="MarginContainer/VBoxContainer/Buttons"]
+margin_right = 111.0
+margin_bottom = 20.0
+size_flags_vertical = 2
+size_flags_stretch_ratio = 0.0
+text = "Start Game"
+
+[node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer/Buttons"]
+margin_top = 45.0
+margin_right = 111.0
+margin_bottom = 65.0
+size_flags_horizontal = 0
+text = "Return to Menu"
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Buttons/StartButton" to="." method="_on_StartButton_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Buttons/BackButton" to="." method="_on_BackButton_pressed"]

@@ -45,7 +45,7 @@ _global_script_class_icons={
 [application]
 
 config/name="DemonMansion"
-run/main_scene="res://scenes/mainmenu/MainMenu.tscn"
+run/main_scene="res://scenes/menu/title/TitleScene.tscn"
 
 [display]
 

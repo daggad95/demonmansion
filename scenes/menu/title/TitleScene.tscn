@@ -1,13 +1,13 @@
 [gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://scenes/mainmenu/MainMenu.gd" type="Script" id=1]
+[ext_resource path="res://scenes/menu/title/TitleScene.gd" type="Script" id=1]
 [ext_resource path="res://assets/fonts/source-code-pro/source-code-pro-2.010R-ro-1.030R-it/TTF/SourceCodePro-Regular.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://scenes/mainmenu/ContinueButton.tscn" type="PackedScene" id=3]
-[ext_resource path="res://scenes/mainmenu/NewGameButton.tscn" type="PackedScene" id=4]
-[ext_resource path="res://scenes/mainmenu/OptionsButton.tscn" type="PackedScene" id=5]
-[ext_resource path="res://scenes/mainmenu/ExitGameButton.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/menu/title/NewGameButton.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/menu/title/ContinueButton.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/menu/title/OptionsButton.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/menu/title/ExitButton.tscn" type="PackedScene" id=6]
 [ext_resource path="res://assets/TilesetGrass/preview.png" type="Texture" id=7]
-[ext_resource path="res://scenes/mainmenu/FadeIn.tscn" type="PackedScene" id=8]
+[ext_resource path="res://scenes/menu/misc/FadeIn.tscn" type="PackedScene" id=8]
 
 [sub_resource type="Theme" id=1]
 
@@ -71,29 +71,25 @@ size_flags_vertical = 3
 custom_constants/separation = 10
 alignment = 1
 
-[node name="ContinueButton" parent="MainMenu/InsideMargins/LeftTextBox/MenuButtons" instance=ExtResource( 3 )]
+[node name="NewGame" parent="MainMenu/InsideMargins/LeftTextBox/MenuButtons" instance=ExtResource( 3 )]
 margin_top = 131.0
 margin_right = 444.0
 margin_bottom = 175.0
-scene_to_load = "res://scenes/mainmenu/ContinueScene.tscn"
 
-[node name="NewGameButton" parent="MainMenu/InsideMargins/LeftTextBox/MenuButtons" instance=ExtResource( 4 )]
+[node name="Continue" parent="MainMenu/InsideMargins/LeftTextBox/MenuButtons" instance=ExtResource( 4 )]
 margin_top = 185.0
 margin_right = 444.0
 margin_bottom = 229.0
-scene_to_load = "res://scenes/mainmenu/NewGameScene.tscn"
 
-[node name="OptionsButton" parent="MainMenu/InsideMargins/LeftTextBox/MenuButtons" instance=ExtResource( 5 )]
+[node name="Options" parent="MainMenu/InsideMargins/LeftTextBox/MenuButtons" instance=ExtResource( 5 )]
 margin_top = 239.0
 margin_right = 444.0
 margin_bottom = 283.0
-scene_to_load = "res://scenes/mainmenu/OptionsScene.tscn"
 
-[node name="ExitGameButton" parent="MainMenu/InsideMargins/LeftTextBox" instance=ExtResource( 6 )]
+[node name="Exit" parent="MainMenu/InsideMargins/LeftTextBox" instance=ExtResource( 6 )]
 margin_top = 516.0
 margin_right = 444.0
 margin_bottom = 560.0
-script = null
 
 [node name="RightPictureBox" type="CenterContainer" parent="MainMenu/InsideMargins"]
 margin_left = 456.0
@@ -118,3 +114,7 @@ stretch_mode = 7
 
 [node name="FadeIn" parent="." instance=ExtResource( 8 )]
 visible = false
+[connection signal="pressed" from="MainMenu/InsideMargins/LeftTextBox/MenuButtons/NewGame" to="." method="_on_NewGame_pressed"]
+[connection signal="pressed" from="MainMenu/InsideMargins/LeftTextBox/MenuButtons/Continue" to="." method="_on_Continue_pressed"]
+[connection signal="pressed" from="MainMenu/InsideMargins/LeftTextBox/MenuButtons/Options" to="." method="_on_Options_pressed"]
+[connection signal="pressed" from="MainMenu/InsideMargins/LeftTextBox/Exit" to="." method="_on_Exit_pressed"]
