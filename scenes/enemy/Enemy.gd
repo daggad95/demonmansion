@@ -4,10 +4,14 @@ class_name Enemy
 var speed = 25
 var steer_rate = 300
 var map
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	map = get_parent().get_node("Map")
+var target
+var players
+	
+func init(init_pos, init_map, init_players):
+	position = init_pos
+	map = init_map
+	players = init_players
+	target = players[1]
 	add_to_group('enemy')
 	
 func _physics_process(delta):
@@ -28,7 +32,7 @@ func _physics_process(delta):
 			target_dir += (position - enemy.position)
 			target_vel = target_dir.normalized() * speed / 4
 	else:
-		target_dir = map.get_vector_to_target(position)
+		target_dir = map.get_vector_to_target(target.get_name(), position)
 		target_vel = target_dir.normalized() * speed
 		
 	rotation = 0

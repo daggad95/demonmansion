@@ -8,6 +8,7 @@ var money     = 0
 var inventory = []
 var speed = 100
 var velocity = Vector2()
+var player_name = "<UNDEFINED>"
 
 func get_input():
 	velocity = Vector2()
@@ -27,7 +28,12 @@ func get_money():
 func get_inventory():
 	return inventory
 
-func _ready():
+func get_name():
+	return player_name
+	
+func init(init_pos, init_name):
+	position = init_pos
+	player_name = init_name
 	inventory.append(Pistol.new())
 
 func _physics_process(delta):
@@ -35,4 +41,4 @@ func _physics_process(delta):
 	
 	if velocity.length() > 0:
 		move_and_slide(velocity)
-		emit_signal('player_moved', position)
+		emit_signal('player_moved', player_name, position)

@@ -5,21 +5,29 @@ const MAX_WEIGHT = 999999
 enum {WATER, TREE, GRASS}
 var traversable = [GRASS]
 var vector_arrows
-var vector_field 
+var vector_fields = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	_load_vector_arrows()
 
-func get_vector_to_target(pos):
-	if vector_field == null:
+func get_vector_to_target(target, pos):
+	
+	if not target in vector_fields:
 		return Vector2(0, 0)
 	else:
+		var field = vector_fields[target]
 		var map_pos = world_to_map(pos)
-		if map_pos.x >= 0 and map_pos.x < len(vector_field) and map_pos.y >= 0 and map_pos.y < len(vector_field[0]):
-			return vector_field[map_pos.x][map_pos.y]
+		if map_pos.x >= 0 and map_pos.x < len(field) and map_pos.y >= 0 and map_pos.y < len(field[0]):
+			return field[map_pos.x][map_pos.y]
 		else:
 			return Vector2(0, 0)
+
+func _on_player_moved(player_name, player_pos):
+	vector_fields[player_name] = _vector_field(player_pos)
+	
+	if player_name == "Player1":
+		_align_vector_arrows(vector_fields[player_name])
 
 func _align_vector_arrows(field):
 	for y in len(vector_arrows[0]):
@@ -135,7 +143,3 @@ func _vector_field(target):
 	vector_field = _gen_vector_field(dist_map)
 	
 	return vector_field
-
-func _on_Player_player_moved(player_pos):
-	vector_field = _vector_field(player_pos)
-	_align_vector_arrows(vector_field)
