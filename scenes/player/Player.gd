@@ -6,9 +6,12 @@ signal player_moved
 var health    = 100
 var money     = 0
 var inventory = []
-var speed = 100
+var speed = 200
 var velocity = Vector2()
 var player_name = "<UNDEFINED>"
+
+const TIMER_LIMIT = 0.5
+var timer = 0.0
 
 func get_input():
 	velocity = Vector2()
@@ -38,6 +41,12 @@ func init(init_pos, init_name):
 
 func _physics_process(delta):
 	get_input()
+	
+	timer += delta
+	if timer > TIMER_LIMIT: # Prints every 2 seconds
+		timer = 0.0
+		print("fps: " + str(Engine.get_frames_per_second()))
+
 	
 	if velocity.length() > 0:
 		move_and_slide(velocity)

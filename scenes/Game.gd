@@ -2,9 +2,11 @@ extends Node2D
 const Map = preload("res://scenes/map/Map.tscn")
 const Player = preload("res://scenes/player/Player.tscn")
 const Enemy = preload("res://scenes/enemy/Enemy.tscn")
+const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
 const NUM_PLAYERS = 2
-const NUM_ENEMIES = 1
+const NUM_ENEMIES = 3
 var players = []
+var camera
 
 func _ready():
 	for i in range(NUM_PLAYERS):
@@ -18,3 +20,7 @@ func _ready():
 		var enemy = Enemy.instance()
 		enemy.init(Vector2(50*i + 50, 200), $Map, players)
 		add_child(enemy)
+		
+	camera = GameCamera.instance()
+	camera.init(self, players)
+	camera.zoom(2)

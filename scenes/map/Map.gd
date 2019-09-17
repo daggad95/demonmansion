@@ -25,7 +25,7 @@ func get_vector_to_target(target, pos):
 
 func _on_player_moved(player_name, player_pos):
 	vector_fields[player_name] = _vector_field(player_pos)
-	
+
 	if player_name == "Player1":
 		_align_vector_arrows(vector_fields[player_name])
 
@@ -59,6 +59,7 @@ func _gen_dist_map(target):
 	var map = _gen_null_map()
 	queue.append([target, 0])
 	
+
 	while len(queue) > 0:
 		var next = queue.pop_front()
 		var tile = next[0]
@@ -70,10 +71,19 @@ func _gen_dist_map(target):
 			if cell in traversable:
 				map[tile.x][tile.y] = dist
 				
-				queue.append([Vector2(tile.x+1, tile.y), dist+1])
-				queue.append([Vector2(tile.x, tile.y+1), dist+1])
-				queue.append([Vector2(tile.x-1, tile.y), dist+1])
-				queue.append([Vector2(tile.x, tile.y-1), dist+1])
+				var right_tile = Vector2(tile.x+1, tile.y)
+				var left_tile = Vector2(tile.x-1, tile.y)
+				var top_tile = Vector2(tile.x, tile.y-1)
+				var bot_tile = Vector2(tile.x, tile.y+1)
+				
+				if get_cellv(right_tile) != -1 and map[right_tile.x][right_tile.y] == null:
+					queue.append([right_tile, dist+1])
+				if get_cellv(left_tile) != -1 and map[left_tile.x][left_tile.y] == null:
+					queue.append([left_tile, dist+1])
+				if get_cellv(top_tile) != -1 and map[top_tile.x][top_tile.y] == null:
+					queue.append([top_tile, dist+1])
+				if get_cellv(bot_tile) != -1 and map[bot_tile.x][bot_tile.y] == null:
+					queue.append([bot_tile, dist+1])
 			else:
 				map[tile.x][tile.y] = MAX_WEIGHT
 	return map
@@ -135,11 +145,10 @@ func _vector_field(target):
 	var target_map_pos = world_to_map(target)
 	var dist_map
 	var vector_field
-
+	
 	if not get_used_rect().has_point(target_map_pos):
 		return null
-
 	dist_map = _gen_dist_map(target_map_pos)
 	vector_field = _gen_vector_field(dist_map)
-	
+
 	return vector_field
