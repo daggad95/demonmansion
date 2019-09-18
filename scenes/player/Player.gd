@@ -6,12 +6,15 @@ signal player_moved
 var health    = 100
 var money     = 0
 var inventory = []
-var speed = 200
+var speed = 100
 var velocity = Vector2()
 var player_name = "<UNDEFINED>"
 
 const TIMER_LIMIT = 0.5
 var timer = 0.0
+
+func _ready():
+	emit_signal('player_moved', player_name, position)
 
 func get_input():
 	velocity = Vector2()
@@ -47,7 +50,7 @@ func _physics_process(delta):
 		timer = 0.0
 		print("fps: " + str(Engine.get_frames_per_second()))
 
-	
 	if velocity.length() > 0:
-		move_and_slide(velocity)
-		emit_signal('player_moved', player_name, position)
+		if player_name == 'Player1':
+			move_and_slide(velocity)
+			emit_signal('player_moved', player_name, position)

@@ -1,13 +1,25 @@
 extends Node2D
-var game
 var players
 
 func init(init_game, init_players):
-	game = init_game
 	players = init_players
-	
+
+func _ready():
+	self.zoom(2)
+
 func zoom(scale):
-	game.apply_scale(Vector2(scale, scale))
+	var canvas_transform = get_viewport().get_canvas_transform()
+	get_viewport().set_canvas_transform(canvas_transform.scaled(Vector2(scale, scale)))
 
 func center(focus):
-	game.translate(game.get_position() - focus)
+	var viewport_size = get_viewport().get_visible_rect().size
+	var canvas_transform = get_viewport().get_canvas_transform()
+	canvas_transform.origin = viewport_size/2 - focus*canvas_transform.get_scale()
+	get_viewport().set_canvas_transform(canvas_transform)
+	
+func _on_player_moved(player_name, player_pos):
+	var player_center = Vector2(0, 0)
+	
+	for player in players:
+		player_center += player.get_position()
+	center(player_center/2)
