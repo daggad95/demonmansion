@@ -45,6 +45,10 @@ popup_exclusive = true
 window_title = "Quit to Desktop"
 dialog_text = "Are you sure?"
 script = ExtResource( 5 )
+
+[node name="StorePopup" type="WindowDialog" parent="CanvasLayer"]
+margin_right = 48.0
+margin_bottom = 40.0
 [connection signal="esc_pressed" from="." to="CanvasLayer/ExitConfirmation" method="_on_Game_esc_pressed"]
 [connection signal="player_moved" from="Player" to="Map" method="_on_Player_player_moved"]
 [connection signal="confirmed" from="CanvasLayer/ExitConfirmation" to="." method="_on_ExitConfirmation_confirmed"]
