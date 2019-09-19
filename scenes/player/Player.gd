@@ -1,4 +1,5 @@
 extends KinematicBody2D
+const Pistol = preload("res://scenes/weapon/Pistol.tscn")
 
 class_name Player
 signal player_moved
@@ -6,6 +7,7 @@ signal player_moved
 var health    = 100
 var money     = 0
 var inventory = []
+var equipped_weapon = null
 var speed = 100
 var velocity = Vector2()
 var player_name = "<UNDEFINED>"
@@ -28,6 +30,9 @@ func get_input():
 	if Input.is_action_pressed('player%d_up' % player_id):
 	    velocity.y -= 1
 	velocity = velocity.normalized() * speed
+	
+	if Input.is_action_just_pressed('player%d_shoot' % player_id):
+		equipped_weapon.shoot()
 
 func get_money():
 	return money
@@ -42,15 +47,14 @@ func init(init_pos, init_name, init_id):
 	position = init_pos
 	player_name = init_name
 	player_id = init_id
-	inventory.append(Pistol.new())
+	
+	var pistol = Pistol.instance()
+	inventory.append(pistol)
+	equipped_weapon = pistol
+	add_child(pistol)
 
 func _physics_process(delta):
 	get_input()
-	
-	timer += delta
-	if timer > TIMER_LIMIT: # Prints every 2 seconds
-		timer = 0.0
-		print("fps: " + str(Engine.get_frames_per_second()))
 
 	if velocity.length() > 0:
 		move_and_slide(velocity)

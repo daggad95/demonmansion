@@ -4,8 +4,8 @@
 [ext_resource path="res://scenes/weapon/Weapon.gd" type="Script" id=2]
 
 [node name="Weapon" type="Sprite"]
-position = Vector2( 286.742, 60.3821 )
-scale = Vector2( 6.20004, 6.30888 )
+position = Vector2( 31.3309, 6.22322 )
+z_index = 10
 texture = ExtResource( 1 )
 vframes = 25
 hframes = 7
