@@ -26,7 +26,6 @@ func _ready():
 #		var enemy = Enemy.instance()
 #		enemy.init(Vector2(50*i + 50, 200), $Map, players)
 #		add_child(enemy)	
-
 	
 func _process(delta):
 	if Input.is_action_pressed("ui_cancel"):
@@ -38,5 +37,3 @@ func _on_ExitConfirmation_popup_hide():
 
 func _on_ExitConfirmation_confirmed():
 	get_tree().quit()
-
-
