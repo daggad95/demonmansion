@@ -8,11 +8,12 @@ var weapon_name = '<UNDEFINED>'
 var price       = 0
 var projectile  = null
 var aim_dir = Vector2(1,1)
+var img_offset = Vector2(-56, 0)
 
 func _input(event):
 	if event is InputEventMouseButton:
-		var viewport_pos = get_viewport().get_canvas_transform()[2]
-		print(viewport_pos, viewport_pos+event.position, global_position)
+		var pos_in_viewport = self.get_global_transform_with_canvas()[2] + img_offset
+		aim_dir = pos_in_viewport.direction_to(event.position)
 
 func shoot():
 	var projectile = Projectile.instance()

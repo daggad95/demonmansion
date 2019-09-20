@@ -1,8 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://scenes/ExitConfirmation.gd" type="Script" id=5]
 [ext_resource path="res://scenes/Game.gd" type="Script" id=1]
 [ext_resource path="res://scenes/map/Map.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/ExitConfirmation.gd" type="Script" id=3]
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 1 )
@@ -13,6 +13,7 @@ script = ExtResource( 1 )
 pause_mode = 2
 scale = Vector2( 1.25, 1.25 )
 transform = Transform2D( 1.25, 0, 0, 1.25, 0, 0 )
+
 [node name="ExitConfirmation" type="ConfirmationDialog" parent="CanvasLayer"]
 pause_mode = 2
 margin_left = 151.0
@@ -21,12 +22,12 @@ margin_right = 351.0
 margin_bottom = 164.0
 popup_exclusive = true
 window_title = "Quit to Desktop"
-script = ExtResource( 5 )
 dialog_text = "Are you sure?"
+script = ExtResource( 3 )
+
 [node name="StorePopup" type="WindowDialog" parent="CanvasLayer"]
 margin_right = 48.0
 margin_bottom = 40.0
-[connection signal="player_moved" from="Player" to="Map" method="_on_Player_player_moved"]
 [connection signal="esc_pressed" from="." to="CanvasLayer/ExitConfirmation" method="_on_Game_esc_pressed"]
 [connection signal="confirmed" from="CanvasLayer/ExitConfirmation" to="." method="_on_ExitConfirmation_confirmed"]
 [connection signal="popup_hide" from="CanvasLayer/ExitConfirmation" to="." method="_on_ExitConfirmation_popup_hide"]

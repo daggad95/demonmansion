@@ -3,8 +3,8 @@ const Map = preload("res://scenes/map/Map.tscn")
 const Player = preload("res://scenes/player/Player.tscn")
 const Enemy = preload("res://scenes/enemy/Enemy.tscn")
 const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
-const NUM_PLAYERS = 2
-const NUM_ENEMIES = 3
+const NUM_PLAYERS = 1
+const NUM_ENEMIES = 0
 var players = []
 var camera
 signal esc_pressed
@@ -22,10 +22,10 @@ func _ready():
 		players.append(player)
 		add_child(player)
 	
-#	for i in range(NUM_ENEMIES):
-#		var enemy = Enemy.instance()
-#		enemy.init(Vector2(50*i + 50, 200), $Map, players)
-#		add_child(enemy)	
+	for i in range(NUM_ENEMIES):
+		var enemy = Enemy.instance()
+		enemy.init(Vector2(50*i + 50, 200), $Map, players)
+		add_child(enemy)	
 	
 func _process(delta):
 	if Input.is_action_pressed("ui_cancel"):
