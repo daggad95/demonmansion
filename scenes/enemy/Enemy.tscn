@@ -7,7 +7,7 @@
 extents = Vector2( 8.39441, 8.58649 )
 
 [sub_resource type="CircleShape2D" id=2]
-radius = 26.8968
+radius = 11.9844
 
 [node name="Enemy" type="RigidBody2D"]
 collision_layer = 3
@@ -29,5 +29,4 @@ __meta__ = {
 [node name="Bubble" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Bubble"]
-visible = false
 shape = SubResource( 2 )

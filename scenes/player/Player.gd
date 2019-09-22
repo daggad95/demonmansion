@@ -1,6 +1,8 @@
 extends KinematicBody2D
 const Pistol = preload("res://scenes/weapon/Pistol.tscn")
-
+const Shotgun = preload("res://scenes/weapon/Shotgun.tscn")
+const AssaultRifle = preload("res://scenes/weapon/AssaultRifle.tscn")
+const Sniper = preload("res://scenes/weapon/Sniper.tscn")
 class_name Player
 signal player_moved
 
@@ -51,9 +53,19 @@ func init(init_pos, init_name, init_id):
 	player_id = init_id
 	
 	var pistol = Pistol.instance()
+	var shotgun = Shotgun.instance()
+	var assault_rifle = AssaultRifle.instance()
+	var sniper = Sniper.instance()
 	inventory.append(pistol)
-	equipped_weapon = pistol
+	inventory.append(shotgun)
+	inventory.append(assault_rifle)
+	inventory.append(sniper)
 	add_child(pistol)
+	add_child(shotgun)
+	add_child(assault_rifle)
+	add_child(sniper)
+	equipped_weapon = sniper
+
 
 func _physics_process(delta):
 	get_input()

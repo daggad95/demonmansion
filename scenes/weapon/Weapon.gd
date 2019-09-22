@@ -8,6 +8,8 @@ var weapon_name = '<UNDEFINED>'
 var price       = 0
 var reload_time = 0
 var reloading = false
+var spread = 0
+var num_projectiles = 1
 var aim_dir = Vector2(0,0)
 var img_offset = Vector2(-56, 0)
 var automatic = false
@@ -21,7 +23,9 @@ func _input(event):
 
 func shoot():
 	if clip > 0 and can_fire:
-		add_child(_gen_projectile())
+		for i in range(0, num_projectiles):
+			var projectile = _gen_projectile()
+			add_child(_process_projectile(projectile))
 		clip -= 1
 		can_fire = false
 		$FireTimer.start(1.0/fire_rate)
@@ -38,6 +42,11 @@ func get_price():
 
 func is_automatic():
 	return automatic
+	
+func _process_projectile(projectile):
+	projectile.rotate(rand_range(-spread/2, spread/2))
+	projectile.scale_speed(rand_range(0.9, 1.1))
+	return projectile
 
 func _gen_projectile():
 	return null
@@ -45,7 +54,6 @@ func _gen_projectile():
 func _on_ReloadTimer_timeout():
 	clip = clip_size
 	reloading = false
-
 
 func _on_FireTimer_timeout():
 	can_fire = true

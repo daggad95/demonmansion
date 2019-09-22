@@ -47,6 +47,12 @@ func init(
 	else:
 		set_collision_mask(PLAYER_COLLISION)
 		set_collision_layer(PLAYER_COLLISION)
+
+func rotate(rad):
+	direction = direction.rotated(rad)
+
+func scale_speed(factor):
+	speed = speed * factor
 	
 func _handle_collisions():
 	for body in get_overlapping_bodies():
