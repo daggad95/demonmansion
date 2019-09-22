@@ -6,7 +6,12 @@ var direction
 var speed
 var prange
 var damage
-var dist_travelled
+var dist_travelled 
+
+# calculated as percentage of max damage
+# at max range. e.g. damage dropoff of 0.75 means
+# at max projectile range 75% of damage will be lost.
+var damage_dropoff 
 
 # number of bodies the projectile can penetrate
 # this is decremented every time a body is hit
@@ -22,6 +27,7 @@ func init(
 	init_range, 
 	init_pen, 
 	init_damage,
+	init_damage_dropoff,
 	offset, 
 	player_projectile=true):
 		
@@ -31,6 +37,7 @@ func init(
 	prange = init_range
 	max_pen = init_pen
 	damage = init_damage
+	damage_dropoff = init_damage_dropoff
 	dist_travelled = 0
 	collided = []
 	
@@ -44,8 +51,9 @@ func init(
 func _handle_collisions():
 	for body in get_overlapping_bodies():
 		if not body in collided:
-			body.take_damage(damage)
+			body.take_damage(damage - damage * damage_dropoff * float(dist_travelled)/prange)
 			collided.append(body)
+			max_pen -= 1
 	
 func _physics_process(delta):
 	_handle_collisions()
