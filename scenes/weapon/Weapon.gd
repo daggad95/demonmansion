@@ -7,7 +7,7 @@ var clip        = 0
 var weapon_name = '<UNDEFINED>'
 var price       = 0
 var projectile  = null
-var aim_dir = Vector2(1,1)
+var aim_dir = Vector2(0,0)
 var img_offset = Vector2(-56, 0)
 
 func _input(event):
@@ -18,7 +18,7 @@ func _input(event):
 func shoot():
 	var projectile = Projectile.instance()
 	var mouse_position = get_viewport().get_mouse_position()
-	projectile.init(aim_dir, 200, position)
+	projectile.init(aim_dir, 200, 100, 1, 25, position)
 	add_child(projectile)
 
 func get_name():

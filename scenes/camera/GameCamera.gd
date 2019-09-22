@@ -22,4 +22,4 @@ func _on_player_moved(player_name, player_pos):
 	
 	for player in players:
 		player_center += player.get_position()
-	center(player_center/2)
+	center(player_center/len(players))

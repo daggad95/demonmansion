@@ -3,6 +3,7 @@ class_name Enemy
 
 var speed = 25
 var steer_rate = 300
+var health = 100
 var map
 var target
 var players
@@ -11,8 +12,15 @@ func init(init_pos, init_map, init_players):
 	position = init_pos
 	map = init_map
 	players = init_players
-	target = players[1]
+	target = players[0]
 	add_to_group('enemy')
+
+func take_damage(damage):
+	print("taking %d damage" % damage)
+	health -= damage
+	
+	if health <= 0:
+		queue_free()
 
 func _physics_process(delta):
 	var target_dir
