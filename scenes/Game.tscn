@@ -27,4 +27,5 @@ grow_vertical = 2
 rect_pivot_offset = Vector2( 873.746, -243.252 )
 script = ExtResource( 3 )
 [connection signal="esc_pressed" from="." to="CanvasLayer/ExitConfirmation" method="_on_Game_esc_pressed"]
+[connection signal="confirmed" from="CanvasLayer/ExitConfirmation" to="." method="_on_ExitConfirmation_confirmed"]
 [connection signal="popup_hide" from="CanvasLayer/ExitConfirmation" to="." method="_on_ExitConfirmation_popup_hide"]

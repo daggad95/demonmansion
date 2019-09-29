@@ -1,6 +1,8 @@
 extends KinematicBody2D
 const Pistol = preload("res://scenes/weapon/Pistol.tscn")
-
+const Shotgun = preload("res://scenes/weapon/Shotgun.tscn")
+const AssaultRifle = preload("res://scenes/weapon/AssaultRifle.tscn")
+const Sniper = preload("res://scenes/weapon/Sniper.tscn")
 class_name Player
 signal player_moved
 
@@ -31,9 +33,11 @@ func get_input():
 	    velocity.y -= 1
 	velocity = velocity.normalized() * speed
 	
-	if Input.is_action_just_pressed('player%d_shoot' % player_id):
+	if not equipped_weapon.is_automatic() and Input.is_action_just_pressed('player%d_shoot' % player_id):
 		equipped_weapon.shoot()
-
+	if equipped_weapon.is_automatic() and Input.is_action_pressed('player%d_shoot' % player_id):
+		equipped_weapon.shoot()
+		
 func get_money():
 	return money
 
@@ -49,9 +53,19 @@ func init(init_pos, init_name, init_id):
 	player_id = init_id
 	
 	var pistol = Pistol.instance()
+	var shotgun = Shotgun.instance()
+	var assault_rifle = AssaultRifle.instance()
+	var sniper = Sniper.instance()
 	inventory.append(pistol)
-	equipped_weapon = pistol
+	inventory.append(shotgun)
+	inventory.append(assault_rifle)
+	inventory.append(sniper)
 	add_child(pistol)
+	add_child(shotgun)
+	add_child(assault_rifle)
+	add_child(sniper)
+	equipped_weapon = sniper
+
 
 func _physics_process(delta):
 	get_input()

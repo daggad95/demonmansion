@@ -24,15 +24,16 @@ func _ready():
 		players.append(player)
 		add_child(player)
 	
-#	for i in range(NUM_ENEMIES):
-#		var enemy = Enemy.instance()
-#		enemy.init(Vector2(50*i + 50, 200), $Map, players)
-#		add_child(enemy)	
+	for i in range(NUM_ENEMIES):
+		var enemy = Enemy.instance()
+		enemy.init(Vector2(50*i + 50, 200), $Map, players)
+		add_child(enemy)	
 	
 func _process(delta):
 	if Input.is_action_pressed("ui_cancel"):
 		emit_signal("esc_pressed")
 		get_tree().paused = true
+    
 	elif Input.is_action_pressed("store_button"):
 		emit_signal("store_button_pressed")
 		# get_tree().paused = true
@@ -43,4 +44,3 @@ func _on_ExitConfirmation_popup_hide():
 	
 func _on_ExitConfirmation_confirmed():
 	get_tree().quit()
-

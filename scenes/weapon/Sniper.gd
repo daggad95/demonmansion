@@ -1,13 +1,13 @@
 extends Weapon
 
 func _ready():
-	clip_size   = 10
-	clip        = 10
+	clip_size   = 5
+	clip        = 5
 	weapon_name = 'Pistol'
-	price       = 0
-	reload_time = 1
-	fire_rate = 5
-	spread = PI/8
+	price       = 100
+	reload_time = 3
+	fire_rate = 1
+	spread = PI/128
 	num_projectiles = 1
 	automatic = false
 	
@@ -15,10 +15,10 @@ func _gen_projectile():
 	var projectile = Projectile.instance()
 	projectile.init(
 		aim_dir, 
-		400,  # speed
-		100,  # range
-		2,    # penetration
-		25,   # damage
-		0.25, # damage dropoff
+		600,  # speed
+		300,  # range
+		5,    # penetration
+		200,   # damage
+		0.1, # damage dropoff
 		position)
 	return projectile

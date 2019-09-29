@@ -14,11 +14,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scenes/enemy/Enemy.gd"
 }, {
-"base": "Weapon",
-"class": "Pistol",
-"language": "GDScript",
-"path": "res://scenes/weapon/Pistol.gd"
-}, {
 "base": "KinematicBody2D",
 "class": "Player",
 "language": "GDScript",
@@ -36,7 +31,6 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Enemy": "",
-"Pistol": "",
 "Player": "",
 "VectorArrow": "",
 "Weapon": ""
