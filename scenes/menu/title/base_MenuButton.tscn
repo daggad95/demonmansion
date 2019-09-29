@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/fonts/droid-sans/DroidSans.tres" type="DynamicFont" id=1]
+[ext_resource path="res://assets/fonts/source-code-pro/SourceCodePro.tres" type="DynamicFont" id=2]
+
+[node name="Button" type="Button"]
+margin_top = 132.0
+margin_right = 448.0
+margin_bottom = 176.0
+focus_mode = 0
+size_flags_horizontal = 3
+custom_fonts/font = ExtResource( 1 )
+enabled_focus_mode = 0
+flat = true
+align = 0
+
+[node name="Label" type="Label" parent="."]
+margin_right = 40.0
+margin_bottom = 14.0
+custom_fonts/font = ExtResource( 2 )
+text = "Label"

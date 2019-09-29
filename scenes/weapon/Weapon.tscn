@@ -4,10 +4,17 @@
 [ext_resource path="res://scenes/weapon/Weapon.gd" type="Script" id=2]
 
 [node name="Weapon" type="Sprite"]
-position = Vector2( 286.742, 60.3821 )
-scale = Vector2( 6.20004, 6.30888 )
+position = Vector2( 29.7738, 4.62008 )
+z_index = 10
 texture = ExtResource( 1 )
 vframes = 25
 hframes = 7
-frame = 38
+frame = 7
 script = ExtResource( 2 )
+
+[node name="ReloadTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="FireTimer" type="Timer" parent="."]
+[connection signal="timeout" from="ReloadTimer" to="." method="_on_ReloadTimer_timeout"]
+[connection signal="timeout" from="FireTimer" to="." method="_on_FireTimer_timeout"]
