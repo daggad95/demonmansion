@@ -20,12 +20,12 @@ font_data = ExtResource( 2 )
 size = 22
 font_data = ExtResource( 2 )
 
-[node name="Control" type="Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="CanvasLayer" type="CanvasLayer"]
+
+[node name="Control" type="Control" parent="."]
 script = ExtResource( 1 )
 
-[node name="MainMenu" type="MarginContainer" parent="."]
+[node name="MainMenu" type="MarginContainer" parent="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_constants/margin_right = 120
@@ -33,76 +33,76 @@ custom_constants/margin_top = 80
 custom_constants/margin_left = 120
 custom_constants/margin_bottom = 80
 
-[node name="InsideMargins" type="HSplitContainer" parent="MainMenu"]
+[node name="InsideMargins" type="HSplitContainer" parent="Control/MainMenu"]
 margin_left = 120.0
 margin_top = 80.0
-margin_right = 1160.0
-margin_bottom = 640.0
+margin_right = 1093.0
+margin_bottom = 542.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
 
-[node name="LeftTextBox" type="VBoxContainer" parent="MainMenu/InsideMargins"]
-margin_right = 444.0
-margin_bottom = 560.0
+[node name="LeftTextBox" type="VBoxContainer" parent="Control/MainMenu/InsideMargins"]
+margin_right = 377.0
+margin_bottom = 462.0
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="Title" type="Label" parent="MainMenu/InsideMargins/LeftTextBox"]
-margin_right = 444.0
+[node name="Title" type="Label" parent="Control/MainMenu/InsideMargins/LeftTextBox"]
+margin_right = 377.0
 margin_bottom = 62.0
 theme = SubResource( 1 )
 custom_fonts/font = SubResource( 2 )
 text = "Demon Mansion"
 
-[node name="Version" type="Label" parent="MainMenu/InsideMargins/LeftTextBox"]
+[node name="Version" type="Label" parent="Control/MainMenu/InsideMargins/LeftTextBox"]
 margin_top = 66.0
-margin_right = 444.0
+margin_right = 377.0
 margin_bottom = 94.0
 theme = SubResource( 1 )
 custom_fonts/font = SubResource( 3 )
 text = "ver 0.1"
 
-[node name="MenuButtons" type="VBoxContainer" parent="MainMenu/InsideMargins/LeftTextBox"]
+[node name="MenuButtons" type="VBoxContainer" parent="Control/MainMenu/InsideMargins/LeftTextBox"]
 margin_top = 98.0
-margin_right = 444.0
-margin_bottom = 512.0
+margin_right = 377.0
+margin_bottom = 414.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 10
 alignment = 1
 
-[node name="NewGame" parent="MainMenu/InsideMargins/LeftTextBox/MenuButtons" instance=ExtResource( 3 )]
-margin_top = 131.0
-margin_right = 444.0
-margin_bottom = 175.0
+[node name="NewGame" parent="Control/MainMenu/InsideMargins/LeftTextBox/MenuButtons" instance=ExtResource( 3 )]
+margin_top = 82.0
+margin_right = 377.0
+margin_bottom = 126.0
 
-[node name="Continue" parent="MainMenu/InsideMargins/LeftTextBox/MenuButtons" instance=ExtResource( 4 )]
-margin_top = 185.0
-margin_right = 444.0
-margin_bottom = 229.0
+[node name="Continue" parent="Control/MainMenu/InsideMargins/LeftTextBox/MenuButtons" instance=ExtResource( 4 )]
+margin_top = 136.0
+margin_right = 377.0
+margin_bottom = 180.0
 
-[node name="Options" parent="MainMenu/InsideMargins/LeftTextBox/MenuButtons" instance=ExtResource( 5 )]
-margin_top = 239.0
-margin_right = 444.0
-margin_bottom = 283.0
+[node name="Options" parent="Control/MainMenu/InsideMargins/LeftTextBox/MenuButtons" instance=ExtResource( 5 )]
+margin_top = 190.0
+margin_right = 377.0
+margin_bottom = 234.0
 
-[node name="Exit" parent="MainMenu/InsideMargins/LeftTextBox" instance=ExtResource( 6 )]
-margin_top = 516.0
-margin_right = 444.0
-margin_bottom = 560.0
+[node name="Exit" parent="Control/MainMenu/InsideMargins/LeftTextBox" instance=ExtResource( 6 )]
+margin_top = 418.0
+margin_right = 377.0
+margin_bottom = 462.0
 
-[node name="RightPictureBox" type="CenterContainer" parent="MainMenu/InsideMargins"]
-editor/display_folded = true
-margin_left = 456.0
-margin_right = 1040.0
+[node name="RightPictureBox" type="CenterContainer" parent="Control/MainMenu/InsideMargins"]
+margin_left = 389.0
+margin_right = 973.0
+
 margin_bottom = 462.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 0
 size_flags_stretch_ratio = 0.0
 
-[node name="TextureRect" type="TextureRect" parent="MainMenu/InsideMargins/RightPictureBox"]
+[node name="TextureRect" type="TextureRect" parent="Control/MainMenu/InsideMargins/RightPictureBox"]
 margin_right = 584.0
 margin_bottom = 462.0
 grow_horizontal = 0
@@ -114,11 +114,10 @@ size_flags_stretch_ratio = 0.0
 texture = ExtResource( 7 )
 stretch_mode = 7
 
-[node name="FadeIn" parent="." instance=ExtResource( 8 )]
+[node name="FadeIn" parent="Control" instance=ExtResource( 8 )]
 visible = false
 
-[node name="ExitConfirmation" type="ConfirmationDialog" parent="."]
-visible = true
+[node name="ExitConfirmation" type="ConfirmationDialog" parent="Control"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -130,8 +129,8 @@ margin_bottom = 35.0
 window_title = "Quit to Desktop"
 dialog_text = "Are you sure?"
 script = ExtResource( 9 )
-[connection signal="pressed" from="MainMenu/InsideMargins/LeftTextBox/MenuButtons/NewGame" to="." method="_on_NewGame_pressed"]
-[connection signal="pressed" from="MainMenu/InsideMargins/LeftTextBox/MenuButtons/Continue" to="." method="_on_Continue_pressed"]
-[connection signal="pressed" from="MainMenu/InsideMargins/LeftTextBox/MenuButtons/Options" to="." method="_on_Options_pressed"]
-[connection signal="pressed" from="MainMenu/InsideMargins/LeftTextBox/Exit" to="ExitConfirmation" method="_on_Exit_pressed"]
-[connection signal="confirmed" from="ExitConfirmation" to="." method="_on_ConfirmationDialog_confirmed"]
+[connection signal="pressed" from="Control/MainMenu/InsideMargins/LeftTextBox/MenuButtons/NewGame" to="Control" method="_on_NewGame_pressed"]
+[connection signal="pressed" from="Control/MainMenu/InsideMargins/LeftTextBox/MenuButtons/Continue" to="Control" method="_on_Continue_pressed"]
+[connection signal="pressed" from="Control/MainMenu/InsideMargins/LeftTextBox/MenuButtons/Options" to="Control" method="_on_Options_pressed"]
+[connection signal="pressed" from="Control/MainMenu/InsideMargins/LeftTextBox/Exit" to="Control/ExitConfirmation" method="_on_Exit_pressed"]
+[connection signal="confirmed" from="Control/ExitConfirmation" to="Control" method="_on_ConfirmationDialog_confirmed"]
