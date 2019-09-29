@@ -93,6 +93,7 @@ margin_right = 444.0
 margin_bottom = 560.0
 
 [node name="RightPictureBox" type="CenterContainer" parent="MainMenu/InsideMargins"]
+editor/display_folded = true
 margin_left = 456.0
 margin_right = 1040.0
 margin_bottom = 462.0

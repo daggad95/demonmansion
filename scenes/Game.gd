@@ -4,7 +4,7 @@ const Player = preload("res://scenes/player/Player.tscn")
 const Enemy = preload("res://scenes/enemy/Enemy.tscn")
 const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
 const NUM_PLAYERS = 1
-const NUM_ENEMIES = 20
+const NUM_ENEMIES = 10
 var players = []
 var camera
 signal esc_pressed

@@ -12,16 +12,29 @@ func _ready():
 	_load_vector_arrows()
 
 func get_vector_to_target(target, pos):
+	var vector = Vector2(0, 0)
 	
 	if not target in vector_fields:
-		return Vector2(0, 0)
+		return vector
 	else:
 		var field = vector_fields[target]
-		var map_pos = world_to_map(pos)
-		if map_pos.x >= 0 and map_pos.x < len(field) and map_pos.y >= 0 and map_pos.y < len(field[0]):
-			return field[map_pos.x][map_pos.y]
-		else:
-			return Vector2(0, 0)
+		var neighbors = [
+			pos,
+			pos + Vector2(0, 1),
+			pos + Vector2(1, 0),
+			pos + Vector2(0, -1),
+			pos + Vector2(-1, 0), 
+			pos + Vector2(1, 1),
+			pos + Vector2(-1, -1),
+			pos + Vector2(1, -1),
+			pos + Vector2(-1, 1)
+		]
+		
+		for pos in neighbors:
+			var map_pos = world_to_map(pos)
+			if map_pos.x >= 0 and map_pos.x < len(field) and map_pos.y >= 0 and map_pos.y < len(field[0]):
+				vector += field[map_pos.x][map_pos.y]
+		return vector.normalized()
 
 func _on_player_moved(player_name, player_pos):
 	vector_fields[player_name] = _vector_field(player_pos)
