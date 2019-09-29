@@ -14,7 +14,6 @@ pause_mode = 2
 
 [node name="ExitConfirmation" type="ConfirmationDialog" parent="CanvasLayer"]
 pause_mode = 2
-visible = true
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -26,14 +25,6 @@ margin_bottom = 35.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_pivot_offset = Vector2( 873.746, -243.252 )
-popup_exclusive = true
-window_title = "Quit to Desktop"
-dialog_text = "Are you sure?"
 script = ExtResource( 3 )
-
-[node name="StorePopup" type="WindowDialog" parent="CanvasLayer"]
-margin_right = 48.0
-margin_bottom = 40.0
 [connection signal="esc_pressed" from="." to="CanvasLayer/ExitConfirmation" method="_on_Game_esc_pressed"]
-[connection signal="confirmed" from="CanvasLayer/ExitConfirmation" to="." method="_on_ExitConfirmation_confirmed"]
 [connection signal="popup_hide" from="CanvasLayer/ExitConfirmation" to="." method="_on_ExitConfirmation_popup_hide"]

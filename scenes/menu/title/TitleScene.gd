@@ -15,3 +15,7 @@ func _on_Options_pressed():
 	
 func _on_ConfirmationDialog_confirmed():
 	get_tree().quit()
+
+func _process(delta):
+	if Input.is_key_pressed(KEY_ESCAPE):
+		$ExitConfirmation.popup()

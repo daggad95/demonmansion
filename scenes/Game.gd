@@ -7,7 +7,9 @@ const NUM_PLAYERS = 2
 const NUM_ENEMIES = 3
 var players = []
 var camera
+
 signal esc_pressed
+signal store_button_pressed
 
 func _ready():
 	camera = GameCamera.instance()
@@ -31,9 +33,14 @@ func _process(delta):
 	if Input.is_action_pressed("ui_cancel"):
 		emit_signal("esc_pressed")
 		get_tree().paused = true
+	elif Input.is_action_pressed("store_button"):
+		emit_signal("store_button_pressed")
+		# get_tree().paused = true
 
 func _on_ExitConfirmation_popup_hide():
 	get_tree().paused = false
-
+	print("confirmation hidden")
+	
 func _on_ExitConfirmation_confirmed():
 	get_tree().quit()
+
