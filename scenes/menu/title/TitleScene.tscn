@@ -95,7 +95,6 @@ margin_bottom = 462.0
 [node name="RightPictureBox" type="CenterContainer" parent="Control/MainMenu/InsideMargins"]
 margin_left = 389.0
 margin_right = 973.0
-
 margin_bottom = 462.0
 grow_horizontal = 2
 grow_vertical = 2
