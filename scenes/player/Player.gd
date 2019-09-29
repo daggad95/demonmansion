@@ -5,6 +5,7 @@ const AssaultRifle = preload("res://scenes/weapon/AssaultRifle.tscn")
 const Sniper = preload("res://scenes/weapon/Sniper.tscn")
 class_name Player
 signal player_moved
+signal open_store
 
 var health    = 100
 var money     = 0
@@ -31,6 +32,9 @@ func get_input():
 	    velocity.y += 1
 	if Input.is_action_pressed('player%d_up' % player_id):
 	    velocity.y -= 1
+	if Input.is_action_just_pressed('player%d_open_store' % player_id):
+		emit_signal('open_store', self)
+		
 	velocity = velocity.normalized() * speed
 	
 	if not equipped_weapon.is_automatic() and Input.is_action_just_pressed('player%d_shoot' % player_id):
@@ -40,7 +44,13 @@ func get_input():
 		
 func get_money():
 	return money
-
+	
+func add_money(amount):
+	money = max(money + amount, 0)
+	
+func add_to_inventory(weapon):
+	inventory.append(weapon)
+	
 func get_inventory():
 	return inventory
 
