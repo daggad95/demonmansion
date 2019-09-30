@@ -16,8 +16,20 @@ func init(init_pos, init_map, init_players):
 	position = init_pos
 	map = init_map
 	players = init_players
-	target = players[0]
+	target = _get_nearest_player()
 	add_to_group('enemy')
+	
+func _get_nearest_player():
+	var min_dist = INF
+	var nearest
+	var dist
+	
+	for player in players:
+		dist = position.distance_to(player.get_position())
+		if dist < min_dist:
+			min_dist = dist
+			nearest = player
+	return nearest
 
 func take_damage(damage):
 	print("taking %d damage" % damage)
@@ -58,9 +70,6 @@ func _separate_force():
 func _chase_target():
 	add_central_force(_seek_force() * seek_weight)
 	add_central_force(_separate_force() * separate_weight)
-
-func _physics_process(delta):
-	rotation = 0
-	applied_force = Vector2(0, 0)
 	
-	_chase_target()
+func _close_in():
+	add_central_force(_seek_force())

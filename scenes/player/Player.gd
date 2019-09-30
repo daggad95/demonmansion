@@ -57,6 +57,10 @@ func get_inventory():
 func get_name():
 	return player_name
 	
+func take_damage(damage):
+	print("taking %d damage" % damage)
+	health -= damage
+	
 func init(init_pos, init_name, init_id):
 	position = init_pos
 	player_name = init_name
@@ -75,7 +79,7 @@ func init(init_pos, init_name, init_id):
 	add_child(assault_rifle)
 	add_child(sniper)
 	equipped_weapon = sniper
-
+	add_to_group('player')
 
 func _physics_process(delta):
 	get_input()
