@@ -38,7 +38,7 @@ margin_bottom = 44.2937
 text = "FPS"
 
 [node name="Store" parent="." instance=ExtResource( 4 )]
-position = Vector2( 151.662, -82.0211 )
+position = Vector2( -132.317, -89.7589 )
 [connection signal="esc_pressed" from="." to="CanvasLayer/ExitConfirmation" method="_on_Game_esc_pressed"]
 [connection signal="confirmed" from="CanvasLayer/ExitConfirmation" to="." method="_on_ExitConfirmation_confirmed"]
 [connection signal="popup_hide" from="CanvasLayer/ExitConfirmation" to="." method="_on_ExitConfirmation_popup_hide"]

@@ -15,10 +15,16 @@ func _ready():
 	create_store_window()
 	
 func _process(delta):
-	if len(get_overlapping_bodies()) == 0:
-		store_window.visible = false
+	var is_player_overlapping = false
+	for body in get_overlapping_bodies():
+		if body.is_in_group("player"):
+			is_player_overlapping = true
+	if !is_player_overlapping:
+		store_window.hide()
+			
 
 func create_store_window():
+	store_window.hide()
 	print("player count: ", player_count)
 	$CanvasLayer/MarginContainer.margin_left = -125 * player_count
 	$CanvasLayer/MarginContainer.margin_right = 125 * player_count
