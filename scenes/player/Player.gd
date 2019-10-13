@@ -103,6 +103,13 @@ func _physics_process(delta):
 		move_and_slide(velocity)
 		emit_signal('player_moved', player_name, position)
 
+func showMessage():
+	$NotInStoreMessage.visible = true
+	$NotInStoreMessage/Timer.start(1)
+
+func _on_Timer_timeout():
+	$NotInStoreMessage.visible = false
+
 func _on_BurnTimer_timeout():
 	burning = false
 	$FireSprite.hide()
