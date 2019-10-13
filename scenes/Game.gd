@@ -3,8 +3,8 @@ const Map = preload("res://scenes/map/Map.tscn")
 const Player = preload("res://scenes/player/Player.tscn")
 const Enemy = preload("res://scenes/enemy/Enemy.tscn")
 const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
-const NUM_PLAYERS = 2
-const NUM_ENEMIES = 3
+const NUM_PLAYERS = 3
+const NUM_ENEMIES = 0
 var players = []
 var camera
 
@@ -45,3 +45,6 @@ func _on_ExitConfirmation_popup_hide():
 	
 func _on_ExitConfirmation_confirmed():
 	get_tree().quit()
+
+func get_player_count():
+	return NUM_PLAYERS
