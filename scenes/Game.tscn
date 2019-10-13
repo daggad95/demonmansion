@@ -28,6 +28,13 @@ grow_vertical = 2
 rect_pivot_offset = Vector2( 873.746, -243.252 )
 script = ExtResource( 3 )
 
+[node name="Label" type="Label" parent="CanvasLayer"]
+margin_left = 24.1468
+margin_top = 20.2937
+margin_right = 82.1468
+margin_bottom = 44.2937
+text = "FPS"
+
 [node name="Store" parent="." instance=ExtResource( 4 )]
 [connection signal="esc_pressed" from="." to="CanvasLayer/ExitConfirmation" method="_on_Game_esc_pressed"]
 [connection signal="confirmed" from="CanvasLayer/ExitConfirmation" to="." method="_on_ExitConfirmation_confirmed"]

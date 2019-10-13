@@ -67,9 +67,17 @@ func _separate_force():
 	else:
 		return Vector2(0, 0)
 
+func _brake_force():
+	var target_vel = Vector2(0, 0)
+	return (target_vel - linear_velocity).normalized() * steer_rate
+
 func _chase_target():
 	add_central_force(_seek_force() * seek_weight)
 	add_central_force(_separate_force() * separate_weight)
 	
 func _close_in():
 	add_central_force(_seek_force())
+
+func _brake():
+	add_central_force(_brake_force())
+	

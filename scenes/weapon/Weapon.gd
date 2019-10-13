@@ -25,7 +25,7 @@ func shoot():
 	if clip > 0 and can_fire:
 		for i in range(0, num_projectiles):
 			var projectile = _gen_projectile()
-			add_child(_process_projectile(projectile))
+			get_tree().get_root().add_child(_process_projectile(projectile))
 		clip -= 1
 		can_fire = false
 		$FireTimer.start(1.0/fire_rate)
