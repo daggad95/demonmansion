@@ -6,10 +6,12 @@ enum {WATER, TREE, GRASS}
 var traversable = [GRASS]
 var vector_arrows
 var vector_fields = {}
+var debug = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	_load_vector_arrows()
+	if debug:
+		_load_vector_arrows()
 
 func get_vector_to_target(target, pos):
 	var vector = Vector2(0, 0)
@@ -37,10 +39,12 @@ func get_vector_to_target(target, pos):
 		return vector.normalized()
 
 func _on_player_moved(player_name, player_pos):
-	vector_fields[player_name] = _vector_field(player_pos)
 
-	if player_name == "Player1":
-		_align_vector_arrows(vector_fields[player_name])
+	vector_fields[player_name] = _vector_field(player_pos)
+	
+	if debug:
+		if player_name == "Player1":
+			_align_vector_arrows(vector_fields[player_name])
 
 func _align_vector_arrows(field):
 	for y in len(vector_arrows[0]):

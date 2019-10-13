@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://scenes/enemy/Enemy.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/enemy/FireSpirit.gd" type="Script" id=2]
+[ext_resource path="res://assets/PIPOYA FREE RPG Character Sprites 32x32/Enemy/Enemy 13-1.png" type="Texture" id=3]
+
+[node name="FireSpirit" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="." index="2"]
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 3 )
+vframes = 4
+hframes = 3
+
+[node name="LineOfSight" type="RayCast2D" parent="." index="3"]
+
+[node name="FireTimer" type="Timer" parent="." index="4"]
+one_shot = true
+[connection signal="timeout" from="FireTimer" to="." method="_on_FireTimer_timeout"]

@@ -20,5 +20,5 @@ func _gen_projectile():
 		2,    # penetration
 		25,   # damage
 		0.9, # damage dropoff
-		position)
+		global_position - position)
 	return projectile

@@ -15,6 +15,8 @@ var speed = 100
 var velocity = Vector2()
 var player_name = "<UNDEFINED>"
 var player_id = -1
+var burning = false
+var burn_damage = 0
 
 const TIMER_LIMIT = 0.5
 var timer = 0.0
@@ -57,6 +59,20 @@ func get_inventory():
 func get_name():
 	return player_name
 	
+func take_damage(damage):
+	health -= damage
+	print('player took %f damage, current health: %f' % [damage, health])
+
+func inflict_burn(damage_per_second, duration):
+	if not burning:
+		burning = true
+		$FireSprite.show()
+		burn_damage = damage_per_second
+		$BurnTimer.start(duration)
+	else:
+		burn_damage = max(damage_per_second, burn_damage)
+		$BurnTimer.set_wait_time(max(duration, $BurnTimer.get_time_left()))
+	
 func init(init_pos, init_name, init_id):
 	position = init_pos
 	player_name = init_name
@@ -75,11 +91,18 @@ func init(init_pos, init_name, init_id):
 	add_child(assault_rifle)
 	add_child(sniper)
 	equipped_weapon = sniper
-
+	add_to_group('player')
 
 func _physics_process(delta):
 	get_input()
-
+	
+	if burning:
+		take_damage(delta * burn_damage)
+		
 	if velocity.length() > 0:
 		move_and_slide(velocity)
 		emit_signal('player_moved', player_name, position)
+
+func _on_BurnTimer_timeout():
+	burning = false
+	$FireSprite.hide()
