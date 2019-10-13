@@ -26,6 +26,8 @@ margin_bottom = 35.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_pivot_offset = Vector2( 873.746, -243.252 )
+window_title = ""
+dialog_text = "Really quit?"
 script = ExtResource( 3 )
 
 [node name="Label" type="Label" parent="CanvasLayer"]
@@ -36,6 +38,7 @@ margin_bottom = 44.2937
 text = "FPS"
 
 [node name="Store" parent="." instance=ExtResource( 4 )]
+position = Vector2( 151.662, -82.0211 )
 [connection signal="esc_pressed" from="." to="CanvasLayer/ExitConfirmation" method="_on_Game_esc_pressed"]
 [connection signal="confirmed" from="CanvasLayer/ExitConfirmation" to="." method="_on_ExitConfirmation_confirmed"]
 [connection signal="popup_hide" from="CanvasLayer/ExitConfirmation" to="." method="_on_ExitConfirmation_popup_hide"]
