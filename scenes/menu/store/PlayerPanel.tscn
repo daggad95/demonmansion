@@ -14,14 +14,23 @@ margin_right = 250.0
 margin_bottom = 500.0
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="VBoxContainer"]
+[node name="PlayerName" type="Label" parent="VBoxContainer"]
 margin_right = 250.0
-margin_bottom = 14.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 0, 25 )
+align = 1
+valign = 1
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer"]
+margin_top = 29.0
+margin_right = 250.0
+margin_bottom = 104.0
+rect_min_size = Vector2( 0, 75 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 18.0
+margin_top = 108.0
 margin_right = 250.0
-margin_bottom = 38.0
+margin_bottom = 128.0
 
 [node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
 margin_right = 107.0
@@ -45,15 +54,14 @@ margin_right = 250.0
 margin_bottom = 20.0
 
 [node name="Button" type="Button" parent="VBoxContainer"]
-margin_top = 42.0
+margin_top = 132.0
 margin_right = 250.0
-margin_bottom = 269.0
+margin_bottom = 314.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-text = "test"
 
 [node name="Button3" type="Button" parent="VBoxContainer"]
-margin_top = 273.0
+margin_top = 318.0
 margin_right = 250.0
 margin_bottom = 500.0
 size_flags_vertical = 3

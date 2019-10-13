@@ -12,10 +12,16 @@ signal esc_pressed
 signal store_button_pressed
 
 func _ready():
+	for i in range(NUM_ENEMIES):
+		var enemy = Enemy.instance()
+		enemy.init(Vector2(50*i + 50, 200), $Map, players)
+		add_child(enemy)
+		
+func _enter_tree():	
 	camera = GameCamera.instance()
 	camera.init(self, players)
 	add_child(camera)
-	
+
 	for i in range(NUM_PLAYERS):
 		var player = Player.instance()
 		player.init(Vector2(100*i + 100, 100), "Player%d" % (i+1), i+1)
@@ -24,11 +30,6 @@ func _ready():
 		player.connect("open_store", $Store, "_on_open_store")
 		players.append(player)
 		add_child(player)
-	
-	for i in range(NUM_ENEMIES):
-		var enemy = Enemy.instance()
-		enemy.init(Vector2(50*i + 50, 200), $Map, players)
-		add_child(enemy)	
 	
 func _process(delta):
 	if Input.is_action_pressed("ui_cancel"):
@@ -48,3 +49,7 @@ func _on_ExitConfirmation_confirmed():
 
 func get_player_count():
 	return NUM_PLAYERS
+	
+func get_players():
+	return players
+	

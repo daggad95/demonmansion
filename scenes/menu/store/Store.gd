@@ -25,10 +25,14 @@ func create_store_window():
 	
 	# Add the instance as a child node BEFORE customizing properties of the instance.
 	# Otherwise custom properties are applied equally to ALL instances of the child node.
+	var players = game_node.get_players()
+	print(players)
 	for i in range(player_count):
+		var player = players[i]
 		var panel = player_panel.instance()
 		self.get_node("CanvasLayer/MarginContainer/HBoxContainer").add_child(panel)
 		panel.rect_position.x = 250 * i
+		panel.get_node("VBoxContainer/PlayerName").text = player.get_name()
 		panel.get_node("VBoxContainer/Button").text = str(i)
 		
 
