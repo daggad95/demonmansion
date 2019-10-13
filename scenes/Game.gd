@@ -1,10 +1,12 @@
 extends Node2D
 const Map = preload("res://scenes/map/Map.tscn")
 const Player = preload("res://scenes/player/Player.tscn")
-const Enemy = preload("res://scenes/enemy/Enemy.tscn")
+const Zombie = preload("res://scenes/enemy/Zombie.tscn")
+const FireSpirit = preload("res://scenes/enemy/FireSpirit.tscn")
 const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
-const NUM_PLAYERS = 3
-const NUM_ENEMIES = 0
+const NUM_PLAYERS = 1
+const NUM_ENEMIES = 1
+
 var players = []
 var camera
 
@@ -39,6 +41,9 @@ func _process(delta):
 	elif Input.is_action_pressed("store_button"):
 		emit_signal("store_button_pressed")
 		# get_tree().paused = true
+	
+	$CanvasLayer/Label.set_text(str(Engine.get_frames_per_second()))
+	
 
 func _on_ExitConfirmation_popup_hide():
 	get_tree().paused = false

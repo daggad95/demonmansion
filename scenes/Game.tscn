@@ -30,6 +30,13 @@ window_title = ""
 dialog_text = "Really quit?"
 script = ExtResource( 3 )
 
+[node name="Label" type="Label" parent="CanvasLayer"]
+margin_left = 24.1468
+margin_top = 20.2937
+margin_right = 82.1468
+margin_bottom = 44.2937
+text = "FPS"
+
 [node name="Store" parent="." instance=ExtResource( 4 )]
 position = Vector2( 151.662, -82.0211 )
 [connection signal="esc_pressed" from="." to="CanvasLayer/ExitConfirmation" method="_on_Game_esc_pressed"]
