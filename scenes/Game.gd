@@ -15,7 +15,7 @@ signal store_button_pressed
 
 func _ready():
 	for i in range(NUM_ENEMIES):
-		var enemy = Enemy.instance()
+		var enemy = FireSpirit.instance()
 		enemy.init(Vector2(50*i + 50, 200), $Map, players)
 		add_child(enemy)
 		

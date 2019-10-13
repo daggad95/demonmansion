@@ -58,15 +58,16 @@ func _async_calc_vector_field(player_data):
 	lock.unlock()
 	
 func _on_player_moved(player_name, player_pos):
-	lock.lock()
-	if not calculating and $PathUpdateTimer.is_stopped():
-		if active_thread != null:
-			active_thread.join()
-			active_thread = null
-		active_thread = Thread.new()
-		active_thread.start(self, '_async_calc_vector_field', [player_name, player_pos])
-		calculating = true
-	lock.unlock()
+#	lock.lock()
+#	if not calculating and $PathUpdateTimer.is_stopped():
+#		if active_thread != null:
+#			active_thread.join()
+#			active_thread = null
+#		active_thread = Thread.new()
+#		active_thread.start(self, '_async_calc_vector_field', [player_name, player_pos])
+#		calculating = true
+#	lock.unlock()
+	pass
 	
 #	if debug:
 #		if player_name == "Player1":
