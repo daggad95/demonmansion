@@ -6,7 +6,10 @@ enum {WATER, TREE, GRASS}
 var traversable = [GRASS]
 var vector_arrows
 var vector_fields = {}
+var calculating_vector = {}
 var debug = false
+var calculating = false
+var lock = Mutex.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -19,7 +22,8 @@ func get_vector_to_target(target, pos):
 	if not target in vector_fields:
 		return vector
 	else:
-		var field = vector_fields[target]
+		var field = _get_field(target)
+		print(field)
 		var neighbors = [
 			pos,
 			pos + Vector2(0, 1),
@@ -38,13 +42,35 @@ func get_vector_to_target(target, pos):
 				vector += field[map_pos.x][map_pos.y]
 		return vector.normalized()
 
-func _on_player_moved(player_name, player_pos):
+func _get_field(target):
+	lock.lock()
+	var field = vector_fields[target]
+	lock.unlock()
+	return field
 
-	vector_fields[player_name] = _vector_field(player_pos)
+func _async_calc_vector_field(player_data):
+	lock.lock()
+	$PathUpdateTimer.start()
+	var temp = _vector_field(player_data[1])
+	vector_fields[player_data[0]] = temp
+	calculating = false
+	print('done')
+	lock.unlock()
 	
-	if debug:
-		if player_name == "Player1":
-			_align_vector_arrows(vector_fields[player_name])
+func _on_player_moved(player_name, player_pos):
+	lock.lock()
+	if not calculating and $PathUpdateTimer.is_stopped():
+		if active_thread != null:
+			active_thread.join()
+			active_thread = null
+		active_thread = Thread.new()
+		active_thread.start(self, '_async_calc_vector_field', [player_name, player_pos])
+		calculating = true
+	lock.unlock()
+	
+#	if debug:
+#		if player_name == "Player1":
+#			_align_vector_arrows(vector_fields[player_name])
 
 func _align_vector_arrows(field):
 	for y in len(vector_arrows[0]):
