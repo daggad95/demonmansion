@@ -1,0 +1,27 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://scenes/enemy/Enemy.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/enemy/Ogre.gd" type="Script" id=2]
+[ext_resource path="res://assets/Enemies/Ogre_Tileset.png" type="Texture" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 15.1284, 16.5378 )
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 27.79
+
+[node name="Ogre" instance=ExtResource( 1 )]
+linear_damp = 0.0
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="." index="0"]
+position = Vector2( 5.25579, -15.1834 )
+texture = ExtResource( 3 )
+vframes = 8
+hframes = 17
+
+[node name="CollisionShape2D" parent="." index="1"]
+shape = SubResource( 1 )
+
+[node name="CollisionShape2D" parent="Bubble" index="0"]
+shape = SubResource( 2 )

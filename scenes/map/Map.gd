@@ -36,14 +36,14 @@ func get_vector_to_target(target, pos):
 	else:
 		var neighbors = [
 			pos,
-			pos + Vector2(0, 1),
-			pos + Vector2(1, 0),
-			pos + Vector2(0, -1),
-			pos + Vector2(-1, 0), 
-			pos + Vector2(1, 1),
-			pos + Vector2(-1, -1),
-			pos + Vector2(1, -1),
-			pos + Vector2(-1, 1)
+#			pos + Vector2(0, 1),
+#			pos + Vector2(1, 0),
+#			pos + Vector2(0, -1),
+#			pos + Vector2(-1, 0), 
+#			pos + Vector2(1, 1),
+#			pos + Vector2(-1, -1),
+#			pos + Vector2(1, -1),
+#			pos + Vector2(-1, 1)
 		]
 		
 		for pos in neighbors:
