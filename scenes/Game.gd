@@ -4,7 +4,7 @@ const Player = preload("res://scenes/player/Player.tscn")
 const Zombie = preload("res://scenes/enemy/Zombie.tscn")
 const FireSpirit = preload("res://scenes/enemy/FireSpirit.tscn")
 const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
-const NUM_PLAYERS = 3
+const NUM_PLAYERS = 1
 const NUM_ENEMIES = 10
 
 var players = []

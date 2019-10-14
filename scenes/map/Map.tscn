@@ -335,3 +335,4 @@ script = ExtResource( 2 )
 [node name="PathUpdateTimer" type="Timer" parent="."]
 wait_time = 0.1
 one_shot = true
+[connection signal="timeout" from="PathUpdateTimer" to="." method="_on_PathUpdateTimer_timeout"]
