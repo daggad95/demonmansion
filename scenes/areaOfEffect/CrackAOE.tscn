@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scenes/areaOfEffect/AreaOfEffect.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/areaOfEffect/CrackAOE.gd" type="Script" id=2]
+[ext_resource path="res://assets/Effects/earthquake.png" type="Texture" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 14.5587, 12.2968 )
+
+[node name="CrackAOE" index="0" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+
+[node name="Sprite" parent="." index="0"]
+modulate = Color( 1, 1, 1, 1 )
+scale = Vector2( 0.1, 0.1 )
+texture = ExtResource( 3 )
+vframes = 2
+hframes = 3
+frame = 1
+
+[node name="Hitbox" parent="." index="1"]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" index="0"]
+visible = false
+shape = SubResource( 1 )
