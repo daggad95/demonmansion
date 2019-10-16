@@ -59,6 +59,10 @@ func get_inventory():
 func get_name():
 	return player_name
 	
+func get_sprite():
+	var player_sprite = get_node("Sprite")
+	return player_sprite
+	
 func take_damage(damage):
 	health -= damage
 	print('player took %f damage, current health: %f' % [damage, health])

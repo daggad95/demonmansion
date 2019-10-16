@@ -39,7 +39,21 @@ func create_store_window():
 		self.get_node("CanvasLayer/MarginContainer/HBoxContainer").add_child(panel)
 		panel.rect_position.x = 250 * i
 		panel.get_node("VBoxContainer/PlayerName").text = player.get_name()
-		panel.get_node("VBoxContainer/Button").text = str(i)
+		
+		# Uses duplicate() to avoid passing by reference
+		var player_texture = player.get_sprite().duplicate().get_texture()
+		var player_texture_image = player_texture.get_data()
+		
+		# Create a new image and copy the texture to it
+		var img = Image.new()
+		img.create(32, 32, false, Image.FORMAT_RGBA8)
+		var src_rect = Rect2(Vector2(32, 0), Vector2(64, 32))
+		img.blit_rect(player_texture_image, src_rect, Vector2(0, 0))
+		
+		# Create an ImageTexture from the new image
+		var img_texture = ImageTexture.new()
+		img_texture.create_from_image(img, 7)
+		panel.get_node("VBoxContainer/PlayerTexture").set_texture(img_texture)
 		
 
 func _on_open_store(player):

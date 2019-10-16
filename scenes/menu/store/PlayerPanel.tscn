@@ -21,16 +21,16 @@ rect_min_size = Vector2( 0, 25 )
 align = 1
 valign = 1
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer"]
+[node name="PlayerTexture" type="TextureRect" parent="VBoxContainer"]
 margin_top = 29.0
 margin_right = 250.0
-margin_bottom = 104.0
-rect_min_size = Vector2( 0, 75 )
+margin_bottom = 29.0
+stretch_mode = 4
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 108.0
+margin_top = 33.0
 margin_right = 250.0
-margin_bottom = 128.0
+margin_bottom = 53.0
 
 [node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
 margin_right = 107.0
@@ -54,14 +54,14 @@ margin_right = 250.0
 margin_bottom = 20.0
 
 [node name="Button" type="Button" parent="VBoxContainer"]
-margin_top = 132.0
+margin_top = 57.0
 margin_right = 250.0
-margin_bottom = 314.0
+margin_bottom = 276.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Button3" type="Button" parent="VBoxContainer"]
-margin_top = 318.0
+margin_top = 280.0
 margin_right = 250.0
 margin_bottom = 500.0
 size_flags_vertical = 3
