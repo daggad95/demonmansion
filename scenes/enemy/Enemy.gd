@@ -1,9 +1,9 @@
 extends RigidBody2D
 class_name Enemy
 
-var speed = 50
-var steer_rate = 300
-var health = 100
+var speed = 50.0
+var steer_rate = 300.0
+var health = 100.0
 var map
 var target
 var players
@@ -59,7 +59,7 @@ func _separate_force():
 		for enemy in nearby_enemies:
 			target_dir = enemy.global_position.direction_to(global_position)
 		target_vel = target_dir.normalized() * speed
-		return (target_vel - linear_velocity).normalized() * steer_rate
+		return (target_vel - linear_velocity).normalized()
 	else:
 		return Vector2(0, 0)
 
@@ -108,16 +108,17 @@ func _avoid_obstacle_force():
 		target_dir += _avoid_obstacle_from('right', right)
 
 	target_vel = target_dir.normalized() * speed
-	return (target_vel - linear_velocity).normalized() * 2
+	return (target_vel - linear_velocity).normalized() 
 	
 func _brake_force():
 	var target_vel = Vector2(0, 0)
-	return (target_vel - linear_velocity).normalized() * steer_rate
-
+	return (target_vel - linear_velocity).normalized() * (linear_velocity.length() / speed)
+	
 func _chase_target():
 	var steer_force = Vector2(0, 0)
 	steer_force += _seek_force() 
-	steer_force += _avoid_obstacle_force()
+	steer_force += _avoid_obstacle_force() * 2
+	steer_force += _separate_force() * 2
 	steer_force = steer_force.normalized()
 	steer_force *= steer_rate
 	
@@ -127,8 +128,17 @@ func _close_in():
 	add_central_force(_seek_force())
 
 func _brake():
-	add_central_force(_brake_force())
+	if linear_velocity.length() > 5:
+		var steer_force = _brake_force() * steer_rate
+		add_central_force(steer_force)
+	else:
+		linear_velocity = Vector2(0, 0)
 
 func _shared_update(delta):
 	rotation = 0
 	applied_force = Vector2(0, 0)
+		
+	if linear_velocity.x > 0:
+		$Sprite.set_flip_h(false)
+	elif linear_velocity.x <  0:
+		$Sprite.set_flip_h(true)

@@ -17,7 +17,7 @@ signal store_button_pressed
 func _ready():
 	for i in range(NUM_ENEMIES):
 		var enemy = Ogre.instance()
-		enemy.init(Vector2(50*i + 50, 200), $Map, players)
+		enemy.init(Vector2(25*i + 50, 200), $Map, players)
 		add_child(enemy)
 		
 func _enter_tree():	
