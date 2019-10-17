@@ -50,6 +50,9 @@ func get_money():
 func add_money(amount):
 	money = max(money + amount, 0)
 	
+func get_health():
+	return health
+	
 func add_to_inventory(weapon):
 	inventory.append(weapon)
 	

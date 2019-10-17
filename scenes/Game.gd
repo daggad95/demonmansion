@@ -4,7 +4,8 @@ const Player = preload("res://scenes/player/Player.tscn")
 const Zombie = preload("res://scenes/enemy/Zombie.tscn")
 const FireSpirit = preload("res://scenes/enemy/FireSpirit.tscn")
 const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
-const NUM_PLAYERS = 2
+const TOTAL_WEAPON_COUNT = 4 # used to allocate invetory spots in the store window
+const NUM_PLAYERS = 3
 const NUM_ENEMIES = 0
 
 var players = []
@@ -57,4 +58,7 @@ func get_player_count():
 	
 func get_players():
 	return players
+	
+func get_total_weapon_count():
+	return TOTAL_WEAPON_COUNT
 	

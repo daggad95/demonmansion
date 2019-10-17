@@ -13,6 +13,7 @@ margin_bottom = 500.0
 margin_right = 250.0
 margin_bottom = 500.0
 size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="PlayerName" type="Label" parent="VBoxContainer"]
 margin_right = 250.0
@@ -21,47 +22,83 @@ rect_min_size = Vector2( 0, 25 )
 align = 1
 valign = 1
 
-[node name="PlayerTexture" type="TextureRect" parent="VBoxContainer"]
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer"]
 margin_top = 29.0
 margin_right = 250.0
-margin_bottom = 29.0
+margin_bottom = 33.0
+
+[node name="PlayerTexture" type="TextureRect" parent="VBoxContainer"]
+margin_top = 37.0
+margin_right = 250.0
+margin_bottom = 37.0
 stretch_mode = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 33.0
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+margin_top = 41.0
 margin_right = 250.0
-margin_bottom = 53.0
+margin_bottom = 45.0
 
-[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_right = 107.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-
-[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_left = 111.0
-margin_right = 218.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-
-[node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_left = 222.0
-margin_right = 234.0
-margin_bottom = 20.0
-
-[node name="Button4" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_left = 238.0
+[node name="CenterContainer3" type="CenterContainer" parent="VBoxContainer"]
+margin_top = 49.0
 margin_right = 250.0
-margin_bottom = 20.0
+margin_bottom = 63.0
 
-[node name="Button" type="Button" parent="VBoxContainer"]
-margin_top = 57.0
+[node name="InventoryLabel" type="Label" parent="VBoxContainer/CenterContainer3"]
+margin_left = 67.0
+margin_right = 182.0
+margin_bottom = 14.0
+text = "Current inventory:"
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer"]
+margin_top = 67.0
 margin_right = 250.0
-margin_bottom = 276.0
+margin_bottom = 67.0
+
+[node name="PlayerInventory" type="GridContainer" parent="VBoxContainer/CenterContainer"]
+margin_left = 125.0
+margin_right = 125.0
+size_flags_horizontal = 2
+columns = 3
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
+margin_top = 71.0
+margin_right = 250.0
+margin_bottom = 111.0
+
+[node name="CenterContainer4" type="CenterContainer" parent="VBoxContainer"]
+margin_top = 79.0
+margin_right = 250.0
+margin_bottom = 93.0
+
+[node name="AvailableLabel" type="Label" parent="VBoxContainer/CenterContainer4"]
+margin_left = 74.0
+margin_right = 175.0
+margin_bottom = 14.0
+text = "Store inventory:"
+
+[node name="CenterContainer2" type="CenterContainer" parent="VBoxContainer"]
+margin_top = 97.0
+margin_right = 250.0
+margin_bottom = 97.0
+
+[node name="StoreInventory" type="GridContainer" parent="VBoxContainer/CenterContainer2"]
+margin_left = 125.0
+margin_right = 125.0
+size_flags_horizontal = 2
+columns = 3
+
+[node name="MoneyLabel" type="Label" parent="VBoxContainer"]
+margin_top = 101.0
+margin_right = 250.0
+margin_bottom = 482.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+valign = 2
 
-[node name="Button3" type="Button" parent="VBoxContainer"]
-margin_top = 280.0
+[node name="HealthLabel" type="Label" parent="VBoxContainer"]
+margin_top = 486.0
 margin_right = 250.0
 margin_bottom = 500.0
-size_flags_vertical = 3
+size_flags_horizontal = 3
+size_flags_vertical = 0
+valign = 2
