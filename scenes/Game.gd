@@ -6,7 +6,7 @@ const FireSpirit = preload("res://scenes/enemy/FireSpirit.tscn")
 const Ogre = preload("res://scenes/enemy/Ogre.tscn")
 const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
 const NUM_PLAYERS = 1
-const NUM_ENEMIES = 1
+const NUM_ENEMIES = 20
 
 var players = []
 var camera
@@ -16,7 +16,7 @@ signal store_button_pressed
 
 func _ready():
 	for i in range(NUM_ENEMIES):
-		var enemy = Ogre.instance()
+		var enemy = Zombie.instance()
 		enemy.init(Vector2(25*i + 50, 200), $Map, players)
 		add_child(enemy)
 		

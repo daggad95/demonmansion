@@ -5,9 +5,11 @@ onready var hit_damage = 10
 onready var can_hit = true
 onready var pause_after_hit = 1
 
+func _ready():
+	speed = 20
+
 func _physics_process(delta):
-	rotation = 0
-	applied_force = Vector2(0, 0)
+	_shared_update(delta)
 	target = _get_nearest_player()
 	
 	if position.distance_to(target.get_position()) > attack_range:
@@ -27,6 +29,19 @@ func _physics_process(delta):
 				body.take_damage(hit_damage)
 				can_hit = false
 				$HitTimer.start(pause_after_hit)
+	
+	if abs(linear_velocity.x) > abs(linear_velocity.y):
+		if $ChangeDirTimer.is_stopped():
+			$AnimationPlayer.play('walk_left_right')
+			$ChangeDirTimer.start()
+	elif linear_velocity.y < 0:
+		if $ChangeDirTimer.is_stopped():
+			$AnimationPlayer.play('walk_up')
+			$ChangeDirTimer.start()
+	else:
+		if $ChangeDirTimer.is_stopped():
+			$AnimationPlayer.play('walk_down')
+			$ChangeDirTimer.start()
 		
 func _on_HitTimer_timeout():
 	can_hit = true
