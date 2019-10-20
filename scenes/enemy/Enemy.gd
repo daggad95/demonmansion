@@ -125,7 +125,7 @@ func _chase_target():
 	add_central_force(steer_force)
 	
 func _close_in():
-	add_central_force(_seek_force())
+	add_central_force(_seek_force() * steer_rate)
 
 func _brake():
 	if linear_velocity.length() > 5:
