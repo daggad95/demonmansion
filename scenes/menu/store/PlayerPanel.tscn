@@ -63,7 +63,7 @@ columns = 3
 [node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
 margin_top = 71.0
 margin_right = 250.0
-margin_bottom = 111.0
+margin_bottom = 75.0
 
 [node name="CenterContainer4" type="CenterContainer" parent="VBoxContainer"]
 margin_top = 79.0

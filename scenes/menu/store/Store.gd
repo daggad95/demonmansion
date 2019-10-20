@@ -43,6 +43,11 @@ func create_store_window():
 		panel.get_node("VBoxContainer/PlayerName").text = player.get_name()
 		panel.get_node("VBoxContainer/PlayerTexture").set_texture(get_player_icon(player))
 		
+		var player_sprite = player.get_node("Sprite").duplicate()
+		panel.get_node("VBoxContainer").add_child(player_sprite)
+		player_sprite.set_position(Vector2(0, 0))
+		player_sprite.set_scale(Vector2(1, 1))
+		
 		for i in range(total_weapon_count):
 			var inventory_item = TextureButton.new()
 			var store_item = TextureButton.new()
@@ -59,7 +64,6 @@ func create_store_window():
 		var health_actual_string = health_format_string % [player.get_name(), str(player.get_health())]
 		panel.get_node("VBoxContainer/HealthLabel").text = health_actual_string
 			
-		
 		
 # Returns the second frame of the StreamTexture that is used as the player's sprite.
 func get_player_icon(player):
