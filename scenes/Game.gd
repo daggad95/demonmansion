@@ -6,7 +6,9 @@ const FireSpirit = preload("res://scenes/enemy/FireSpirit.tscn")
 const Ogre = preload("res://scenes/enemy/Ogre.tscn")
 const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
 const NUM_PLAYERS = 1
-const NUM_ENEMIES = 20
+export var num_zombies = 0
+export var num_fire_spirits = 0
+export var num_ogres = 0
 
 var players = []
 var camera
@@ -15,11 +17,20 @@ signal esc_pressed
 signal store_button_pressed
 
 func _ready():
-	for i in range(NUM_ENEMIES):
+	for i in range(num_zombies):
 		var enemy = Zombie.instance()
-		enemy.init(Vector2(25*i + 50, 200), $Map, players)
+		enemy.init(Vector2(25*i + 50, 50), $Map, players)
 		add_child(enemy)
 		
+	for i in range(num_fire_spirits):
+		var enemy = FireSpirit.instance()
+		enemy.init(Vector2(25*i + 50, 100), $Map, players)
+		add_child(enemy)
+	
+	for i in range(num_ogres):
+		var enemy = Ogre.instance()
+		enemy.init(Vector2(25*i + 50, 150), $Map, players)
+		add_child(enemy)
 func _enter_tree():	
 	camera = GameCamera.instance()
 	camera.init(self, players)

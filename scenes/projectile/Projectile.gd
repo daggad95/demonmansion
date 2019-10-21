@@ -23,6 +23,7 @@ var max_pen
 
 # list of bodies the projectile has collided with
 var collided 
+var sprite = null
 
 func init(
 	init_direction, 
@@ -50,13 +51,24 @@ func init(
 	else:
 		set_collision_mask(PLAYER_COLLISION)
 
+	sprite = $DefaultSprite
+	$DefaultSprite.show()
+
 func init_burn(damage, duration):
 	burn_damage = damage
 	burn_duration = duration
 	inflict_burn = true
 
-func rotate(rad):
-	direction = direction.rotated(rad)
+func set_sprite(sprite_name):
+	$DefaultSprite.hide()
+	
+	if sprite_name == 'fireball':
+		sprite = $FireballSprite
+		$FireballSprite.show()
+		$AnimationPlayer.play('fireball')
+
+func rotate_sprite(dir):
+	sprite.rotate(dir - PI/2)
 
 func scale_speed(factor):
 	speed = speed * factor
