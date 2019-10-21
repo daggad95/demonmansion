@@ -1,19 +1,93 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/enemy/Enemy.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/enemy/Zombie.gd" type="Script" id=2]
-[ext_resource path="res://assets/PIPOYA FREE RPG Character Sprites 32x32/Enemy/Enemy 01-1.png" type="Texture" id=3]
+[ext_resource path="res://assets/Enemies/zombie.png" type="Texture" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 7.98985, 8.40377 )
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 17.5383
+
+[sub_resource type="Animation" id=5]
+resource_name = "walk_down"
+length = 1.2
+loop = true
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.6, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 6, 7, 8, 7 ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "walk_left_right"
+length = 0.75
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.7 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 3, 5 ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "walk_up"
+length = 1.2
+loop = true
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.6, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 1 ]
+}
 
 [node name="Zombie" instance=ExtResource( 1 )]
-gravity_scale = 0.0
 script = ExtResource( 2 )
 
+[node name="CollisionShape2D" parent="." index="0"]
+shape = SubResource( 1 )
+
+[node name="CollisionShape2D" parent="Bubble" index="0"]
+shape = SubResource( 2 )
+
 [node name="Sprite" type="Sprite" parent="." index="2"]
-scale = Vector2( 0.5, 0.5 )
+position = Vector2( 0.425785, -3.09702 )
+scale = Vector2( 0.25, 0.25 )
 texture = ExtResource( 3 )
 vframes = 4
 hframes = 3
+frame = 8
 
 [node name="HitTimer" type="Timer" parent="." index="3"]
 one_shot = true
+
+[node name="RayCast" parent="." index="4"]
+scale = Vector2( 1, 0.5 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="6"]
+anims/walk_down = SubResource( 5 )
+anims/walk_left_right = SubResource( 3 )
+anims/walk_up = SubResource( 4 )
 [connection signal="timeout" from="HitTimer" to="." method="_on_HitTimer_timeout"]

@@ -3,48 +3,92 @@ const VectorArrow = preload("res://scenes/map/VectorArrow.tscn")
 const MAX_WEIGHT = 999999
 
 enum {WATER, TREE, GRASS}
+onready var Game = get_tree().get_root().get_node('Game')
 var traversable = [GRASS]
 var vector_arrows
 var vector_fields = {}
+var calculating = {}
+var worker_threads = {}
 var debug = false
+var lock = Mutex.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	if debug:
 		_load_vector_arrows()
+		
+	for player in Game.get_players():
+		var player_name = player.get_name()
+		vector_fields[player_name] = null
+		calculating[player_name] = true
+		worker_threads[player_name] = Thread.new()
+		worker_threads[player_name].start(self, '_async_calc_vector_field', [player_name, player.get_position()])
+	$PathUpdateTimer.start(0.1)
 
 func get_vector_to_target(target, pos):
 	var vector = Vector2(0, 0)
+	lock.lock()
+	var field = vector_fields[target]
 	
-	if not target in vector_fields:
+	if field == null:
+		lock.unlock()
 		return vector
 	else:
-		var field = vector_fields[target]
 		var neighbors = [
 			pos,
-			pos + Vector2(0, 1),
-			pos + Vector2(1, 0),
-			pos + Vector2(0, -1),
-			pos + Vector2(-1, 0), 
-			pos + Vector2(1, 1),
-			pos + Vector2(-1, -1),
-			pos + Vector2(1, -1),
-			pos + Vector2(-1, 1)
+#			pos + Vector2(0, 1),
+#			pos + Vector2(1, 0),
+#			pos + Vector2(0, -1),
+#			pos + Vector2(-1, 0), 
+#			pos + Vector2(1, 1),
+#			pos + Vector2(-1, -1),
+#			pos + Vector2(1, -1),
+#			pos + Vector2(-1, 1)
 		]
 		
 		for pos in neighbors:
 			var map_pos = world_to_map(pos)
 			if map_pos.x >= 0 and map_pos.x < len(field) and map_pos.y >= 0 and map_pos.y < len(field[0]):
 				vector += field[map_pos.x][map_pos.y]
+		lock.unlock()
 		return vector.normalized()
 
-func _on_player_moved(player_name, player_pos):
+func _async_calc_vector_field(player_data):
+	var player_name = player_data[0]
+	var player_pos  = player_data[1]
+	var temp = _vector_field(player_pos)
+	lock.lock()
+	vector_fields[player_data[0]] = temp
+	calculating[player_name] = false
+	lock.unlock()
 
-	vector_fields[player_name] = _vector_field(player_pos)
+func _on_PathUpdateTimer_timeout():
+	for player in Game.get_players():
+		var player_name = player.get_name()
+		var done_calculating
+		
+		lock.lock()
+		done_calculating = calculating[player_name]
+		lock.unlock()
+		
+		if done_calculating:
+			worker_threads[player_name].wait_to_finish()
+			
+		calculating[player_name] = true
+		worker_threads[player_name].start(self, '_async_calc_vector_field', [player_name, player.get_position()])
+	$PathUpdateTimer.start(0.1)
 	
+func _on_player_moved(player_name, player_pos):
 	if debug:
 		if player_name == "Player1":
-			_align_vector_arrows(vector_fields[player_name])
+			lock.lock()
+			var vector_field_exists = vector_fields[player_name] != null
+			var temp_field
+			if vector_field_exists:
+				temp_field = vector_fields[player_name].duplicate()
+			lock.unlock()
+			if vector_field_exists:
+				_align_vector_arrows(temp_field)
 
 func _align_vector_arrows(field):
 	for y in len(vector_arrows[0]):
