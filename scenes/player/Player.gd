@@ -58,6 +58,12 @@ func add_to_inventory(weapon):
 	
 func get_inventory():
 	return inventory
+	
+func has_weapon(weapon):
+	for wep in inventory:
+		if wep.get_name() == weapon.get_name():
+			return true
+	return false
 
 func get_name():
 	return player_name

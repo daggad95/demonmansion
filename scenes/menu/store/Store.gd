@@ -1,14 +1,18 @@
 extends Area2D
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
 onready var game_node = get_tree().get_root().get_node("Game")
 onready var player_count = game_node.get_player_count()
 onready var store_window = get_node("CanvasLayer/MarginContainer")
 
+const Pistol = preload("res://scenes/weapon/Pistol.tscn")
+const Shotgun = preload("res://scenes/weapon/Shotgun.tscn")
+const AssaultRifle = preload("res://scenes/weapon/AssaultRifle.tscn")
+const Sniper = preload("res://scenes/weapon/Sniper.tscn")
+const WEAPONS = [Pistol, Shotgun, AssaultRifle, Sniper]
+
 const player_panel = preload("res://scenes/menu/store/PlayerPanel.tscn")
+const TOTAL_WEAPON_COUNT = 4
+const PLAYER_PANEL_WIDTH = 250
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -25,37 +29,44 @@ func _process(delta):
 
 func create_store_window():
 	store_window.hide()
+	
+	var init_weapons = []
+	for weapon in WEAPONS:
+		init_weapons.append(weapon.instance())		
+	
 	print("player count: ", player_count)
-	$CanvasLayer/MarginContainer.margin_left = -125 * player_count
-	$CanvasLayer/MarginContainer.margin_right = 125 * player_count
+	$CanvasLayer/MarginContainer.margin_left = -1 * (PLAYER_PANEL_WIDTH/2) * player_count
+	$CanvasLayer/MarginContainer.margin_right = (PLAYER_PANEL_WIDTH/2) * player_count
 	
 	# Add the instance as a child node BEFORE customizing properties of the instance.
 	# Otherwise custom properties are applied equally to ALL instances of the child node.
 	var players = game_node.get_players()
-	var total_weapon_count = game_node.get_total_weapon_count()
-	print(players)
 	for i in range(player_count):
 		var player = players[i]
 		var panel = player_panel.instance()
 		self.get_node("CanvasLayer/MarginContainer/HBoxContainer").add_child(panel)
-
-		panel.rect_position.x = 250 * i
+		panel.rect_position.x = PLAYER_PANEL_WIDTH * i
 		panel.get_node("VBoxContainer/PlayerName").text = player.get_name()
-		panel.get_node("VBoxContainer/PlayerTexture").set_texture(get_player_icon(player))
 		
 		var player_sprite = player.get_node("Sprite").duplicate()
-		panel.get_node("VBoxContainer").add_child(player_sprite)
-		player_sprite.set_position(Vector2(0, 0))
+		panel.get_node("VBoxContainer/PlayerSpriteContainer").add_child(player_sprite)
+		player_sprite.set_frame(1)
+		player_sprite.offset.x = PLAYER_PANEL_WIDTH/2
 		player_sprite.set_scale(Vector2(1, 1))
 		
-		for i in range(total_weapon_count):
-			var inventory_item = TextureButton.new()
-			var store_item = TextureButton.new()
-			panel.get_node("VBoxContainer/CenterContainer/PlayerInventory").add_child(inventory_item)
-			panel.get_node("VBoxContainer/CenterContainer2/StoreInventory").add_child(store_item)
-			#inventory_item.set_normal_texture(player.get_inventory()[0].get_texture())
-			inventory_item.set_normal_texture(get_player_icon(player))
-			store_item.set_normal_texture(get_player_icon(player))
+		for i in range(100):
+			for weapon in init_weapons:
+				if player.has_weapon(weapon):
+					var weapon_container = CenterContainer.new()
+					weapon_container.set_custom_minimum_size(Vector2(50, 50))
+					var weapon_duplicate = weapon.duplicate()
+					weapon_container.add_child(weapon_duplicate)
+					weapon_duplicate.set_scale(Vector2(2, 2))
+					weapon_duplicate.set_offset(Vector2(30, 12))
+					
+					
+					panel.get_node("VBoxContainer/PlayerInventoryContainer/ScrollContainer/CenterContainer/PlayerInventory").add_child(weapon_container)
+
 		
 		var money_format_string = "%s money: %s"
 		var money_actual_string = money_format_string % [player.get_name(), str(player.get_money())]
@@ -63,24 +74,6 @@ func create_store_window():
 		var health_format_string = "%s health: %s"
 		var health_actual_string = health_format_string % [player.get_name(), str(player.get_health())]
 		panel.get_node("VBoxContainer/HealthLabel").text = health_actual_string
-			
-		
-# Returns the second frame of the StreamTexture that is used as the player's sprite.
-func get_player_icon(player):
-	# Uses duplicate() to avoid passing by reference
-	var player_texture = player.get_sprite().duplicate().get_texture()
-	var player_texture_image = player_texture.get_data()
-	
-	# Create a new image and copy the texture to it
-	var img = Image.new()
-	img.create(32, 32, false, Image.FORMAT_RGBA8)
-	var src_rect = Rect2(Vector2(32, 0), Vector2(64, 32))
-	img.blit_rect(player_texture_image, src_rect, Vector2(0, 0)) # copies from player image
-	
-	# Create an ImageTexture from the new image
-	var img_texture = ImageTexture.new()
-	img_texture.create_from_image(img, 7)	
-	return img_texture
 
 
 func _on_open_store(player):

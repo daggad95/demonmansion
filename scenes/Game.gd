@@ -5,8 +5,8 @@ const Zombie = preload("res://scenes/enemy/Zombie.tscn")
 const FireSpirit = preload("res://scenes/enemy/FireSpirit.tscn")
 const Ogre = preload("res://scenes/enemy/Ogre.tscn")
 const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
-const NUM_PLAYERS = 1
-const NUM_ENEMIES = 20
+const NUM_PLAYERS = 3
+const NUM_ENEMIES = 0
 
 var players = []
 var camera
@@ -58,7 +58,3 @@ func get_player_count():
 	
 func get_players():
 	return players
-	
-func get_total_weapon_count():
-	return TOTAL_WEAPON_COUNT
-	
