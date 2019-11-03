@@ -34,12 +34,12 @@ func create_store_window():
 	for weapon in WEAPONS:
 		init_weapons.append(weapon.instance())		
 	
-	print("player count: ", player_count)
+	# Scale the store window width by the number of players
 	$CanvasLayer/MarginContainer.margin_left = -1 * (PLAYER_PANEL_WIDTH/2) * player_count
 	$CanvasLayer/MarginContainer.margin_right = (PLAYER_PANEL_WIDTH/2) * player_count
 	
-	# Add the instance as a child node BEFORE customizing properties of the instance.
-	# Otherwise custom properties are applied equally to ALL instances of the child node.
+	# Add the instance as a child node before customizing properties of the instance.
+	# Otherwise custom properties are applied equally to all instances of the child node.
 	var players = game_node.get_players()
 	for i in range(player_count):
 		var player = players[i]
@@ -54,9 +54,13 @@ func create_store_window():
 		player_sprite.offset.x = PLAYER_PANEL_WIDTH/2
 		player_sprite.set_scale(Vector2(1, 1))
 		
-		for i in range(100):
+		# Populate the list of player owned weapons
+		for i in range(TOTAL_WEAPON_COUNT):
 			for weapon in init_weapons:
+				print(weapon.get_name())
 				if player.has_weapon(weapon):
+					print(player.get_name(), " has weapon ", weapon.get_name())
+					
 					var weapon_container = CenterContainer.new()
 					weapon_container.set_custom_minimum_size(Vector2(50, 50))
 					var weapon_duplicate = weapon.duplicate()
@@ -64,10 +68,8 @@ func create_store_window():
 					weapon_duplicate.set_scale(Vector2(2, 2))
 					weapon_duplicate.set_offset(Vector2(30, 12))
 					
-					
 					panel.get_node("VBoxContainer/PlayerInventoryContainer/ScrollContainer/CenterContainer/PlayerInventory").add_child(weapon_container)
 
-		
 		var money_format_string = "%s money: %s"
 		var money_actual_string = money_format_string % [player.get_name(), str(player.get_money())]
 		panel.get_node("VBoxContainer/MoneyLabel").text = money_actual_string
