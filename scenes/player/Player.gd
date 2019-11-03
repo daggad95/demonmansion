@@ -7,8 +7,8 @@ class_name Player
 signal player_moved
 signal open_store
 
-var health    = 100
-var money     = 0
+var health = 100
+var money = 0
 var inventory = []
 var equipped_weapon = null
 var speed = 100
@@ -50,14 +50,28 @@ func get_money():
 func add_money(amount):
 	money = max(money + amount, 0)
 	
+func get_health():
+	return health
+	
 func add_to_inventory(weapon):
 	inventory.append(weapon)
 	
+# Get an array of Weapon objects that the player currently owns
 func get_inventory():
 	return inventory
+	
+func has_weapon(weapon):
+	for wep in inventory:
+		if wep.get_name() == weapon.get_name():
+			return true
+	return false
 
 func get_name():
 	return player_name
+	
+func get_sprite():
+	var player_sprite = get_node("Sprite")
+	return player_sprite
 	
 func take_damage(damage):
 	health -= damage
@@ -78,20 +92,15 @@ func init(init_pos, init_name, init_id):
 	player_name = init_name
 	player_id = init_id
 	
+	# Set the default weapon to Pistol
 	var pistol = Pistol.instance()
-	var shotgun = Shotgun.instance()
-	var assault_rifle = AssaultRifle.instance()
-	var sniper = Sniper.instance()
 	inventory.append(pistol)
-	inventory.append(shotgun)
-	inventory.append(assault_rifle)
-	inventory.append(sniper)
 	add_child(pistol)
-	add_child(shotgun)
-	add_child(assault_rifle)
-	add_child(sniper)
-	equipped_weapon = sniper
+	equipped_weapon = pistol
 	add_to_group('player')
+	
+	# Debug
+	print(self.get_name(), ": pistol equipped (default)")
 
 func _physics_process(delta):
 	get_input()

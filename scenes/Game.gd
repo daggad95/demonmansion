@@ -77,4 +77,3 @@ func get_player_count():
 	
 func get_players():
 	return players
-	

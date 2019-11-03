@@ -2,66 +2,110 @@
 
 [node name="MarginContainer" type="MarginContainer"]
 margin_right = 250.0
-margin_bottom = 500.0
+margin_bottom = 584.0
 size_flags_horizontal = 3
 
 [node name="Panel" type="Panel" parent="."]
 margin_right = 250.0
-margin_bottom = 500.0
+margin_bottom = 584.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_right = 250.0
-margin_bottom = 500.0
+margin_bottom = 584.0
 size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
 
 [node name="PlayerName" type="Label" parent="VBoxContainer"]
 margin_right = 250.0
-margin_bottom = 25.0
-rect_min_size = Vector2( 0, 25 )
+margin_bottom = 50.0
+rect_min_size = Vector2( 0, 50 )
 align = 1
 valign = 1
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer"]
-margin_top = 29.0
+[node name="PlayerSpriteContainer" type="CenterContainer" parent="VBoxContainer"]
+margin_top = 54.0
 margin_right = 250.0
 margin_bottom = 104.0
-rect_min_size = Vector2( 0, 75 )
+rect_min_size = Vector2( 0, 50 )
+size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="PlayerInventoryLabelContainer" type="CenterContainer" parent="VBoxContainer"]
+editor/display_folded = true
 margin_top = 108.0
 margin_right = 250.0
-margin_bottom = 128.0
+margin_bottom = 122.0
 
-[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_right = 107.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
+[node name="PlayerInventoryLabel" type="Label" parent="VBoxContainer/PlayerInventoryLabelContainer"]
+margin_left = 67.0
+margin_right = 182.0
+margin_bottom = 14.0
+text = "Current inventory:"
 
-[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_left = 111.0
-margin_right = 218.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-
-[node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_left = 222.0
-margin_right = 234.0
-margin_bottom = 20.0
-
-[node name="Button4" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_left = 238.0
+[node name="PlayerInventoryContainer" type="CenterContainer" parent="VBoxContainer"]
+margin_top = 126.0
 margin_right = 250.0
-margin_bottom = 20.0
+margin_bottom = 326.0
+rect_min_size = Vector2( 0, 200 )
 
-[node name="Button" type="Button" parent="VBoxContainer"]
-margin_top = 132.0
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/PlayerInventoryContainer"]
 margin_right = 250.0
-margin_bottom = 314.0
+margin_bottom = 200.0
+rect_min_size = Vector2( 250, 200 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Button3" type="Button" parent="VBoxContainer"]
-margin_top = 318.0
-margin_right = 250.0
-margin_bottom = 500.0
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/PlayerInventoryContainer/ScrollContainer"]
+size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="PlayerInventory" type="GridContainer" parent="VBoxContainer/PlayerInventoryContainer/ScrollContainer/CenterContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 3
+
+[node name="StoreInventoryLabelContainer" type="CenterContainer" parent="VBoxContainer"]
+editor/display_folded = true
+margin_top = 330.0
+margin_right = 250.0
+margin_bottom = 344.0
+
+[node name="StoreInventoryLabel" type="Label" parent="VBoxContainer/StoreInventoryLabelContainer"]
+margin_left = 74.0
+margin_right = 175.0
+margin_bottom = 14.0
+text = "Store inventory:"
+
+[node name="StoreInventoryContainer" type="CenterContainer" parent="VBoxContainer"]
+margin_top = 348.0
+margin_right = 250.0
+margin_bottom = 548.0
+rect_min_size = Vector2( 0, 200 )
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/StoreInventoryContainer"]
+margin_left = 125.0
+margin_top = 100.0
+margin_right = 125.0
+margin_bottom = 100.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="StoreInventory" type="GridContainer" parent="VBoxContainer/StoreInventoryContainer/ScrollContainer"]
+size_flags_horizontal = 3
+columns = 3
+
+[node name="MoneyLabel" type="Label" parent="VBoxContainer"]
+margin_top = 552.0
+margin_right = 250.0
+margin_bottom = 566.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+valign = 2
+
+[node name="HealthLabel" type="Label" parent="VBoxContainer"]
+margin_top = 570.0
+margin_right = 250.0
+margin_bottom = 584.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+valign = 2
