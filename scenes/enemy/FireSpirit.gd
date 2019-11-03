@@ -8,8 +8,7 @@ func _physics_process(delta):
 	var vector_to_target
 	var has_line_of_sight
 
-	rotation = 0
-	applied_force = Vector2(0, 0)
+	_shared_update(delta)
 	target = _get_nearest_player()
 	vector_to_target = target.get_position() - position
 
@@ -21,11 +20,21 @@ func _physics_process(delta):
 
 	if position.distance_to(target.get_position()) > attack_range or !has_line_of_sight:
 		_chase_target()
+		$AnimationPlayer.play("move_hop")
 	else:
 		_brake()
+		
+		if position.direction_to(target.get_position()).x < 0:
+			$Sprite.set_flip_h(true)
+		else:
+			$Sprite.set_flip_h(false)
+		
+		if $AnimationPlayer.current_animation == 'move_hop':
+			$AnimationPlayer.stop()
+			$Sprite.set_frame(0)
 
 		if can_fire:
-			_shoot_projectile()
+			$AnimationPlayer.play('attack')
 			can_fire = false
 			$FireTimer.start(1)
 
@@ -44,7 +53,9 @@ func _shoot_projectile():
 		2.5, # damage/second
 		5   # duration
 	)
+	projectile.set_sprite('fireball')
 	projectile.set_scale(Vector2(2,2))
+	projectile.rotate_sprite(position.direction_to(target.get_position()).angle())
 	get_tree().get_root().add_child(projectile)
 
 func _on_FireTimer_timeout():

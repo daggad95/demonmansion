@@ -1,15 +1,28 @@
 extends Weapon
 
+static func get_weapon_props():
+	return {
+		'clip_size': 35,
+		'weapon_name': 'Assault Rifle',
+		'price': 100,
+		'reload_time': 2,
+		'fire_rate': 10,
+		'spread': PI/16,
+		'num_projectiles': 1,
+		'automatic': true
+	}
+
 func _ready():
-	clip_size   = 35
-	clip        = 35
-	weapon_name = 'Assault Rifle'
-	price       = 100
-	reload_time = 2
-	fire_rate = 10
-	spread = PI/16
-	num_projectiles = 1
-	automatic = true
+	var weapon_props = get_weapon_props()
+	clip_size   	= weapon_props['clip_size']
+	clip        	= weapon_props['clip_size']
+	weapon_name 	= weapon_props['weapon_name']
+	price       	= weapon_props['price']
+	reload_time 	= weapon_props['reload_time']
+	fire_rate   	= weapon_props['fire_rate']
+	spread      	= weapon_props['spread']
+	num_projectiles = weapon_props['num_projectiles']
+	automatic 		= weapon_props['automatic']
 	
 func _gen_projectile():
 	var projectile = Projectile.instance()
