@@ -4,6 +4,7 @@ class_name Enemy
 var speed = 50.0
 var steer_rate = 300.0
 var health = 100.0
+var face_right = true
 var map
 var target
 var players
@@ -139,6 +140,6 @@ func _shared_update(delta):
 	applied_force = Vector2(0, 0)
 		
 	if linear_velocity.x > 0:
-		$Sprite.set_flip_h(false)
+		$Sprite.set_flip_h(face_right)
 	elif linear_velocity.x <  0:
-		$Sprite.set_flip_h(true)
+		$Sprite.set_flip_h(!face_right)

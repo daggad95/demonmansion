@@ -33,7 +33,7 @@ func shoot():
 		print('reloading')
 		$ReloadTimer.start(reload_time)
 		reloading = true
-
+		
 func get_name():
 	return weapon_name
 
