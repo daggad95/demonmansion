@@ -4,6 +4,9 @@ class_name Enemy
 var speed = 50.0
 var steer_rate = 300.0
 var health = 100.0
+var knockback_speed = 50
+var knockback_duration = 0.1
+var base_hit = 10
 var face_right = true
 var map
 var target
@@ -135,11 +138,25 @@ func _brake():
 	else:
 		linear_velocity = Vector2(0, 0)
 
+func _charge(charge_target):
+	var target_dir = position.direction_to(charge_target)
+	var target_vel = target_dir.normalized() * speed
+	var steer_force = (target_vel - linear_velocity).normalized() * steer_rate
+	add_central_force(steer_force)
+
 func _shared_update(delta):
 	rotation = 0
 	applied_force = Vector2(0, 0)
+	
+	for body in $Bubble.get_overlapping_bodies():
+		if body.is_in_group('player'):
+			body.apply_knockback(
+				position.direction_to(body.get_position()),
+				knockback_speed,
+				knockback_duration)
+			body.take_damage(base_hit)
 		
 	if linear_velocity.x > 0:
-		$Sprite.set_flip_h(face_right)
-	elif linear_velocity.x <  0:
 		$Sprite.set_flip_h(!face_right)
+	elif linear_velocity.x <  0:
+		$Sprite.set_flip_h(face_right)

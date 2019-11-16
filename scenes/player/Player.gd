@@ -17,6 +17,7 @@ var player_name = "<UNDEFINED>"
 var player_id = -1
 var burning = false
 var burn_damage = 0
+var knockback = null
 
 const TIMER_LIMIT = 0.5
 var timer = 0.0
@@ -72,6 +73,10 @@ func inflict_burn(damage_per_second, duration):
 	else:
 		burn_damage = max(damage_per_second, burn_damage)
 		$BurnTimer.set_wait_time(max(duration, $BurnTimer.get_time_left()))
+
+func apply_knockback(dir, speed, duration):
+	knockback = dir * speed
+	$KnockbackTimer.start(duration)
 	
 func init(init_pos, init_name, init_id):
 	position = init_pos
@@ -98,6 +103,10 @@ func _physics_process(delta):
 	
 	if burning:
 		take_damage(delta * burn_damage)
+	
+	if knockback:
+		move_and_collide(knockback*delta)
+		emit_signal('player_moved', player_name, position)
 		
 	if velocity.length() > 0:
 		move_and_slide(velocity)
@@ -113,3 +122,6 @@ func _on_Timer_timeout():
 func _on_BurnTimer_timeout():
 	burning = false
 	$FireSprite.hide()
+
+func _on_KnockbackTimer_timeout():
+	knockback = null
