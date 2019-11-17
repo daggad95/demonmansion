@@ -84,5 +84,11 @@ anims/Burn = SubResource( 4 )
 
 [node name="BurnTimer" type="Timer" parent="."]
 one_shot = true
+
+[node name="KnockbackTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="InvulnerableTimer" type="Timer" parent="."]
 [connection signal="timeout" from="NotInStoreMessage/Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="BurnTimer" to="." method="_on_BurnTimer_timeout"]
+[connection signal="timeout" from="KnockbackTimer" to="." method="_on_KnockbackTimer_timeout"]
