@@ -4,15 +4,17 @@ onready var game_node = get_tree().get_root().get_node("Game")
 onready var player_count = game_node.get_player_count()
 onready var store_window = get_node("CanvasLayer/MarginContainer")
 
-const Pistol = preload("res://scenes/weapon/Pistol.tscn")
-const Shotgun = preload("res://scenes/weapon/Shotgun.tscn")
-const AssaultRifle = preload("res://scenes/weapon/AssaultRifle.tscn")
-const Sniper = preload("res://scenes/weapon/Sniper.tscn")
+const Pistol = preload("res://scenes/weapon/Pistol.gd")
+const Shotgun = preload("res://scenes/weapon/Shotgun.gd")
+const AssaultRifle = preload("res://scenes/weapon/AssaultRifle.gd")
+const Sniper = preload("res://scenes/weapon/Sniper.gd")
 const WEAPONS = [Pistol, Shotgun, AssaultRifle, Sniper]
 
 const player_panel = preload("res://scenes/menu/store/PlayerPanel.tscn")
 const TOTAL_WEAPON_COUNT = 4
 const PLAYER_PANEL_WIDTH = 250
+
+var player_panels = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -28,11 +30,7 @@ func _process(delta):
 			
 
 func create_store_window():
-	store_window.hide()
-	
-	var init_weapons = []
-	for weapon in WEAPONS:
-		init_weapons.append(weapon.instance())		
+	store_window.hide()	
 	
 	# Scale the store window width by the number of players
 	$CanvasLayer/MarginContainer.margin_left = -1 * (PLAYER_PANEL_WIDTH/2) * player_count
@@ -44,6 +42,7 @@ func create_store_window():
 	for i in range(player_count):
 		var player = players[i]
 		var panel = player_panel.instance()
+		player_panels.append(panel)
 		self.get_node("CanvasLayer/MarginContainer/HBoxContainer").add_child(panel)
 		panel.rect_position.x = PLAYER_PANEL_WIDTH * i
 		panel.get_node("VBoxContainer/PlayerName").text = player.get_name()
@@ -54,22 +53,6 @@ func create_store_window():
 		player_sprite.offset.x = PLAYER_PANEL_WIDTH/2
 		player_sprite.set_scale(Vector2(1, 1))
 		
-		# Populate the list of player owned weapons
-		for i in range(TOTAL_WEAPON_COUNT):
-			for weapon in init_weapons:
-				print(weapon.get_name())
-				if player.has_weapon(weapon):
-					print(player.get_name(), " has weapon ", weapon.get_name())
-					
-					var weapon_container = CenterContainer.new()
-					weapon_container.set_custom_minimum_size(Vector2(50, 50))
-					var weapon_duplicate = weapon.duplicate()
-					weapon_container.add_child(weapon_duplicate)
-					weapon_duplicate.set_scale(Vector2(2, 2))
-					weapon_duplicate.set_offset(Vector2(30, 12))
-					
-					panel.get_node("VBoxContainer/PlayerInventoryContainer/ScrollContainer/CenterContainer/PlayerInventory").add_child(weapon_container)
-
 		var money_format_string = "%s money: %s"
 		var money_actual_string = money_format_string % [player.get_name(), str(player.get_money())]
 		panel.get_node("VBoxContainer/MoneyLabel").text = money_actual_string
@@ -81,5 +64,29 @@ func create_store_window():
 func _on_open_store(player):
 	if overlaps_body(player):
 		store_window.visible = !store_window.visible
+		
+		var players = game_node.get_players()
+		for i in range(player_count):
+			var current_player = players[i]
+			var panel = player_panels[i]
+			var player_inventory = panel.get_node("VBoxContainer/PlayerInventoryContainer/VBoxContainer/ScrollContainer/CenterContainer/PlayerInventory")
+			for child in player_inventory.get_children():
+				child.queue_free()
+			
+			for weapon in WEAPONS:
+				var weapon_props = weapon.get_weapon_props()
+				if current_player.has_weapon(weapon_props['weapon_name']):
+					
+					for i in range(100):
+						var weapon_container = CenterContainer.new()
+						var wep_texture_rect = TextureRect.new()
+						wep_texture_rect.set_texture(load(weapon_props['icon']))
+						
+						var wep_texture_rect_size = wep_texture_rect.get_texture().get_size()
+						weapon_container.set_custom_minimum_size(Vector2(50,50))
+						weapon_container.add_child(wep_texture_rect)
+						
+						player_inventory.add_child(weapon_container)
+					
 	else:
 		player.showMessage()

@@ -9,7 +9,8 @@ static func get_weapon_props():
 		'fire_rate': 1,
 		'spread': PI/4,
 		'num_projectiles': 15,
-		'automatic': false
+		'automatic': false,
+		'texture': "res://assets/101-micro-pixel-guns/palette-1/guns/sheet-#1-with-firing.png"
 	}
 
 func _ready():

@@ -6,7 +6,8 @@ const FireSpirit = preload("res://scenes/enemy/FireSpirit.tscn")
 const Ogre = preload("res://scenes/enemy/Ogre.tscn")
 const Hellhound = preload("res://scenes/enemy/Hellhound.tscn")
 const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
-const NUM_PLAYERS = 1
+
+export var num_players = 0
 export var num_zombies = 0
 export var num_fire_spirits = 0
 export var num_ogres = 0
@@ -44,7 +45,7 @@ func _enter_tree():
 	camera.init(self, players)
 	add_child(camera)
 
-	for i in range(NUM_PLAYERS):
+	for i in range(num_players):
 		var player = Player.instance()
 		player.init(Vector2(100*i + 100, 100), "Player%d" % (i+1), i+1)
 		player.connect("player_moved", $Map, "_on_player_moved")
@@ -73,7 +74,7 @@ func _on_ExitConfirmation_confirmed():
 	get_tree().quit()
 
 func get_player_count():
-	return NUM_PLAYERS
+	return num_players
 	
 func get_players():
 	return players

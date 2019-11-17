@@ -9,7 +9,8 @@ static func get_weapon_props():
 		'fire_rate': 10,
 		'spread': PI/16,
 		'num_projectiles': 1,
-		'automatic': true
+		'automatic': true,
+		'icon': "res://assets/WWIIweapons/StG 44.png"
 	}
 
 func _ready():

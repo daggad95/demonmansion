@@ -60,9 +60,10 @@ func add_to_inventory(weapon):
 func get_inventory():
 	return inventory
 	
-func has_weapon(weapon):
-	for wep in inventory:
-		if wep.get_name() == weapon.get_name():
+func has_weapon(weapon_name):
+	for player_weapon in inventory:
+		if player_weapon.get_name() == weapon_name:
+			print("has_weapon(): ", player_weapon.get_name(), " ", weapon_name)
 			return true
 	return false
 
@@ -96,11 +97,14 @@ func init(init_pos, init_name, init_id):
 	var pistol = Pistol.instance()
 	inventory.append(pistol)
 	add_child(pistol)
-	equipped_weapon = pistol
-	add_to_group('player')
 	
 	# Debug
-	print(self.get_name(), ": pistol equipped (default)")
+	var ar = AssaultRifle.instance()
+	inventory.append(ar)
+	add_child(ar)
+	
+	equipped_weapon = pistol
+	add_to_group('player')
 
 func _physics_process(delta):
 	get_input()
