@@ -103,6 +103,11 @@ func init(init_pos, init_name, init_id):
 	inventory.append(ar)
 	add_child(ar)
 	
+	# Debug
+	var sniper = Sniper.instance()
+	inventory.append(sniper)
+	add_child(sniper)
+	
 	equipped_weapon = pistol
 	add_to_group('player')
 
