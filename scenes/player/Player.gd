@@ -100,14 +100,15 @@ func init(init_pos, init_name, init_id):
 	
 	# Debug
 	var ar = AssaultRifle.instance()
-	inventory.append(ar)
-	add_child(ar)
-	
-	# Debug
 	var sniper = Sniper.instance()
+	var shotgun = Shotgun.instance()
+	inventory.append(ar)
 	inventory.append(sniper)
+	inventory.append(shotgun)
+	add_child(ar)
 	add_child(sniper)
-	
+	add_child(shotgun)
+
 	equipped_weapon = pistol
 	add_to_group('player')
 
