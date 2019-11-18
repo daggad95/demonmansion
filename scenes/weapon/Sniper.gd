@@ -10,7 +10,7 @@ static func get_weapon_props():
 		'spread': PI/128,
 		'num_projectiles': 1,
 		'automatic': false,
-		'texture': "res://assets/101-micro-pixel-guns/palette-1/guns/sheet-#1-with-firing.png"
+		'texture': "res://assets/WWIIweapons/Mosin Nagant.png"
 	}
 
 func _ready():
