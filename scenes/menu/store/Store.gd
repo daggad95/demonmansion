@@ -61,6 +61,7 @@ func create_store_window():
 #		var health_format_string = "%s health: %s"
 #		var health_actual_string = health_format_string % [player.get_name(), str(player.get_health())]
 #		panel.get_node("VBoxContainer/HealthLabel").text = health_actual_string
+	print(store_window.get_child(0))
 
 
 func _on_open_store(player):

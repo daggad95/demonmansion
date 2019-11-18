@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://assets/store/sniper.png" type="Texture" id=1]
+[ext_resource path="res://assets/store/empty_slot_unhovered.png" type="Texture" id=2]
+[ext_resource path="res://assets/misc/Male 01-1_front.png" type="Texture" id=3]
+[ext_resource path="res://assets/store/empty_slot_hovered.png" type="Texture" id=4]
+[ext_resource path="res://assets/store/slot_click_mask.png" type="BitMap" id=5]
+
+[node name="ItemSlot" type="Control"]
+margin_right = 80.0
+margin_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_min_size = Vector2( 80, 80 )
+
+[node name="WeaponTextureRect" type="TextureRect" parent="."]
+rect_min_size = Vector2( 80, 80 )
+texture = ExtResource( 1 )
+stretch_mode = 1
+
+[node name="SlotFrame" type="TextureButton" parent="."]
+show_behind_parent = true
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -40.0
+margin_top = -40.0
+margin_right = 40.0
+margin_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_min_size = Vector2( 80, 80 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture_normal = ExtResource( 2 )
+texture_pressed = ExtResource( 3 )
+texture_hover = ExtResource( 4 )
+texture_click_mask = ExtResource( 5 )
+expand = true
