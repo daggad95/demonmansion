@@ -5,12 +5,14 @@ const Zombie = preload("res://scenes/enemy/Zombie.tscn")
 const FireSpirit = preload("res://scenes/enemy/FireSpirit.tscn")
 const Ogre = preload("res://scenes/enemy/Ogre.tscn")
 const Hellhound = preload("res://scenes/enemy/Hellhound.tscn")
+const BossMan = preload("res://scenes/enemy/BossMan.tscn")
 const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
 const NUM_PLAYERS = 1
 export var num_zombies = 0
 export var num_fire_spirits = 0
 export var num_ogres = 0
 export var num_hellhound = 0
+export var bossman = false
 
 var players = []
 var camera
@@ -37,6 +39,11 @@ func _ready():
 	for i in range(num_hellhound):
 		var enemy = Hellhound.instance()
 		enemy.init(Vector2(25*i + 50, 200), $Map, players)
+		add_child(enemy)
+	
+	if bossman:
+		var enemy = BossMan.instance()
+		enemy.init(Vector2(25 + 50, 210), $Map, players)
 		add_child(enemy)
 		
 func _enter_tree():	
@@ -77,3 +84,6 @@ func get_player_count():
 	
 func get_players():
 	return players
+
+func get_map():
+	return $Map

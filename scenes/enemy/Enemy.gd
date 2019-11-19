@@ -18,7 +18,14 @@ func init(init_pos, init_map, init_players):
 	players = init_players
 	target = _get_nearest_player()
 	add_to_group('enemy')
+
+func take_damage(damage):
+	print("taking %d damage" % damage)
+	health -= damage
 	
+	if health <= 0:
+		queue_free()
+
 func _get_nearest_player():
 	var min_dist = INF
 	var nearest
@@ -30,13 +37,6 @@ func _get_nearest_player():
 			min_dist = dist
 			nearest = player
 	return nearest
-
-func take_damage(damage):
-	print("taking %d damage" % damage)
-	health -= damage
-	
-	if health <= 0:
-		queue_free()
 
 func _seek_force():
 	var target_dir
