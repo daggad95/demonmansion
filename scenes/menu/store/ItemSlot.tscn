@@ -1,9 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scenes/menu/store/ItemSlot.gd" type="Script" id=1]
 [ext_resource path="res://assets/store/empty_slot_unhovered.png" type="Texture" id=2]
-[ext_resource path="res://assets/misc/Male 01-1_front.png" type="Texture" id=3]
-[ext_resource path="res://assets/store/empty_slot_hovered.png" type="Texture" id=4]
+[ext_resource path="res://assets/store/empty_slot_hovered.png" type="Texture" id=3]
 
 [node name="ItemSlot" type="Control"]
 margin_right = 80.0
@@ -33,7 +32,6 @@ rect_min_size = Vector2( 80, 80 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 texture_normal = ExtResource( 2 )
-texture_pressed = ExtResource( 3 )
-texture_hover = ExtResource( 4 )
+texture_hover = ExtResource( 3 )
 expand = true
 [connection signal="pressed" from="TextureButton" to="." method="_on_TextureButton_pressed"]

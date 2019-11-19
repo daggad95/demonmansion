@@ -6,7 +6,7 @@ signal open_store
 
 var health = 100
 var money = 0
-var inventory = []
+var inventory = [] # Stores weapon instances, not string weapon names
 var equipped_weapon = null
 var speed = 100
 var velocity = Vector2()
@@ -49,11 +49,11 @@ func add_money(amount):
 	
 func get_health():
 	return health
-	
-func add_to_inventory(weapon):
-	inventory.append(weapon)
-	
-# Get an array of Weapon objects that the player currently owns
+#
+#func add_to_inventory(weapon):
+#	inventory.append(weapon)
+#
+# Get an array of weapon instances
 func get_inventory():
 	return inventory
 	
@@ -85,11 +85,11 @@ func inflict_burn(damage_per_second, duration):
 		burn_damage = max(damage_per_second, burn_damage)
 		$BurnTimer.set_wait_time(max(duration, $BurnTimer.get_time_left()))
 
+# Takes a string weapon name and adds a weapon instance to the player inventory
 func add_weapon_to_inventory(weapon_name):
 	var weapon = WEAPON_FACTORY.create(weapon_name)
 	inventory.append(weapon)
 	add_child(weapon)
-	print(inventory)
 
 func remove_weapon_from_inventory(weapon_name):
 	var match_idx = -1

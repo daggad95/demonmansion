@@ -25,8 +25,6 @@ func _create_item_slot(player, weapon_name, inventory, inventory_type):
 func init(player):
 	var pname_label = $PlayerNameContainer/PlayerName
 	var ptexture = $PlayerTextureContainer
-	# Added a CenterContainer to center the grid horizontally in the scroll container
-	
 	pname_label.set_text(player.get_name())
 	
 	# Find the player sprite and add it to the player panel
@@ -44,17 +42,23 @@ func init(player):
 		_create_item_slot(player, weapon_name, get_node(pinventory_grid), 'player')
 
 	# Pad the player inventory section with empty item slots
-	while get_node(pinventory_grid).get_child_count() < 15:
+	while get_node(pinventory_grid).get_child_count() < 9:
 		var item_slot_container = CenterContainer.new()
 		var item_slot = ItemSlot.instance()
 		item_slot_container.add_child(item_slot)
 		get_node(pinventory_grid).add_child(item_slot_container)
 		
 	for weapon_name in WEAPON_FACTORY.get_weapon_names():
+#		print("debug: ", typeof(weapon_name)) # is a string
 		var props = WEAPON_FACTORY.get_props(weapon_name)
 		_create_item_slot(player, weapon_name, get_node(sinventory_grid), 'store')
-		print(props["weapon_name"])
-		# pass weapon name, get weapon information or weapon instance
+	
+	# Pad the store inventory section with empty item slots
+	while get_node(sinventory_grid).get_child_count() < 9:
+		var item_slot_container = CenterContainer.new()
+		var item_slot = ItemSlot.instance()
+		item_slot_container.add_child(item_slot)
+		get_node(sinventory_grid).add_child(item_slot_container)
 	
 	
 	
