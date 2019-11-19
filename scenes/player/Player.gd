@@ -1,8 +1,5 @@
 extends KinematicBody2D
-const Pistol = preload("res://scenes/weapon/Pistol.tscn")
-const Shotgun = preload("res://scenes/weapon/Shotgun.tscn")
-const AssaultRifle = preload("res://scenes/weapon/AssaultRifle.tscn")
-const Sniper = preload("res://scenes/weapon/Sniper.tscn")
+const WEAPON_FACTORY = preload("res://scenes/weapon/WeaponFactory.gd")
 class_name Player
 signal player_moved
 signal open_store
@@ -87,6 +84,21 @@ func inflict_burn(damage_per_second, duration):
 	else:
 		burn_damage = max(damage_per_second, burn_damage)
 		$BurnTimer.set_wait_time(max(duration, $BurnTimer.get_time_left()))
+
+func add_weapon_to_inventory(weapon_name):
+	var weapon = WEAPON_FACTORY.create(weapon_name)
+	inventory.append(weapon)
+	add_child(weapon)
+	print(inventory)
+
+func remove_weapon_from_inventory(weapon_name):
+	var match_idx = -1
+	for i in range(len(inventory)):
+		if weapon_name == inventory[i].get_name():
+			match_idx = -1
+	
+	inventory[match_idx].queue_free()
+	inventory.remove(match_idx)
 	
 func init(init_pos, init_name, init_id):
 	position = init_pos
@@ -94,22 +106,10 @@ func init(init_pos, init_name, init_id):
 	player_id = init_id
 	
 	# Set the default weapon to Pistol
-	var pistol = Pistol.instance()
-	inventory.append(pistol)
-	add_child(pistol)
+	add_weapon_to_inventory('Pistol')
+	add_weapon_to_inventory('Sniper')
 	
-	# Debug
-	var ar = AssaultRifle.instance()
-	var sniper = Sniper.instance()
-	var shotgun = Shotgun.instance()
-	inventory.append(ar)
-	inventory.append(sniper)
-	inventory.append(shotgun)
-	add_child(ar)
-	add_child(sniper)
-	add_child(shotgun)
-
-	equipped_weapon = pistol
+	equipped_weapon = inventory[0]
 	add_to_group('player')
 
 func _physics_process(delta):

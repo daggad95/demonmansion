@@ -1,23 +1,17 @@
 extends Node
+const WEAPON_FACTORY = preload("res://scenes/weapon/WeaponFactory.gd")
 
 var player
-var weapon
+var weapon_name
 var inventory_type # "player" or "store"
 
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass
-
-
-func init(player, weapon, inventory_type):
+func init(player, weapon_name, inventory_type):
 	self.player = player
-	self.weapon = weapon
+	self.weapon_name = weapon_name
 	self.inventory_type = inventory_type
 
 
 func _on_TextureButton_pressed():
 	# Empty slots have no weapon, so weapon is null 
-	if weapon != null and inventory_type == "store":
-		player.add_to_inventory(weapon)
-		print("Added to inventory: " + weapon.get_name())
+	if weapon_name != null and inventory_type == "store":
+		player.add_weapon_to_inventory(WEAPON_FACTORY.create(weapon_name))
