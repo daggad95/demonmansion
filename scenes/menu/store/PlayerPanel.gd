@@ -7,6 +7,7 @@ const Pistol = preload("res://scenes/weapon/Pistol.gd")
 const Shotgun = preload("res://scenes/weapon/Shotgun.gd")
 const AssaultRifle = preload("res://scenes/weapon/AssaultRifle.gd")
 const Sniper = preload("res://scenes/weapon/Sniper.gd")
+
 const WEAPONS = [Pistol, Shotgun, AssaultRifle, Sniper]
 
 func init(player):
@@ -31,6 +32,8 @@ func init(player):
 		
 		var item_slot_container = CenterContainer.new()
 		var item_slot = ItemSlot.instance()
+		item_slot.init(player, weapon, "player")
+		
 		item_slot_container.add_child(item_slot)
 		pinventory_grid.add_child(item_slot_container)
 		
@@ -48,3 +51,17 @@ func init(player):
 		var item_slot = ItemSlot.instance()
 		item_slot_container.add_child(item_slot)
 		pinventory_grid.add_child(item_slot_container)
+		
+	for weapon in WEAPONS:
+		var props = weapon.get_weapon_props()
+		print(props["weapon_name"])
+		# pass weapon name, get weapon information or weapon instance
+	
+	
+	
+	
+	
+	
+	
+	
+	
