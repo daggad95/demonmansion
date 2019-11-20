@@ -2,6 +2,8 @@ extends Node
 
 const WEAPON_FACTORY = preload("res://scenes/weapon/WeaponFactory.gd")
 
+signal added_weapon_to_player
+
 var player
 var weapon_name
 var inventory_type # "player" or "store"
@@ -25,18 +27,24 @@ func _on_TextureButton_pressed():
 #			print(old_inv)
 #
 			player.add_weapon_to_inventory(weapon_name)
-			print("Given ", weapon_name, " to ", player.get_name())
+			emit_signal("added_weapon_to_player", player, weapon_name)
+#			print("Given ", weapon_name, " to ", player.get_name())
 #
 #			var new_inv = "new: "
 #			for weapon in player.get_inventory():
 #				new_inv = new_inv + weapon.get_name() + " "
 #			print(new_inv)
-		else:
-			print("already has weapon")
+#		else:
+#			print("already has weapon")
 			
 		# Took two hours to debug for some reason
 		# This line: player.add_weapon_to_inventory(WEAPON_FACTORY.create(weapon_name)) should
 		# have been player.add_weapon_to_inventory(weapon_name).
 		# add_weapon_to_inventory() takes a string and instances the weapon there
 
+func get_player():
+	return player
+	
+func get_weapon_name():
+	return weapon_name
 
