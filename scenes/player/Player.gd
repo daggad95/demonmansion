@@ -60,7 +60,7 @@ func get_inventory():
 func has_weapon(weapon_name):
 	for player_weapon in inventory:
 		if player_weapon.get_name() == weapon_name:
-			print("has_weapon(): ", player_weapon.get_name(), " ", weapon_name)
+			#print("has_weapon(): ", player_weapon.get_name(), " ", weapon_name)
 			return true
 	return false
 
