@@ -1,4 +1,5 @@
 extends KinematicBody2D
+
 const WEAPON_FACTORY = preload("res://scenes/weapon/WeaponFactory.gd")
 class_name Player
 signal player_moved
@@ -15,6 +16,7 @@ var player_id = -1
 var burning = false
 var burn_damage = 0
 var knockback = null
+var can_shoot = true # stop players from shooting when store open
 
 const TIMER_LIMIT = 0.5
 var timer = 0.0
@@ -37,10 +39,11 @@ func get_input():
 		
 	velocity = velocity.normalized() * speed
 	
-	if not equipped_weapon.is_automatic() and Input.is_action_just_pressed('player%d_shoot' % player_id):
-		equipped_weapon.shoot()
-	if equipped_weapon.is_automatic() and Input.is_action_pressed('player%d_shoot' % player_id):
-		equipped_weapon.shoot()
+	if can_shoot:
+		if not equipped_weapon.is_automatic() and Input.is_action_just_pressed('player%d_shoot' % player_id):
+			equipped_weapon.shoot()
+		if equipped_weapon.is_automatic() and Input.is_action_pressed('player%d_shoot' % player_id):
+			equipped_weapon.shoot()
 		
 func get_money():
 	return money
@@ -146,3 +149,11 @@ func _on_BurnTimer_timeout():
 
 func _on_KnockbackTimer_timeout():
 	knockback = null
+	
+func _on_store_opened():
+	can_shoot = false
+	
+func _on_store_closed():
+	can_shoot = true
+	
+

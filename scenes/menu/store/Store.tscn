@@ -35,10 +35,12 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Panel" type="Panel" parent="CanvasLayer/MarginContainer"]
-margin_bottom = 500.0
+margin_right = 604.0
+margin_bottom = 550.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MarginContainer"]
-margin_bottom = 500.0
+margin_right = 604.0
+margin_bottom = 550.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
