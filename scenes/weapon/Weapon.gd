@@ -16,6 +16,31 @@ var automatic = false
 var fire_rate = 0 # per second
 var can_fire = true
 
+static func get_weapon_props():
+	return {
+		'clip_size': 0,
+		'weapon_name': '<UNDEFINED>',
+		'price': 0,
+		'reload_time': 0,
+		'fire_rate': 0,
+		'spread': 0,
+		'num_projectiles': 0,
+		'automatic': false,
+		'texture': ""
+	}
+
+func init():
+	var weapon_props = get_weapon_props()
+	clip_size   	= weapon_props['clip_size']
+	clip        	= weapon_props['clip_size']
+	weapon_name 	= weapon_props['weapon_name']
+	price       	= weapon_props['price']
+	reload_time 	= weapon_props['reload_time']
+	fire_rate   	= weapon_props['fire_rate']
+	spread      	= weapon_props['spread']
+	num_projectiles = weapon_props['num_projectiles']
+	automatic 		= weapon_props['automatic']
+
 func _input(event):
 	if event is InputEventMouseMotion:
 		var pos_in_viewport = self.get_global_transform_with_canvas()[2] + img_offset

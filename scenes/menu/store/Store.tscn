@@ -25,22 +25,24 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -250.0
 margin_top = -250.0
-margin_right = 250.0
 margin_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_min_size = Vector2( 0, 500 )
 rect_scale = Vector2( 0.989713, 1.00645 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Panel" type="Panel" parent="CanvasLayer/MarginContainer"]
-margin_right = 500.0
 margin_bottom = 500.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MarginContainer"]
-margin_right = 500.0
 margin_bottom = 500.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
+alignment = 1
 
 [node name="StoreHitbox" type="CollisionShape2D" parent="."]
 position = Vector2( 229.465, 159.65 )
