@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scenes/enemy/Enemy.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/enemy/Hellhound.gd" type="Script" id=2]
@@ -26,7 +26,23 @@ tracks/0/keys = {
 "values": [ 0, 6 ]
 }
 
-[node name="Hellhound" index="0" instance=ExtResource( 1 )]
+[sub_resource type="Animation" id=4]
+resource_name = "attack"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 7, 9 ]
+}
+
+[node name="Hellhound" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" parent="." index="0"]
@@ -36,12 +52,18 @@ shape = SubResource( 1 )
 shape = SubResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="." index="5"]
-position = Vector2( -0.796829, -6.50317 )
+position = Vector2( 0.0791323, 0.50456 )
 scale = Vector2( 0.75, 0.75 )
 texture = ExtResource( 3 )
 vframes = 2
 hframes = 6
+frame = 9
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="6"]
 autoplay = "Walk"
 anims/Walk = SubResource( 3 )
+anims/attack = SubResource( 4 )
+
+[node name="ChargeTimer" type="Timer" parent="." index="7"]
+one_shot = true
+[connection signal="timeout" from="ChargeTimer" to="." method="_on_ChargeTimer_timeout"]
