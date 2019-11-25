@@ -48,24 +48,8 @@ func create_store_window():
 		panel.init(player)
 		store_window.add_child(panel)
 		
-#		player_panels.append(panel)
-#		self.get_node("CanvasLayer/MarginContainer/HBoxContainer").add_child(panel)
-#		panel.get_node("VBoxContainer/PlayerName").text = player.get_name()
-#
-#		var player_sprite = player.get_node("Sprite").duplicate()
-#		panel.get_node("VBoxContainer/PlayerSpriteContainer").add_child(player_sprite)
-#		player_sprite.set_frame(1)
-#		player_sprite.offset.x = PLAYER_PANEL_WIDTH/2
-#		player_sprite.set_scale(Vector2(1, 1))
-#
-#		var money_format_string = "%s money: %s"
-#		var money_actual_string = money_format_string % [player.get_name(), str(player.get_money())]
-#		panel.get_node("VBoxContainer/MoneyLabel").text = money_actual_string
-#		var health_format_string = "%s health: %s"
-#		var health_actual_string = health_format_string % [player.get_name(), str(player.get_health())]
-#		panel.get_node("VBoxContainer/HealthLabel").text = health_actual_string
-#	print(store_window.get_child(0))
-	
+
+
 
 func _on_open_store(player):
 	if overlaps_body(player):

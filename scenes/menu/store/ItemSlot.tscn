@@ -4,28 +4,21 @@
 [ext_resource path="res://assets/store/empty_slot_unhovered.png" type="Texture" id=2]
 [ext_resource path="res://assets/store/empty_slot_hovered.png" type="Texture" id=3]
 
-[node name="ItemSlot" type="Control"]
-margin_right = 80.0
-margin_bottom = 80.0
-grow_horizontal = 2
-grow_vertical = 2
-rect_min_size = Vector2( 80, 80 )
+[node name="ItemSlot" type="MarginContainer"]
+margin_right = 40.0
+margin_bottom = 40.0
 script = ExtResource( 1 )
 
 [node name="WeaponTextureRect" type="TextureRect" parent="."]
+margin_right = 80.0
+margin_bottom = 80.0
 rect_min_size = Vector2( 80, 80 )
 stretch_mode = 1
 
 [node name="TextureButton" type="TextureButton" parent="."]
 show_behind_parent = true
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -40.0
-margin_top = -40.0
-margin_right = 40.0
-margin_bottom = 40.0
+margin_right = 80.0
+margin_bottom = 80.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 80, 80 )
@@ -34,4 +27,12 @@ size_flags_vertical = 3
 texture_normal = ExtResource( 2 )
 texture_hover = ExtResource( 3 )
 expand = true
+
+[node name="PriceLabel" type="Label" parent="."]
+margin_top = 66.0
+margin_right = 80.0
+margin_bottom = 80.0
+size_flags_vertical = 8
+align = 1
+valign = 2
 [connection signal="pressed" from="TextureButton" to="." method="_on_TextureButton_pressed"]

@@ -6,7 +6,7 @@ signal player_moved
 signal open_store
 
 var health = 100
-var money = 0
+var money = 1000
 var inventory = [] # Stores weapon instances, not string weapon names
 var equipped_weapon = null
 var speed = 100
@@ -100,10 +100,11 @@ func remove_weapon_from_inventory(weapon_name):
 	var match_idx = -1
 	for i in range(len(inventory)):
 		if weapon_name == inventory[i].get_name():
-			match_idx = -1
-	
-	inventory[match_idx].queue_free()
-	inventory.remove(match_idx)
+			match_idx = i
+			break
+	if match_idx != -1:
+		inventory[match_idx].queue_free()
+		inventory.remove(match_idx)
 
 func apply_knockback(dir, speed, duration):
 	knockback = dir * speed
@@ -121,6 +122,8 @@ func init(init_pos, init_name, init_id):
 	
 	equipped_weapon = inventory[0]
 	add_to_group('player')
+	
+	
 
 func _physics_process(delta):
 	get_input()
