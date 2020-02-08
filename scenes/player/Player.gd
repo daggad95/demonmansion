@@ -48,10 +48,10 @@ func get_input():
 	if can_shoot:
 		if not equipped_weapon.is_automatic() and Input.is_action_just_pressed('player%d_shoot' % player_id):
 			equipped_weapon.shoot()
-      emit_signal('fired_weapon', equipped_weapon)
+			emit_signal('fired_weapon', equipped_weapon)
 		if equipped_weapon.is_automatic() and Input.is_action_pressed('player%d_shoot' % player_id):
 			equipped_weapon.shoot()
-      emit_signal('fired_weapon', equipped_weapon)
+			emit_signal('fired_weapon', equipped_weapon)
 		
 func get_money():
 	return money
