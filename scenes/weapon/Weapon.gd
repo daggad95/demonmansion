@@ -1,6 +1,7 @@
 extends Sprite
 class_name Weapon
 const Projectile = preload("res://scenes/projectile/Projectile.tscn")
+signal reload_finish
 
 var clip_size   = 0
 var clip        = 0
@@ -67,6 +68,12 @@ func get_price():
 
 func is_automatic():
 	return automatic
+
+func get_clip():
+	return clip
+
+func get_clip_size():
+	return clip_size
 	
 func _process_projectile(projectile):
 	projectile.rotate(rand_range(-spread/2, spread/2))
@@ -78,6 +85,7 @@ func _gen_projectile():
 
 func _on_ReloadTimer_timeout():
 	clip = clip_size
+	emit_signal('reload_finish', self)
 	reloading = false
 
 func _on_FireTimer_timeout():
