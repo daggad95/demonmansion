@@ -5,6 +5,7 @@ signal player_moved
 signal open_store
 signal damage_taken
 signal fired_weapon
+signal switch_weapon
 
 var max_health = 100.0
 var health = 100.0
@@ -28,13 +29,13 @@ func _ready():
 func get_input():
 	velocity = Vector2()
 	if Input.is_action_pressed('player%d_right' % player_id):
-	    velocity.x += 1
+		velocity.x += 1
 	if Input.is_action_pressed('player%d_left' % player_id):
-	    velocity.x -= 1
+		velocity.x -= 1
 	if Input.is_action_pressed('player%d_down' % player_id):
-	    velocity.y += 1
+		velocity.y += 1
 	if Input.is_action_pressed('player%d_up' % player_id):
-	    velocity.y -= 1
+		velocity.y -= 1
 	if Input.is_action_just_pressed('player%d_open_store' % player_id):
 		emit_signal('open_store', self)
 		
@@ -46,6 +47,7 @@ func get_input():
 	if equipped_weapon.is_automatic() and Input.is_action_pressed('player%d_shoot' % player_id):
 		equipped_weapon.shoot()
 		emit_signal('fired_weapon', equipped_weapon)
+	
 		
 func get_money():
 	return money
@@ -79,6 +81,9 @@ func get_sprite():
 
 func get_id():
 	return player_id
+
+func get_equipped_weapon():
+	return equipped_weapon
 	
 func take_damage(damage):
 	health -= damage
@@ -125,6 +130,7 @@ func init(init_pos, init_name, init_id):
 	add_weapon_to_inventory('Sniper')
 	
 	equipped_weapon = inventory[0]
+	emit_signal('switch_weapon', equipped_weapon)
 	add_to_group('player')
 
 func _physics_process(delta):

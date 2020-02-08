@@ -63,7 +63,7 @@ func _process(delta):
 	if Input.is_action_pressed("ui_cancel"):
 		emit_signal("esc_pressed")
 		get_tree().paused = true
-    
+	
 	elif Input.is_action_pressed("store_button"):
 		emit_signal("store_button_pressed")
 		# get_tree().paused = true
