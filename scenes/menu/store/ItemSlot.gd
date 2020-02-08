@@ -36,7 +36,7 @@ func _on_TextureButton_pressed():
 				if weapon.get_name() == weapon_name:
 					player_has_weapon = true
 
-			if !player_has_weapon and player.get_money() > props['price']:
+			if !player_has_weapon and player.get_money() >= props['price']:
 				player.add_weapon_to_inventory(weapon_name)
 				player.add_money(-1 * props['price'])
 				emit_signal("added_money_to_player", player, -1 * props['price'])

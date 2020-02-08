@@ -6,7 +6,7 @@ signal player_moved
 signal open_store
 
 var health = 100
-var money = 1000
+var money = 10
 var inventory = [] # Stores weapon instances, not string weapon names
 var equipped_weapon = null
 var speed = 100
@@ -27,13 +27,13 @@ func _ready():
 func get_input():
 	velocity = Vector2()
 	if Input.is_action_pressed('player%d_right' % player_id):
-	    velocity.x += 1
+		velocity.x += 1
 	if Input.is_action_pressed('player%d_left' % player_id):
-	    velocity.x -= 1
+		velocity.x -= 1
 	if Input.is_action_pressed('player%d_down' % player_id):
-	    velocity.y += 1
+		velocity.y += 1
 	if Input.is_action_pressed('player%d_up' % player_id):
-	    velocity.y -= 1
+		velocity.y -= 1
 	if Input.is_action_just_pressed('player%d_open_store' % player_id):
 		emit_signal('open_store', self)
 		

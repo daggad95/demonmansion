@@ -12,7 +12,6 @@ onready var store_window = get_node("CanvasLayer/MarginContainer")
 
 const PlayerPanel = preload("res://scenes/menu/store/PlayerPanel.tscn")
 
-
 var player_panels = []
 
 signal store_opened
@@ -20,7 +19,6 @@ signal store_closed
 
 func _ready():
 	create_store_window()
-	
 	
 func _process(delta):
 	var is_player_overlapping = false
@@ -30,7 +28,7 @@ func _process(delta):
 	if !is_player_overlapping and store_window.is_visible():
 		store_window.set_visible(false)
 		emit_signal("store_closed")
-			
+
 
 func create_store_window():
 	var store_window_container = $CanvasLayer/MarginContainer
@@ -47,14 +45,11 @@ func create_store_window():
 		var panel = PlayerPanel.instance()
 		panel.init(player)
 		store_window.add_child(panel)
-		
-
-
-
+	
 func _on_open_store(player):
 	if overlaps_body(player):
 		if store_window.is_visible():
-			emit_signal("store_closed")
+			emit_signal("store_closed") 
 		else:
 			emit_signal("store_opened")
 		store_window.set_visible(!store_window.is_visible())

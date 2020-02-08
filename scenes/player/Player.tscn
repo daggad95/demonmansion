@@ -52,7 +52,6 @@ visible = false
 shape = SubResource( 1 )
 
 [node name="NotInStoreMessage" type="Label" parent="."]
-editor/display_folded = true
 visible = false
 anchor_left = 0.5
 anchor_top = 0.5
@@ -70,7 +69,6 @@ valign = 1
 [node name="Timer" type="Timer" parent="NotInStoreMessage"]
 
 [node name="FireSprite" type="Sprite" parent="."]
-editor/display_folded = true
 visible = false
 modulate = Color( 1, 1, 1, 0.619608 )
 texture = ExtResource( 3 )
