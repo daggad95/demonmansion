@@ -5,10 +5,10 @@
 [ext_resource path="res://assets/Enemies/boss.png" type="Texture" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 36.6301, 35.3162 )
+extents = Vector2( 13.5705, 14.499 )
 
 [sub_resource type="CircleShape2D" id=2]
-radius = 59.4209
+radius = 17.6853
 
 [node name="BossMan" index="0" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
@@ -16,9 +16,16 @@ script = ExtResource( 2 )
 [node name="CollisionShape2D" parent="." index="0"]
 shape = SubResource( 1 )
 
+[node name="Bubble" parent="." index="1"]
+editor/display_folded = true
+
 [node name="CollisionShape2D" parent="Bubble" index="0"]
 shape = SubResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="." index="5"]
-scale = Vector2( 0.25, 0.25 )
+scale = Vector2( 0.1, 0.1 )
 texture = ExtResource( 3 )
+
+[node name="MergeTimer" type="Timer" parent="." index="6"]
+[connection signal="timeout" from="AttackTimer" to="." method="_on_AttackTimer_timeout"]
+[connection signal="timeout" from="MergeTimer" to="." method="_on_MergeTimer_timeout"]

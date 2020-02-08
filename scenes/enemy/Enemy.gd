@@ -1,4 +1,5 @@
 extends RigidBody2D
+signal dead
 class_name Enemy
 
 var speed = 50.0
@@ -24,7 +25,11 @@ func take_damage(damage):
 	health -= damage
 	
 	if health <= 0:
-		queue_free()
+		die()
+
+func die():
+	emit_signal("dead", self)
+	queue_free()
 
 func _get_nearest_player():
 	var min_dist = INF
