@@ -10,23 +10,6 @@ const sinventory_grid = 'StoreInventoryContainer/CenterContainer/StoreInventoryG
 var pinventory_wep_count = 0
 var sinventory_wep_count = 0
 
-func create_item_slot(player, props, inventory, inventory_type):
-	var item_slot_container = CenterContainer.new()
-	var item_slot = ItemSlot.instance()
-	item_slot.connect("added_weapon_to_player", self, "on_added_weapon_to_player")
-	item_slot.init(player, props['weapon_name'], inventory_type)
-	
-	item_slot_container.add_child(item_slot)
-	inventory.add_child(item_slot_container)
-	
-	# Update the texture of this item slot with what the player owns
-	var weapon_texture_path_format = "res://assets/store/%s.png"
-	var weapon_texture_path = weapon_texture_path_format % props['weapon_name']
-	
-	# Make sure the weapons are 80x80 and imported as textures
-	var weapon_stex = load(weapon_texture_path)
-	item_slot.get_node("WeaponTextureRect").set_texture(weapon_stex)
-
 
 func init(player):
 	var pname_label = $PlayerNameContainer/PlayerName
@@ -43,9 +26,22 @@ func init(player):
 	init_player_inventory(player)
 	init_store_inventory(player)
 	
-		
+	var money_format_string = "Money: %s"
+	var money_actual_string = money_format_string % str(player.get_money())
+	get_node("PlayerMoneyContainer/PlayerMoneyLabel").set_text(money_actual_string)
+
+
 # Add player weapons to the player inventory
 func init_player_inventory(player):
+	# reset the view if a wep is added
+	get_node("PlayerInventoryContainer").set_v_scroll(0)
+	
+	# Clear the current player inventory
+	for item_slot_container in get_node(pinventory_grid).get_children():
+		item_slot_container.queue_free()
+		pinventory_wep_count -= 1
+
+	# Create an item slot for each weapon in player inventory
 	for weapon in player.get_inventory():
 		var props = WEAPON_FACTORY.get_props(weapon.get_name())
 		var weapon_name = props['weapon_name']
@@ -60,8 +56,16 @@ func init_player_inventory(player):
 		get_node(pinventory_grid).add_child(item_slot_container)
 		pinventory_wep_count += 1
 	
+	
 # Add one of each weapon to the store inventory
-func init_store_inventory(player):	
+func init_store_inventory(player):
+	
+	# Clear the current store inventory
+	for item_slot_container in get_node(sinventory_grid).get_children():
+		item_slot_container.queue_free()
+		sinventory_wep_count -= 1
+	
+	# Create an item slot for each weapon that player doesn't have
 	for weapon_name in WEAPON_FACTORY.get_weapon_names():
 		if !player.has_weapon(weapon_name):
 			var props = WEAPON_FACTORY.get_props(weapon_name)
@@ -75,24 +79,34 @@ func init_store_inventory(player):
 		item_slot_container.add_child(item_slot)
 		get_node(sinventory_grid).add_child(item_slot_container)
 		sinventory_wep_count += 1
+
+
+func create_item_slot(player, props, inventory, inventory_type):
+	print(inventory_type)
+	var item_slot_container = CenterContainer.new()
+	var item_slot = ItemSlot.instance()
 	
+	item_slot.connect("added_money_to_player", self, "on_added_money_to_player")
+	item_slot.connect("player_inventory_changed", self, "on_player_inventory_changed")
 	
-func on_added_weapon_to_player(player, weapon_name):
-	for item_slot_container in get_node(pinventory_grid).get_children():
-		# queue_free() happens at the end of the frame
-		# that's too late for inventory grid padding
-		item_slot_container.queue_free()
-		pinventory_wep_count -= 1
+	item_slot.init(player, props['weapon_name'], inventory_type)
+	item_slot_container.add_child(item_slot)
+	inventory.add_child(item_slot_container)
+	
+	# Update the texture of this item slot with what the player owns
+	var weapon_texture_path_format = "res://assets/store/%s.png"
+	var weapon_texture_path = weapon_texture_path_format % props['weapon_name']
+	
+	# Make sure the weapons are 80x80 and imported as textures
+	var weapon_stex = load(weapon_texture_path)
+	item_slot.get_node("WeaponTextureRect").set_texture(weapon_stex)
+	item_slot.get_node("PriceLabel").set_text(String(props['price']))
+
+	
+func on_player_inventory_changed(player, weapon_name):
 	init_player_inventory(player)
-	
-	# Player/Store inventories: 
-	# Grid of CenterContainers, each holds one ItemSlot
-	# ItemSlot has TextureRect (gun icon) and TextureButton (background frame)
-	for item_slot_container in get_node(sinventory_grid).get_children():
-		item_slot_container.queue_free()
-		sinventory_wep_count -= 1
 	init_store_inventory(player)
-	
-	
-	
-	
+
+
+func on_added_money_to_player(player, money_amount):
+	get_node("PlayerMoneyContainer/PlayerMoneyLabel").set_text("Money: " + str(player.get_money()))

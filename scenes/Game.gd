@@ -1,4 +1,5 @@
 extends Node2D
+
 const Map = preload("res://scenes/map/Map.tscn")
 const Player = preload("res://scenes/player/Player.tscn")
 const Zombie = preload("res://scenes/enemy/Zombie.tscn")
@@ -58,7 +59,7 @@ func _process(delta):
 	if Input.is_action_pressed("ui_cancel"):
 		emit_signal("esc_pressed")
 		get_tree().paused = true
-    
+	
 	elif Input.is_action_pressed("store_button"):
 		emit_signal("store_button_pressed")
 		# get_tree().paused = true
