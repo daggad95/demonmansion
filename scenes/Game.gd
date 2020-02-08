@@ -1,6 +1,7 @@
 extends Node2D
 const Map = preload("res://scenes/map/Map.tscn")
 const Player = preload("res://scenes/player/Player.tscn")
+const HUD = preload("res://scenes/hud/HUD.tscn")
 const Zombie = preload("res://scenes/enemy/Zombie.tscn")
 const FireSpirit = preload("res://scenes/enemy/FireSpirit.tscn")
 const Ogre = preload("res://scenes/enemy/Ogre.tscn")
@@ -53,6 +54,10 @@ func _enter_tree():
 		player.connect("open_store", $Store, "_on_open_store")
 		players.append(player)
 		add_child(player)
+		
+		var hud = HUD.instance()
+		hud.init(player)
+		$CanvasLayer.add_child(hud)
 	
 func _process(delta):
 	if Input.is_action_pressed("ui_cancel"):

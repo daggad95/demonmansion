@@ -3,8 +3,11 @@ const WEAPON_FACTORY = preload("res://scenes/weapon/WeaponFactory.gd")
 class_name Player
 signal player_moved
 signal open_store
+signal damage_taken
+signal fired_weapon
 
-var health = 100
+var max_health = 100.0
+var health = 100.0
 var money = 0
 var inventory = [] # Stores weapon instances, not string weapon names
 var equipped_weapon = null
@@ -39,8 +42,10 @@ func get_input():
 	
 	if not equipped_weapon.is_automatic() and Input.is_action_just_pressed('player%d_shoot' % player_id):
 		equipped_weapon.shoot()
+		emit_signal('fired_weapon', equipped_weapon)
 	if equipped_weapon.is_automatic() and Input.is_action_pressed('player%d_shoot' % player_id):
 		equipped_weapon.shoot()
+		emit_signal('fired_weapon', equipped_weapon)
 		
 func get_money():
 	return money
@@ -71,10 +76,13 @@ func get_name():
 func get_sprite():
 	var player_sprite = get_node("Sprite")
 	return player_sprite
+
+func get_id():
+	return player_id
 	
 func take_damage(damage):
 	health -= damage
-	print('player took %f damage, current health: %f' % [damage, health])
+	emit_signal("damage_taken", health, max_health, damage)
 
 func inflict_burn(damage_per_second, duration):
 	if not burning:
