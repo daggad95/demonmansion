@@ -1,4 +1,5 @@
 extends Node2D
+
 const Map = preload("res://scenes/map/Map.tscn")
 const Player = preload("res://scenes/player/Player.tscn")
 const HUD = preload("res://scenes/hud/HUD.tscn")

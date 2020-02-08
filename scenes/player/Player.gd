@@ -1,4 +1,5 @@
 extends KinematicBody2D
+
 const WEAPON_FACTORY = preload("res://scenes/weapon/WeaponFactory.gd")
 class_name Player
 signal player_moved
@@ -7,9 +8,10 @@ signal damage_taken
 signal fired_weapon
 signal switch_weapon
 
+
 var max_health = 100.0
 var health = 100.0
-var money = 0
+var money = 10
 var inventory = [] # Stores weapon instances, not string weapon names
 var equipped_weapon = null
 var speed = 100
@@ -19,6 +21,7 @@ var player_id = -1
 var burning = false
 var burn_damage = 0
 var knockback = null
+var can_shoot = true # stop players from shooting when store open
 
 const TIMER_LIMIT = 0.5
 var timer = 0.0
@@ -41,13 +44,14 @@ func get_input():
 		
 	velocity = velocity.normalized() * speed
 	
-	if not equipped_weapon.is_automatic() and Input.is_action_just_pressed('player%d_shoot' % player_id):
-		equipped_weapon.shoot()
-		emit_signal('fired_weapon', equipped_weapon)
-	if equipped_weapon.is_automatic() and Input.is_action_pressed('player%d_shoot' % player_id):
-		equipped_weapon.shoot()
-		emit_signal('fired_weapon', equipped_weapon)
-	
+
+	if can_shoot:
+		if not equipped_weapon.is_automatic() and Input.is_action_just_pressed('player%d_shoot' % player_id):
+			equipped_weapon.shoot()
+      emit_signal('fired_weapon', equipped_weapon)
+		if equipped_weapon.is_automatic() and Input.is_action_pressed('player%d_shoot' % player_id):
+			equipped_weapon.shoot()
+      emit_signal('fired_weapon', equipped_weapon)
 		
 func get_money():
 	return money
@@ -110,10 +114,11 @@ func remove_weapon_from_inventory(weapon_name):
 	var match_idx = -1
 	for i in range(len(inventory)):
 		if weapon_name == inventory[i].get_name():
-			match_idx = -1
-	
-	inventory[match_idx].queue_free()
-	inventory.remove(match_idx)
+			match_idx = i
+			break
+	if match_idx != -1:
+		inventory[match_idx].queue_free()
+		inventory.remove(match_idx)
 
 func apply_knockback(dir, speed, duration):
 	knockback = dir * speed
@@ -132,6 +137,8 @@ func init(init_pos, init_name, init_id):
 	equipped_weapon = inventory[0]
 	emit_signal('switch_weapon', equipped_weapon)
 	add_to_group('player')
+	
+	
 
 func _physics_process(delta):
 	get_input()
@@ -160,3 +167,11 @@ func _on_BurnTimer_timeout():
 
 func _on_KnockbackTimer_timeout():
 	knockback = null
+	
+func _on_store_opened():
+	can_shoot = false
+	
+func _on_store_closed():
+	can_shoot = true
+	
+
