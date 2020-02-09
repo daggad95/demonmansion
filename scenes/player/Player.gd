@@ -7,6 +7,7 @@ signal open_store
 signal damage_taken
 signal fired_weapon
 signal switch_weapon
+signal money_change
 
 
 var max_health = 100.0
@@ -58,6 +59,7 @@ func get_money():
 	
 func add_money(amount):
 	money = max(money + amount, 0)
+	emit_signal('money_change', money)
 	
 func get_health():
 	return health
