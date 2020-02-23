@@ -4,17 +4,25 @@ signal menu_down
 signal menu_left
 signal menu_right
 signal menu_select
+signal menu_back
+signal menu_select_secondary
 signal player_move
 signal player_aim
 signal player_shoot
 signal player_not_shoot
+signal player_open_store
 
 const min_joy_value = 0.05
 const menu_threshold = 0.8
 var device
+var mapping = {}
 
 func init(device):
 	self.device = device
+	self.mapping['menu_select'] = JOY_XBOX_A
+	self.mapping['menu_back'] = JOY_XBOX_B
+	self.mapping['menu_select_secondary'] = JOY_XBOX_Y
+	self.mapping['player_open_store'] = JOY_XBOX_Y
 
 func _physics_process(delta):
 	var left_joy_pos = Vector2(
@@ -41,7 +49,6 @@ func _physics_process(delta):
 		if left_joy_pos.y < 0:
 			emit_signal("menu_up")
 			print("menu_up")
-			print(left_joy_pos.y)
 		
 	emit_signal("player_move", left_joy_pos.normalized())
 	
@@ -49,3 +56,7 @@ func _physics_process(delta):
 		emit_signal("player_shoot")
 	else:
 		emit_signal("player_not_shoot")
+	
+	for signal_name in mapping.keys():
+		if Input.is_joy_button_pressed(device, mapping[signal_name]):
+			emit_signal(signal_name)
