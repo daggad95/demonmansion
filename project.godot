@@ -41,6 +41,10 @@ _global_script_class_icons={
 config/name="DemonMansion"
 run/main_scene="res://scenes/menu/title/TitleScene.tscn"
 
+[autoload]
+
+Controllers="*res://scenes/controllers/Controllers.gd"
+
 [display]
 
 window/size/width=1280

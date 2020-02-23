@@ -29,31 +29,8 @@ var timer = 0.0
 
 func _ready():
 	emit_signal('player_moved', player_name, position)
-
-func get_input():
-	velocity = Vector2()
-	if Input.is_action_pressed('player%d_right' % player_id):
-		velocity.x += 1
-	if Input.is_action_pressed('player%d_left' % player_id):
-		velocity.x -= 1
-	if Input.is_action_pressed('player%d_down' % player_id):
-		velocity.y += 1
-	if Input.is_action_pressed('player%d_up' % player_id):
-		velocity.y -= 1
-	if Input.is_action_just_pressed('player%d_open_store' % player_id):
-		emit_signal('open_store', self)
-		
-	velocity = velocity.normalized() * speed
 	
 
-	if can_shoot:
-		if not equipped_weapon.is_automatic() and Input.is_action_just_pressed('player%d_shoot' % player_id):
-			equipped_weapon.shoot()
-			emit_signal('fired_weapon', equipped_weapon)
-		if equipped_weapon.is_automatic() and Input.is_action_pressed('player%d_shoot' % player_id):
-			equipped_weapon.shoot()
-			emit_signal('fired_weapon', equipped_weapon)
-		
 func get_money():
 	return money
 	
@@ -140,11 +117,23 @@ func init(init_pos, init_name, init_id):
 	emit_signal('switch_weapon', equipped_weapon)
 	add_to_group('player')
 	
-	
+func link_controller(controller):
+	controller.connect("player_move", self, "_move")
+	controller.connect("player_shoot", self, "_shoot")
+
+func _move(dir):
+	velocity = dir * speed
+
+func _shoot():
+	if can_shoot:
+		if not equipped_weapon.is_automatic():
+			equipped_weapon.shoot()
+			emit_signal('fired_weapon', equipped_weapon)
+		if equipped_weapon.is_automatic():
+			equipped_weapon.shoot()
+			emit_signal('fired_weapon', equipped_weapon)
 
 func _physics_process(delta):
-	get_input()
-	
 	if burning:
 		take_damage(delta * burn_damage)
 	

@@ -46,13 +46,18 @@ func _enter_tree():
 	camera = GameCamera.instance()
 	camera.init(self, players)
 	add_child(camera)
-
+	
+	var controllers = get_node("/root/Controllers").get_controllers()
 	for i in range(num_players):
 		var player = Player.instance()
 		player.init(Vector2(100*i + 100, 100), "Player%d" % (i+1), i+1)
 		player.connect("player_moved", $Map, "_on_player_moved")
 		player.connect("player_moved", camera, "_on_player_moved")
 		player.connect("open_store", $Store, "_on_open_store")
+		
+		if i < len(controllers):
+			player.link_controller(controllers[i])
+			
 		players.append(player)
 		add_child(player)
 		
