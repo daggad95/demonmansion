@@ -10,6 +10,7 @@ signal player_shoot
 signal player_not_shoot
 
 const min_joy_value = 0.05
+const menu_threshold = 0.8
 var device
 
 func init(device):
@@ -24,6 +25,24 @@ func _physics_process(delta):
 		left_joy_pos.x = 0
 	if abs(left_joy_pos.y) < min_joy_value:
 		left_joy_pos.y = 0
+	
+	if abs(left_joy_pos.x) > menu_threshold:
+		if left_joy_pos.x > 0:
+			emit_signal("menu_right")
+			print("menu_right")
+		if left_joy_pos.x < 0:
+			emit_signal("menu_left")
+			print("menu_left")
+	
+	if abs(left_joy_pos.y) > menu_threshold:
+		if left_joy_pos.y  > 0:
+			emit_signal("menu_down")
+			print("menu_down")
+		if left_joy_pos.y < 0:
+			emit_signal("menu_up")
+			print("menu_up")
+			print(left_joy_pos.y)
+		
 	emit_signal("player_move", left_joy_pos.normalized())
 	
 	if abs(Input.get_joy_axis(device, JOY_AXIS_7)) > min_joy_value:
