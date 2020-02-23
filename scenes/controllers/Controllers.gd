@@ -5,7 +5,6 @@ var controllers = []
 
 func _ready():
 	for device in Input.get_connected_joypads():
-		print('new controller')
 		var new_controller = Controller.new()
 		new_controller.init(device)
 		controllers.append(new_controller)
