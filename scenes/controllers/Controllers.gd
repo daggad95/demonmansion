@@ -1,3 +1,4 @@
+# Singleton class autoloaded as "Controllers"
 extends Node
 const Controller = preload("res://scenes/controllers/Controller.gd")
 var controllers = []
