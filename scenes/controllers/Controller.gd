@@ -37,18 +37,14 @@ func _physics_process(delta):
 	if abs(left_joy_pos.x) > menu_threshold:
 		if left_joy_pos.x > 0:
 			emit_signal("menu_right")
-			print("menu_right")
 		if left_joy_pos.x < 0:
 			emit_signal("menu_left")
-			print("menu_left")
 	
 	if abs(left_joy_pos.y) > menu_threshold:
 		if left_joy_pos.y  > 0:
 			emit_signal("menu_down")
-			print("menu_down")
 		if left_joy_pos.y < 0:
 			emit_signal("menu_up")
-			print("menu_up")
 		
 	emit_signal("player_move", left_joy_pos.normalized())
 	
