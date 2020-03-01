@@ -25,28 +25,40 @@ func init(device):
 	self.mapping['player_open_store'] = JOY_XBOX_Y
 
 func _physics_process(delta):
-	var left_joy_pos = Vector2(
-		Input.get_joy_axis(device, JOY_AXIS_0), 
-		Input.get_joy_axis(device, JOY_AXIS_1))
+	var analog_values = {
+		'left_joy_x': Input.get_joy_axis(device, JOY_AXIS_0),
+		'left_joy_y': Input.get_joy_axis(device, JOY_AXIS_1),
+		'right_joy_x': Input.get_joy_axis(device, JOY_AXIS_2),
+		'right_joy_y': Input.get_joy_axis(device, JOY_AXIS_3),
+		'right_trigger': Input.get_joy_axis(device, JOY_AXIS_7)
+	}
 	
-	if abs(left_joy_pos.x) < min_joy_value:
-		left_joy_pos.x = 0
-	if abs(left_joy_pos.y) < min_joy_value:
-		left_joy_pos.y = 0
+	for key in analog_values.keys():
+		if abs(analog_values[key]) < min_joy_value:
+			analog_values[key] = 0
 	
-	if abs(left_joy_pos.x) > menu_threshold:
-		if left_joy_pos.x > 0:
+	if abs(analog_values['left_joy_x']) > menu_threshold:
+		if analog_values['left_joy_x'] > 0:
 			emit_signal("menu_right")
-		if left_joy_pos.x < 0:
+		if analog_values['left_joy_x'] < 0:
 			emit_signal("menu_left")
 	
-	if abs(left_joy_pos.y) > menu_threshold:
-		if left_joy_pos.y  > 0:
+	if analog_values['left_joy_y'] > menu_threshold:
+		if analog_values['left_joy_y']  > 0:
 			emit_signal("menu_down")
-		if left_joy_pos.y < 0:
+		if analog_values['left_joy_y'] < 0:
 			emit_signal("menu_up")
 		
-	emit_signal("player_move", left_joy_pos.normalized())
+	emit_signal("player_move", Vector2(
+		analog_values['left_joy_x'], 
+		analog_values['left_joy_y']
+	).normalized())
+	
+	if abs(analog_values['right_joy_x']) > 0 or abs(analog_values['right_joy_y']) > 0:
+		emit_signal("player_aim", Vector2(
+			analog_values['right_joy_x'],
+			analog_values['right_joy_y']
+		).normalized())
 	
 	if abs(Input.get_joy_axis(device, JOY_AXIS_7)) > min_joy_value:
 		emit_signal("player_shoot")

@@ -9,7 +9,6 @@ signal fired_weapon
 signal switch_weapon
 signal money_change
 
-
 var max_health = 100.0
 var health = 100.0
 var money = 10
@@ -23,13 +22,13 @@ var burning = false
 var burn_damage = 0
 var knockback = null
 var can_shoot = true # stop players from shooting when store open
+var aim_dir = Vector2(1, 0)
 
 const TIMER_LIMIT = 0.5
 var timer = 0.0
 
 func _ready():
 	emit_signal('player_moved', player_name, position)
-	
 
 func get_money():
 	return money
@@ -120,18 +119,29 @@ func init(init_pos, init_name, init_id):
 func link_controller(controller):
 	controller.connect("player_move", self, "_move")
 	controller.connect("player_shoot", self, "_shoot")
+	controller.connect("player_aim", self, "_aim")
+	controller.connect("player_not_shoot", self, "_not_shoot")
 
+func _aim(dir):
+	aim_dir = dir
+	$Crosshairs.set_position(
+		dir 
+		* $Sprite.texture.get_size().x 
+		* $Sprite.get_global_scale().x)
+	
 func _move(dir):
 	velocity = dir * speed
 
 func _shoot():
 	if can_shoot:
+		equipped_weapon.shoot(aim_dir)
+		emit_signal('fired_weapon', equipped_weapon)
+		
 		if not equipped_weapon.is_automatic():
-			equipped_weapon.shoot()
-			emit_signal('fired_weapon', equipped_weapon)
-		if equipped_weapon.is_automatic():
-			equipped_weapon.shoot()
-			emit_signal('fired_weapon', equipped_weapon)
+			can_shoot = false
+
+func _not_shoot():
+	can_shoot = true
 
 func _physics_process(delta):
 	if burning:
