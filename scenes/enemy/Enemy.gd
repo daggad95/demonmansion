@@ -3,6 +3,8 @@ class_name Enemy
 
 const Money = preload("res://scenes/items/Money/Money.tscn")
 const Health = preload("res://scenes/items/Health/Health.tscn")
+const DROP_RATE = 0.25
+
 onready var Game = get_tree().get_root().get_node('Game')
 
 var speed = 50.0
@@ -40,10 +42,24 @@ func take_damage(damage):
 	health -= damage
 	
 	if health <= 0:
-		var money = Health.instance()
-		money.init(position)
-		Game.add_child(money)
+		_drop_item()
 		queue_free()
+
+func _drop_item():
+	var item
+	var rng = RandomNumberGenerator.new()
+	
+	rng.randomize()
+	
+	if rng.randf() <= DROP_RATE:
+		if rng.randf() <= 0.5:
+			item = Health.instance()
+		else:
+			item = Money.instance()
+			
+		item.init(position)
+		Game.add_child(item)
+
 
 func _seek_force():
 	var target_dir

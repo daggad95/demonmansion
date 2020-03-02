@@ -119,7 +119,7 @@ func init(init_pos, init_name, init_id):
 	add_weapon_to_inventory('Pistol')
 	add_weapon_to_inventory('Sniper')
 	
-	equipped_weapon = inventory[0]
+	equipped_weapon = inventory[1]
 	emit_signal('switch_weapon', equipped_weapon)
 	add_to_group('player')
 	
