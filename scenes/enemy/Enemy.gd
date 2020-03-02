@@ -1,6 +1,10 @@
 extends RigidBody2D
 class_name Enemy
 
+const Money = preload("res://scenes/items/Money/Money.tscn")
+const Health = preload("res://scenes/items/Health/Health.tscn")
+onready var Game = get_tree().get_root().get_node('Game')
+
 var speed = 50.0
 var steer_rate = 300.0
 var health = 100.0
@@ -36,6 +40,9 @@ func take_damage(damage):
 	health -= damage
 	
 	if health <= 0:
+		var money = Health.instance()
+		money.init(position)
+		Game.add_child(money)
 		queue_free()
 
 func _seek_force():

@@ -13,7 +13,7 @@ var default_viewport_size = Vector2(
 	ProjectSettings.get_setting("display/window/size/height"))
 
 func init(player):
-	player.connect('damage_taken', self, '_on_player_damage_taken')
+	player.connect('health_change', self, '_on_player_health_change')
 	player.connect('fired_weapon', self, '_on_ammo_update')
 	player.connect('switch_weapon', self, '_on_ammo_update')
 	player.get_equipped_weapon().connect('reload_finish', self, '_on_ammo_update')
@@ -45,7 +45,7 @@ func _ready():
 	set_scale(Vector2(2, 2))
 	_update_position()
 
-func _on_player_damage_taken(health, max_health, damage):
+func _on_player_health_change(health, max_health):
 	var health_ratio = health / max_health
 	
 	var min_size = healthbar.get_node('HealthBarFG').get_custom_minimum_size()

@@ -4,10 +4,10 @@ const WEAPON_FACTORY = preload("res://scenes/weapon/WeaponFactory.gd")
 class_name Player
 signal player_moved
 signal open_store
-signal damage_taken
 signal fired_weapon
 signal switch_weapon
 signal money_change
+signal health_change
 
 var max_health = 100.0
 var health = 100.0
@@ -39,6 +39,13 @@ func add_money(amount):
 	
 func get_health():
 	return health
+
+func get_max_health():
+	return max_health
+	
+func set_health(health):
+	self.health = health
+	emit_signal("health_change", health, max_health)
 #
 #func add_to_inventory(weapon):
 #	inventory.append(weapon)
@@ -69,7 +76,7 @@ func get_equipped_weapon():
 	
 func take_damage(damage):
 	health -= damage
-	emit_signal("damage_taken", health, max_health, damage)
+	emit_signal("health_change", health, max_health)
 
 func inflict_burn(damage_per_second, duration):
 	if not burning:
@@ -125,8 +132,8 @@ func link_controller(controller):
 func _aim(dir):
 	aim_dir = dir
 	$Crosshairs.set_position(
-		dir 
-		* $Sprite.texture.get_size().x 
+		dir
+		* $Sprite.texture.get_size().x
 		* $Sprite.get_global_scale().x)
 	
 func _move(dir):
