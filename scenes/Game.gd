@@ -8,6 +8,7 @@ const FireSpirit = preload("res://scenes/enemy/FireSpirit.tscn")
 const Ogre = preload("res://scenes/enemy/Ogre.tscn")
 const Hellhound = preload("res://scenes/enemy/Hellhound.tscn")
 const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
+const Ammo = preload("res://scenes/items/Ammo/Ammo.tscn")
 
 export var num_players = 0
 export var num_zombies = 0
@@ -69,10 +70,12 @@ func _process(delta):
 	if Input.is_action_pressed("ui_cancel"):
 		emit_signal("esc_pressed")
 		get_tree().paused = true
-	
 	elif Input.is_action_pressed("store_button"):
 		emit_signal("store_button_pressed")
 		# get_tree().paused = true
+	elif Input.is_action_just_pressed(("spawn_ammo")):
+		print("spawn ammo!")
+		_spawn_ammo(get_global_mouse_position())
 	
 	$CanvasLayer/Label.set_text(str(Engine.get_frames_per_second()))
 	
@@ -83,6 +86,12 @@ func _on_ExitConfirmation_popup_hide():
 	
 func _on_ExitConfirmation_confirmed():
 	get_tree().quit()
+
+func _spawn_ammo(pos):
+	var ammo = Ammo.instance()
+	ammo.init(pos)
+	print(pos)
+	add_child(ammo)
 
 func get_player_count():
 	return num_players

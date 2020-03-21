@@ -59,15 +59,14 @@ func shoot(aim_dir, ammo):
 		return true
 	else:
 		if not reloading and clip == 0:
-			reloading = true
-		
 			if ammo_type == Ammo.NONE:
 				reload_amount = clip_size
 			else:
 				reload_amount = min(clip_size, ammo[ammo_type])
 				ammo[ammo_type] -= reload_amount
-			
+
 			if reload_amount > 0:
+				reloading = true
 				$ReloadTimer.start(reload_time)
 		return false
 		

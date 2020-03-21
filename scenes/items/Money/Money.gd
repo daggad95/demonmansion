@@ -1,5 +1,6 @@
 extends Node2D
 
+
 const MIN_VALUE = 5
 const MAX_VALUE = 15
 var value

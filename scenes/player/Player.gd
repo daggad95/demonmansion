@@ -26,7 +26,7 @@ var knockback = null
 var can_shoot = true # stop players from shooting when store open
 var aim_dir = Vector2(1, 0)
 var ammo = {
-	WEAPON.Ammo.SNIPER: 100,
+	WEAPON.Ammo.SNIPER: 0,
 	WEAPON.Ammo.RIFLE: 0,
 	WEAPON.Ammo.SHOTGUN: 0
 }
@@ -83,6 +83,10 @@ func get_equipped_weapon():
 
 func get_ammo():
 	return ammo
+
+func add_ammo(ammo_type, amount):
+	ammo[ammo_type] += amount
+	emit_signal('reloaded', equipped_weapon, ammo)
 
 func equip_weapon(weapon):
 	equipped_weapon = weapon
@@ -195,7 +199,6 @@ func _on_store_closed():
 	can_shoot = true
 
 func _on_reload_finish():
-	print("reloaded!")
 	emit_signal('reloaded', equipped_weapon, ammo)
 	
 
