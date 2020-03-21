@@ -9,7 +9,6 @@
 position = Vector2( 10, 0 )
 script = ExtResource( 1 )
 num_players = 4
-num_zombies = 15
 
 [node name="Map" parent="." instance=ExtResource( 2 )]
 
