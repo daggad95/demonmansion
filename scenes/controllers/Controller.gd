@@ -32,6 +32,7 @@ var signals = [
 ]
 
 func init(device):
+	self.device = device
 	for signal_data in signals:
 		signal_data['timer'].one_shot = true
 
