@@ -146,6 +146,7 @@ func link_controller(controller):
 	controller.connect("player_start_shooting", self, "_shoot")
 	controller.connect("player_stop_shooting", self, "_stop_shooting")
 
+
 func _aim(dir):
 	aim_dir = Vector2(dir[0], dir[1]).normalized()
 	$Crosshairs.set_position(
