@@ -81,6 +81,8 @@ func _process(delta):
 		_spawn_health(get_global_mouse_position())
 	elif Input.is_action_just_pressed("spawn_money"):
 		_spawn_money(get_global_mouse_position())
+	elif Input.is_action_just_pressed("spawn_enemy"):
+		_spawn_enemy(get_global_mouse_position())
 	
 	$CanvasLayer/Label.set_text(str(Engine.get_frames_per_second()))
 	
@@ -92,6 +94,11 @@ func _on_ExitConfirmation_popup_hide():
 func _on_ExitConfirmation_confirmed():
 	get_tree().quit()
 
+func _spawn_enemy(pos):
+	var enemy = Zombie.instance()
+	enemy.init(pos, $Map, players)
+	add_child(enemy)
+	
 func _spawn_ammo(pos):
 	var ammo = Ammo.instance()
 	ammo.init(pos)

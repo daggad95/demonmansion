@@ -26,9 +26,9 @@ var knockback = null
 var can_shoot = true # stop players from shooting when store open
 var aim_dir = Vector2(1, 0)
 var ammo = {
-	WEAPON.Ammo.SNIPER: 0,
-	WEAPON.Ammo.RIFLE: 0,
-	WEAPON.Ammo.SHOTGUN: 0
+	WEAPON.Ammo.SNIPER: 100,
+	WEAPON.Ammo.RIFLE: 1000,
+	WEAPON.Ammo.SHOTGUN: 100
 }
 
 const TIMER_LIMIT = 0.5
@@ -134,7 +134,7 @@ func init(init_pos, init_name, init_id):
 	player_id = init_id
 	
 	add_weapon_to_inventory('Pistol')
-	add_weapon_to_inventory('Sniper')
+	add_weapon_to_inventory('Assault Rifle')
 	equip_weapon(inventory[1])
 
 	add_to_group('player')
