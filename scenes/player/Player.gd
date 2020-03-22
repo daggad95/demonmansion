@@ -12,7 +12,7 @@ signal health_change
 signal reloaded
 
 var max_health = 100.0
-var health = 100.0
+var health = 80.0
 var money = 10
 var inventory = [] # Stores weapon instances, not string weapon names
 var equipped_weapon = null

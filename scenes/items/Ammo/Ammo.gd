@@ -1,4 +1,4 @@
-extends Node2D
+extends "res://scenes/items/Item.gd"
 
 const MIN_VALUE = 5
 const MAX_VALUE = 15

@@ -1,4 +1,5 @@
-extends Node2D
+extends "res://scenes/items/Item.gd"
+
 
 const REGEN_AMOUNT = 25
 
