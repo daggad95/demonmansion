@@ -1,7 +1,8 @@
 extends Node
 
-const threshold = 0.1
-const menu_delay = 0.25
+const PLAYER_THRESHOLD = 0.1
+const MENU_THRESHOLD = 0.5
+const MENU_DELAY = 0.25
 
 enum Dir {NEG, POS, ANY, NONE}
 
@@ -16,7 +17,7 @@ signal player_change_dir
 signal player_aim
 signal player_start_shooting
 signal player_stop_shooting
-signal player_open_store
+signal player_interact
 
 var device
 var signals = [
@@ -34,7 +35,99 @@ var signals = [
 				"emit_func": funcref(self, "_no_data")
 			}
 		],
-		"delay": 0.1
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "menu_down",
+		"triggers": [
+			{
+				"inputs": [JOY_AXIS_1],
+				"eval_func": funcref(self, "_above_pos_threshold"),
+				"emit_func": funcref(self, "_no_data")
+			},
+			{
+				"inputs": [JOY_DPAD_DOWN],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "menu_left",
+		"triggers": [
+			{
+				"inputs": [JOY_AXIS_0],
+				"eval_func": funcref(self, "_below_neg_threshold"),
+				"emit_func": funcref(self, "_no_data")
+			},
+			{
+				"inputs": [JOY_DPAD_LEFT],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "menu_right",
+		"triggers": [
+			{
+				"inputs": [JOY_AXIS_0],
+				"eval_func": funcref(self, "_above_pos_threshold"),
+				"emit_func": funcref(self, "_no_data")
+			},
+			{
+				"inputs": [JOY_DPAD_RIGHT],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "menu_select",
+		"triggers": [
+			{
+				"inputs": [JOY_XBOX_A],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "menu_select_secondary",
+		"triggers": [
+			{
+				"inputs": [JOY_XBOX_Y],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "menu_back",
+		"triggers": [
+			{
+				"inputs": [JOY_XBOX_B],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "player_interact",
+		"triggers": [
+			{
+				"inputs": [JOY_XBOX_A],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
 	},
 	{
 		"name": "player_change_dir",
@@ -96,7 +189,6 @@ func _handle_signal(signal_data):
 	var timer = signal_data['timer']
 	var delay = signal_data['delay']
 	
-	
 	for trigger in triggers:
 		if timer.is_stopped():
 			if trigger['eval_func'].call_func(trigger['inputs']):
@@ -112,16 +204,16 @@ func _physics_process(delta):
 	for signal_data in signals:
 		_handle_signal(signal_data)
 
-func _above_pos_threshold(inputs):
+func _above_pos_threshold(inputs, threshold := MENU_THRESHOLD):
 	return Input.get_joy_axis(device, inputs[0]) > threshold
 
-func _below_neg_threshold(inputs):
+func _below_neg_threshold(inputs, threshold := MENU_THRESHOLD):
 	return Input.get_joy_axis(device, inputs[0]) < -threshold
 
-func _above_abs_threshold(inputs):
+func _above_abs_threshold(inputs, threshold := MENU_THRESHOLD):
 	return abs(Input.get_joy_axis(device, inputs[0])) > threshold
 
-func _below_abs_threshold(inputs):
+func _below_abs_threshold(inputs, threshold := MENU_THRESHOLD):
 	return abs(Input.get_joy_axis(device, inputs[0])) < threshold
 	
 func _pressed(inputs):
@@ -133,7 +225,7 @@ func _always_emit(inputs):
 func _no_data(signal_name, inputs):
 	emit_signal(signal_name)
 
-func _flattened_data(signal_name, inputs):
+func _flattened_data(signal_name, inputs, threshold := PLAYER_THRESHOLD):
 	var values = []
 	
 	for input in inputs:
