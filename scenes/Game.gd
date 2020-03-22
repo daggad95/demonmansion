@@ -8,6 +8,9 @@ const FireSpirit = preload("res://scenes/enemy/FireSpirit.tscn")
 const Ogre = preload("res://scenes/enemy/Ogre.tscn")
 const Hellhound = preload("res://scenes/enemy/Hellhound.tscn")
 const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
+const Ammo = preload("res://scenes/items/Ammo/Ammo.tscn")
+const Money = preload("res://scenes/items/Money/Money.tscn")
+const Health = preload("res://scenes/items/Health/Health.tscn")
 
 export var num_players = 0
 export var num_zombies = 0
@@ -46,13 +49,18 @@ func _enter_tree():
 	camera = GameCamera.instance()
 	camera.init(self, players)
 	add_child(camera)
-
+	
+	var controllers = get_node("/root/Controllers").get_controllers()
 	for i in range(num_players):
 		var player = Player.instance()
 		player.init(Vector2(100*i + 100, 100), "Player%d" % (i+1), i+1)
 		player.connect("player_moved", $Map, "_on_player_moved")
 		player.connect("player_moved", camera, "_on_player_moved")
 		player.connect("open_store", $Store, "_on_open_store")
+		
+		if i < len(controllers):
+			player.link_controller(controllers[i])
+			
 		players.append(player)
 		add_child(player)
 		
@@ -64,10 +72,17 @@ func _process(delta):
 	if Input.is_action_pressed("ui_cancel"):
 		emit_signal("esc_pressed")
 		get_tree().paused = true
-		
 	elif Input.is_action_pressed("store_button"):
 		emit_signal("store_button_pressed")
 		# get_tree().paused = true
+	elif Input.is_action_just_pressed("spawn_ammo"):
+		_spawn_ammo(get_global_mouse_position())
+	elif Input.is_action_just_pressed("spawn_health"):
+		_spawn_health(get_global_mouse_position())
+	elif Input.is_action_just_pressed("spawn_money"):
+		_spawn_money(get_global_mouse_position())
+	elif Input.is_action_just_pressed("spawn_enemy"):
+		_spawn_enemy(get_global_mouse_position())
 	
 	$CanvasLayer/Label.set_text(str(Engine.get_frames_per_second()))
 	
@@ -78,6 +93,26 @@ func _on_ExitConfirmation_popup_hide():
 	
 func _on_ExitConfirmation_confirmed():
 	get_tree().quit()
+
+func _spawn_enemy(pos):
+	var enemy = Zombie.instance()
+	enemy.init(pos, $Map, players)
+	add_child(enemy)
+	
+func _spawn_ammo(pos):
+	var ammo = Ammo.instance()
+	ammo.init(pos)
+	add_child(ammo)
+	
+func _spawn_health(pos):
+	var health = Health.instance()
+	health.init(pos)
+	add_child(health)
+
+func _spawn_money(pos):
+	var money = Money.instance()
+	money.init(pos)
+	add_child(money)
 
 func get_player_count():
 	return num_players

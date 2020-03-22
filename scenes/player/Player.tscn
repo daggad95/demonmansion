@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/player/Player.gd" type="Script" id=1]
 [ext_resource path="res://assets/PIPOYA FREE RPG Character Sprites 32x32/Male/Male 01-1.png" type="Texture" id=2]
 [ext_resource path="res://assets/Fires/Small_Fireball_10x26.png" type="Texture" id=3]
+[ext_resource path="res://assets/misc/crosshair.png" type="Texture" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 8.99535, 9.61714 )
@@ -87,6 +88,10 @@ one_shot = true
 one_shot = true
 
 [node name="InvulnerableTimer" type="Timer" parent="."]
+
+[node name="Crosshairs" type="Sprite" parent="."]
+scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 4 )
 [connection signal="timeout" from="NotInStoreMessage/Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="BurnTimer" to="." method="_on_BurnTimer_timeout"]
 [connection signal="timeout" from="KnockbackTimer" to="." method="_on_KnockbackTimer_timeout"]
