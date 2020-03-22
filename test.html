@@ -1,0 +1,29 @@
+<form action="https://hosted.transactionexpress.com/Transaction/Transaction/Index" method="POST"><input name="HostedKey"
+        id="HostedKey" value="c2de95ea-4a5a-4abc-b1ce-e4ab4cae5999" type="hidden"> <input name="Gateway_ID"
+        id="Gateway_ID" value="9275819302" type="hidden"> <input name="IndustryCode" id="IndustryCode" value="2"
+        type="hidden">
+    <!-- the next line’s blank value tells the hosted page to allow the customer to use credit cards as the only allowed payment type. -->
+    <!-- If you want to only allow more than credit cards, replace “CC” with “” for the value  --> <input
+        name="PaymentType" id="PaymentType" value="CC" type="hidden">
+    <!-- the next line allows the hosted page to capture some perhaps useful info to identify the payment.  --> *
+    Patient Name: <input name="CustRefID" size="40" placeholder="Amy Michaels" id="CustRefID" required="" value=""
+        type="text"> <br> * Amount: <input required="" name="Amount" id="Amount" placeholder="50.00" size="7" value=""
+        type="text"> <br>
+    <!-- the next line’s N value tells the hosted page to not display recurring payment fields  --> <input
+        name="RecurringType" id="RecurringType" value="N" type="hidden"> <input name="RecurringAmount"
+        id="RecurringAmount" value="" type="hidden">
+    <!-- the next line defines where users are directed after a successful purchase. It is suggested you create a simple Thank you page for the site. -->
+    <input name="RURL" id="RURL" value="http://toyocg.wixsite.com/mysite-1/transaction-accepted" type="hidden">
+    <!-- the next line defines where users are directed after they hit the Cancel button on the TXP Hosted page  -->
+    <input name="CURL" id="CURL" value="http://toyocg.wixsite.com/mysite-1/cancel-payment" type="hidden">
+    <!-- If AVSRequired equals “Y”, Address Line 1 and ZIP Code become required fields on the hosted page  --> <input
+        name="AVSRequired" id="AVSRequired" value="Y" type="hidden">
+    <!-- If CVV2Required is set to “Y”, than CVV2 becomes a required field on the hosted page  --> <input
+        name="CVV2Required" id="CVV2Required" value="Y" type="hidden">
+    <!-- If EmailRequired is set to “Y”, then Email becomes a required field on the hosted page  --> <input
+        name="EmailRequired" id="EmailRequired" value="Y" type="hidden">
+    <!-- the next line defines enables/disables the ability to receive response data in a POST format. When set to N, no response data is returned to the RURL -->
+    <input name="PostRspMsg" id="PostRspMsg" value="N" type="hidden">
+    <!-- the next line defines what text is on the button. Replace Pay Now with whatever you desire -->
+    <!-- You can also use a graphic for the button to improve the appearance --> <input name="Submit" id="Submit"
+        value="Pay Now" type="Submit"></form>

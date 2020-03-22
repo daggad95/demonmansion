@@ -6,8 +6,10 @@
 [ext_resource path="res://scenes/menu/store/Store.tscn" type="PackedScene" id=4]
 
 [node name="Game" type="Node2D"]
+position = Vector2( 10, 0 )
 script = ExtResource( 1 )
 num_players = 1
+num_fire_spirits = 1
 
 [node name="Map" parent="." instance=ExtResource( 2 )]
 
