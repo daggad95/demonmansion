@@ -1,6 +1,7 @@
 extends Sprite
 class_name Weapon
 const Projectile = preload("res://scenes/projectile/Projectile.tscn")
+enum Ammo {RIFLE, SNIPER, SHOTGUN, NONE}
 signal reload_finish
 
 var clip_size   = 0
@@ -11,11 +12,13 @@ var reload_time = 0
 var reloading = false
 var spread = 0
 var num_projectiles = 1
+var ammo_type = Ammo.NONE
 var aim_dir = Vector2(1,0)
 var img_offset = Vector2(-56, 0)
 var automatic = false
 var fire_rate = 0 # per second
 var can_fire = true
+var reload_amount = 0
 
 static func get_weapon_props():
 	return {
@@ -27,6 +30,7 @@ static func get_weapon_props():
 		'spread': 0,
 		'num_projectiles': 0,
 		'automatic': false,
+		'ammo_type': Ammo.NONE,
 		'texture': ""
 	}
 
@@ -41,8 +45,9 @@ func init():
 	spread      	= weapon_props['spread']
 	num_projectiles = weapon_props['num_projectiles']
 	automatic 		= weapon_props['automatic']
+	ammo_type       = weapon_props['ammo_type']
 
-func shoot(aim_dir):
+func shoot(aim_dir, ammo):
 	self.aim_dir = aim_dir
 	if clip > 0 and can_fire:
 		for i in range(0, num_projectiles):
@@ -51,10 +56,20 @@ func shoot(aim_dir):
 		clip -= 1
 		can_fire = false
 		$FireTimer.start(1.0/fire_rate)
-	elif not reloading and clip == 0:
-		print('reloading')
-		$ReloadTimer.start(reload_time)
-		reloading = true
+		return true
+	else:
+		if not reloading and clip == 0:
+			if ammo_type == Ammo.NONE:
+				reload_amount = clip_size
+			else:
+				reload_amount = min(clip_size, ammo[ammo_type])
+				ammo[ammo_type] -= reload_amount
+
+			if reload_amount > 0:
+				reloading = true
+				$ReloadTimer.start(reload_time)
+		return false
+		
 		
 func get_name():
 	return weapon_name
@@ -80,8 +95,9 @@ func _gen_projectile():
 	return null
 
 func _on_ReloadTimer_timeout():
-	clip = clip_size
-	emit_signal('reload_finish', self)
+	clip = reload_amount
+	print("reload finish!")
+	emit_signal('reload_finish')
 	reloading = false
 
 func _on_FireTimer_timeout():

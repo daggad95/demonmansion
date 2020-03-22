@@ -11,6 +11,7 @@ func zoom(scale):
 	var canvas_transform = get_viewport().get_canvas_transform()
 	get_viewport().set_canvas_transform(canvas_transform.scaled(Vector2(scale, scale)))
 
+
 func center(focus):
 	var viewport_size = get_viewport().get_visible_rect().size
 	var canvas_transform = get_viewport().get_canvas_transform()

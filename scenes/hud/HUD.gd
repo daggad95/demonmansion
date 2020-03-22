@@ -1,5 +1,6 @@
 extends Control
 enum {TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT}
+const WEAPON = preload("res://scenes/weapon/Weapon.gd")
 const bullet_texture = preload("res://assets/projectiles/bullet.png")
 onready var healthbar = get_node("VBoxContainer/HealthBar")
 onready var ammo = get_node("VBoxContainer/HBoxContainer/Ammo")
@@ -13,13 +14,14 @@ var default_viewport_size = Vector2(
 	ProjectSettings.get_setting("display/window/size/height"))
 
 func init(player):
-	player.connect('damage_taken', self, '_on_player_damage_taken')
+	player.connect('health_change', self, '_on_player_health_change')
 	player.connect('fired_weapon', self, '_on_ammo_update')
 	player.connect('switch_weapon', self, '_on_ammo_update')
+	player.connect('reloaded', self, '_on_ammo_update')
 	player.get_equipped_weapon().connect('reload_finish', self, '_on_ammo_update')
 	player.connect('money_change', self, '_on_money_update')
 	
-	_set_ammo_text(player.get_equipped_weapon())
+	_set_ammo_text(player.get_equipped_weapon(), player.get_ammo())
 	_set_money_text(player.get_money())
 	
 	if player.get_id() == 1:
@@ -45,7 +47,7 @@ func _ready():
 	set_scale(Vector2(2, 2))
 	_update_position()
 
-func _on_player_damage_taken(health, max_health, damage):
+func _on_player_health_change(health, max_health):
 	var health_ratio = health / max_health
 	
 	var min_size = healthbar.get_node('HealthBarFG').get_custom_minimum_size()
@@ -87,12 +89,19 @@ func _set_money_text(money):
 func _update_ammo_label():
 	ammo.set_text(ammo_text)
 
-func _set_ammo_text(weapon):
-	ammo_text = ("{clip}/{clip_size}".format(
-		{"clip": weapon.get_clip(), "clip_size": weapon.get_clip_size()}))
+func _set_ammo_text(weapon, ammo):
+	var ammo_amount
+	var ammo_type = weapon.get_weapon_props()['ammo_type']
+	
+	if ammo_type == WEAPON.Ammo.NONE:
+		ammo_amount = "∞"
+	else:
+		ammo_amount = ammo[ammo_type]
+	ammo_text = ("{clip}/{ammo}".format(
+		{"clip": weapon.get_clip(), "ammo": ammo_amount}))
 
-func _on_ammo_update(weapon):
-	_set_ammo_text(weapon)
+func _on_ammo_update(weapon, ammo):
+	_set_ammo_text(weapon, ammo)
 	_update_ammo_label()
 
 func _flip_y():

@@ -10,6 +10,7 @@ static func get_weapon_props():
 		'spread': PI/16,
 		'num_projectiles': 1,
 		'automatic': true,
+		'ammo_type': Ammo.RIFLE,
 		'texture': "res://assets/Store/Assault Rifle.png"
 	}
 

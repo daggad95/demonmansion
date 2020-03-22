@@ -10,6 +10,7 @@ static func get_weapon_props():
 		'spread': PI/128,
 		'num_projectiles': 1,
 		'automatic': false,
+		'ammo_type': Ammo.SNIPER,
 		'texture': "res://assets/WWIIweapons/Mosin Nagant.png"
 	}
 	

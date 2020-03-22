@@ -1,16 +1,18 @@
 extends KinematicBody2D
 
 const WEAPON_FACTORY = preload("res://scenes/weapon/WeaponFactory.gd")
+const WEAPON = preload("res://scenes/weapon/Weapon.gd")
 class_name Player
 signal player_moved
 signal open_store
-signal damage_taken
 signal fired_weapon
 signal switch_weapon
 signal money_change
+signal health_change
+signal reloaded
 
 var max_health = 100.0
-var health = 100.0
+var health = 80.0
 var money = 10
 var inventory = [] # Stores weapon instances, not string weapon names
 var equipped_weapon = null
@@ -23,6 +25,11 @@ var burn_damage = 0
 var knockback = null
 var can_shoot = true # stop players from shooting when store open
 var aim_dir = Vector2(1, 0)
+var ammo = {
+	WEAPON.Ammo.SNIPER: 100,
+	WEAPON.Ammo.RIFLE: 1000,
+	WEAPON.Ammo.SHOTGUN: 100
+}
 
 const TIMER_LIMIT = 0.5
 var timer = 0.0
@@ -39,6 +46,13 @@ func add_money(amount):
 	
 func get_health():
 	return health
+
+func get_max_health():
+	return max_health
+	
+func set_health(health):
+	self.health = health
+	emit_signal("health_change", health, max_health)
 #
 #func add_to_inventory(weapon):
 #	inventory.append(weapon)
@@ -66,10 +80,22 @@ func get_id():
 
 func get_equipped_weapon():
 	return equipped_weapon
+
+func get_ammo():
+	return ammo
+
+func add_ammo(ammo_type, amount):
+	ammo[ammo_type] += amount
+	emit_signal('reloaded', equipped_weapon, ammo)
+
+func equip_weapon(weapon):
+	equipped_weapon = weapon
+	equipped_weapon.connect("reload_finish", self, "_on_reload_finish")
+	emit_signal('switch_weapon', equipped_weapon, ammo)
 	
 func take_damage(damage):
 	health -= damage
-	emit_signal("damage_taken", health, max_health, damage)
+	emit_signal("health_change", health, max_health)
 
 func inflict_burn(damage_per_second, duration):
 	if not burning:
@@ -80,7 +106,6 @@ func inflict_burn(damage_per_second, duration):
 	else:
 		burn_damage = max(damage_per_second, burn_damage)
 		$BurnTimer.set_wait_time(max(duration, $BurnTimer.get_time_left()))
-
 
 # Takes a string weapon name and adds a weapon instance to the player inventory
 func add_weapon_to_inventory(weapon_name):
@@ -108,12 +133,10 @@ func init(init_pos, init_name, init_id):
 	player_name = init_name
 	player_id = init_id
 	
-	# Set the default weapon to Pistol
 	add_weapon_to_inventory('Pistol')
-	add_weapon_to_inventory('Sniper')
-	
-	equipped_weapon = inventory[0]
-	emit_signal('switch_weapon', equipped_weapon)
+	add_weapon_to_inventory('Assault Rifle')
+	equip_weapon(inventory[1])
+
 	add_to_group('player')
 	
 func link_controller(controller):
@@ -125,8 +148,8 @@ func link_controller(controller):
 func _aim(dir):
 	aim_dir = dir
 	$Crosshairs.set_position(
-		dir 
-		* $Sprite.texture.get_size().x 
+		dir
+		* $Sprite.texture.get_size().x
 		* $Sprite.get_global_scale().x)
 	
 func _move(dir):
@@ -134,8 +157,8 @@ func _move(dir):
 
 func _shoot():
 	if can_shoot:
-		equipped_weapon.shoot(aim_dir)
-		emit_signal('fired_weapon', equipped_weapon)
+		if equipped_weapon.shoot(aim_dir, ammo):
+			emit_signal('fired_weapon', equipped_weapon, ammo)
 		
 		if not equipped_weapon.is_automatic():
 			can_shoot = false
@@ -174,5 +197,8 @@ func _on_store_opened():
 	
 func _on_store_closed():
 	can_shoot = true
+
+func _on_reload_finish():
+	emit_signal('reloaded', equipped_weapon, ammo)
 	
 

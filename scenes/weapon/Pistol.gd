@@ -10,6 +10,7 @@ static func get_weapon_props():
 		'spread': PI/8,
 		'num_projectiles': 1,
 		'automatic': false,
+		'ammo_type': Ammo.NONE,
 		'texture': "res://assets/WWIIweapons/Tokarev TT-33.png"
 	}
 	
