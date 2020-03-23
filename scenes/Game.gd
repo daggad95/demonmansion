@@ -56,7 +56,6 @@ func _enter_tree():
 		player.init(Vector2(100*i + 100, 100), "Player%d" % (i+1), i+1)
 		player.connect("player_moved", $Map, "_on_player_moved")
 		player.connect("player_moved", camera, "_on_player_moved")
-		player.connect("open_store", $Store, "_on_open_store")
 		
 		if i < len(controllers):
 			player.link_controller(controllers[i])
@@ -72,9 +71,6 @@ func _process(delta):
 	if Input.is_action_pressed("ui_cancel"):
 		emit_signal("esc_pressed")
 		get_tree().paused = true
-	elif Input.is_action_pressed("store_button"):
-		emit_signal("store_button_pressed")
-		# get_tree().paused = true
 	elif Input.is_action_just_pressed("spawn_ammo"):
 		_spawn_ammo(get_global_mouse_position())
 	elif Input.is_action_just_pressed("spawn_health"):
