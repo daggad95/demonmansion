@@ -9,13 +9,11 @@ func link_controller(controller):
 	controller.connect("player_interact", self, "_on_open_store")
 
 func _ready():
-	for child in item_grid.get_children():
-		child.queue_free()
-	
 	for name in WeaponFactory.get_weapon_names():
 		var item = WeaponStoreItem.instance()
 		item.init(name)
 		item_grid.add_child(item)
+		
 	$MainContainer.hide()
 	
 func _on_open_store():
