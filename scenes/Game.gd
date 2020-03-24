@@ -51,6 +51,7 @@ func _enter_tree():
 	add_child(camera)
 	
 	var controllers = get_node("/root/Controllers").get_controllers()
+	$StorePanel.link_controller((controllers[0]))
 	for i in range(num_players):
 		var player = Player.instance()
 		player.init(Vector2(100*i + 100, 100), "Player%d" % (i+1), i+1)

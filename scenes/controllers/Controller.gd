@@ -122,7 +122,7 @@ var signals = [
 		"name": "player_interact",
 		"triggers": [
 			{
-				"inputs": [JOY_XBOX_A],
+				"inputs": [JOY_XBOX_Y],
 				"eval_func": funcref(self, "_pressed"),
 				"emit_func": funcref(self, "_no_data")
 			}
