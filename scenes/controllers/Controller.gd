@@ -18,6 +18,10 @@ signal player_aim
 signal player_start_shooting
 signal player_stop_shooting
 signal player_interact
+signal player_inventory_1
+signal player_inventory_2
+signal player_inventory_3
+signal player_inventory_4
 
 var device
 var signals = [
@@ -123,6 +127,50 @@ var signals = [
 		"triggers": [
 			{
 				"inputs": [JOY_XBOX_Y],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "player_inventory_1",
+		"triggers": [
+			{
+				"inputs": [JOY_DPAD_UP],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "player_inventory_2",
+		"triggers": [
+			{
+				"inputs": [JOY_DPAD_RIGHT],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "player_inventory_3",
+		"triggers": [
+			{
+				"inputs": [JOY_DPAD_DOWN],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "player_inventory_4",
+		"triggers": [
+			{
+				"inputs": [JOY_DPAD_LEFT],
 				"eval_func": funcref(self, "_pressed"),
 				"emit_func": funcref(self, "_no_data")
 			}

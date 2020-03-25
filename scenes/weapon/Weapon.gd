@@ -87,7 +87,7 @@ func get_clip_size():
 	return clip_size
 
 func _process_projectile(projectile):
-	projectile.rotate(rand_range(-spread/2, spread/2))
+	projectile.rotate_dir(rand_range(-spread/2, spread/2))
 	projectile.scale_speed(rand_range(0.9, 1.1))
 	return projectile
 

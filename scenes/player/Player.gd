@@ -14,7 +14,7 @@ signal reloaded
 var max_health = 100.0
 var health = 80.0
 var money = 1000
-var inventory = [] # Stores weapon instances, not string weapon names
+var inventory = [null, null, null, null] # Stores weapon instances, not string weapon names
 var equipped_weapon = null
 var speed = 100
 var velocity = Vector2()
@@ -64,7 +64,7 @@ func get_inventory():
 	
 func has_weapon(weapon_name):
 	for player_weapon in inventory:
-		if player_weapon.get_name() == weapon_name:
+		if player_weapon != null and player_weapon.get_name() == weapon_name:
 			return true
 	return false
 
@@ -109,9 +109,14 @@ func inflict_burn(damage_per_second, duration):
 
 # Takes a string weapon name and adds a weapon instance to the player inventory
 func add_weapon_to_inventory(weapon_name):
-	var weapon = WEAPON_FACTORY.create(weapon_name)
-	inventory.append(weapon)
-	add_child(weapon)
+	for idx in len(inventory):
+		if inventory[idx] == null:
+			var weapon = WEAPON_FACTORY.create(weapon_name)
+			inventory[idx] = weapon
+			add_child(weapon)
+			
+			return true
+	return false
 
 func remove_weapon_from_inventory(weapon_name):
 	var match_idx = -1
@@ -134,7 +139,6 @@ func init(init_pos, init_name, init_id):
 	player_id = init_id
 	
 	add_weapon_to_inventory('Pistol')
-	add_weapon_to_inventory('Assault Rifle')
 	equip_weapon(inventory[0])
 
 	add_to_group('player')
@@ -144,7 +148,14 @@ func link_controller(controller):
 	controller.connect("player_aim", self, "_aim")
 	controller.connect("player_start_shooting", self, "_shoot")
 	controller.connect("player_stop_shooting", self, "_stop_shooting")
+	controller.connect("player_inventory_1", self, "_switch_weapon", [0])
+	controller.connect("player_inventory_2", self, "_switch_weapon", [1])
+	controller.connect("player_inventory_3", self, "_switch_weapon", [2])
+	controller.connect("player_inventory_4", self, "_switch_weapon", [3])
 
+func _switch_weapon(weapon_num):
+	if inventory[weapon_num] != null:
+		equip_weapon(inventory[weapon_num])
 
 func _aim(dir):
 	aim_dir = Vector2(dir[0], dir[1]).normalized()

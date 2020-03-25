@@ -70,6 +70,9 @@ func set_sprite(sprite_name):
 func rotate_sprite(dir):
 	sprite.rotate(dir - PI/2)
 
+func rotate_dir(dir):
+	direction = direction.rotated(dir)
+
 func scale_speed(factor):
 	speed = speed * factor
 	
