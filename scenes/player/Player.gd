@@ -13,7 +13,7 @@ signal reloaded
 
 var max_health = 100.0
 var health = 80.0
-var money = 10
+var money = 1000
 var inventory = [] # Stores weapon instances, not string weapon names
 var equipped_weapon = null
 var speed = 100
@@ -65,7 +65,6 @@ func get_inventory():
 func has_weapon(weapon_name):
 	for player_weapon in inventory:
 		if player_weapon.get_name() == weapon_name:
-			#print("has_weapon(): ", player_weapon.get_name(), " ", weapon_name)
 			return true
 	return false
 
