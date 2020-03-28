@@ -68,14 +68,14 @@ func _on_PathUpdateTimer_timeout():
 		var done_calculating
 		
 		lock.lock()
-		done_calculating = calculating[player_name]
+		done_calculating = not calculating[player_name]
 		lock.unlock()
 		
 		if done_calculating:
 			worker_threads[player_name].wait_to_finish()
 			
-		calculating[player_name] = true
-		worker_threads[player_name].start(self, '_async_calc_vector_field', [player_name, player.get_position()])
+			calculating[player_name] = true
+			worker_threads[player_name].start(self, '_async_calc_vector_field', [player_name, player.get_position()])
 	$PathUpdateTimer.start(0.1)
 	
 func _on_player_moved(player_name, player_pos):
