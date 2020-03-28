@@ -18,6 +18,7 @@ var inventory = [] # Stores weapon instances, not string weapon names
 var equipped_weapon = null
 var speed = 100
 var velocity = Vector2()
+var dir = Vector2()
 var player_name = "<UNDEFINED>"
 var player_id = -1
 var burning = false
@@ -135,25 +136,26 @@ func init(init_pos, init_name, init_id):
 	
 	add_weapon_to_inventory('Pistol')
 	add_weapon_to_inventory('Assault Rifle')
-	equip_weapon(inventory[1])
+	equip_weapon(inventory[0])
 
 	add_to_group('player')
 	
 func link_controller(controller):
-	controller.connect("player_move", self, "_move")
-	controller.connect("player_shoot", self, "_shoot")
+	controller.connect("player_change_dir", self, "_set_dir")
 	controller.connect("player_aim", self, "_aim")
-	controller.connect("player_not_shoot", self, "_not_shoot")
+	controller.connect("player_start_shooting", self, "_shoot")
+	controller.connect("player_stop_shooting", self, "_stop_shooting")
+
 
 func _aim(dir):
-	aim_dir = dir
+	aim_dir = Vector2(dir[0], dir[1]).normalized()
 	$Crosshairs.set_position(
-		dir
+		aim_dir
 		* $Sprite.texture.get_size().x
 		* $Sprite.get_global_scale().x)
 	
-func _move(dir):
-	velocity = dir * speed
+func _set_dir(dir):
+	self.dir = Vector2(dir[0], dir[1]).normalized()
 
 func _shoot():
 	if can_shoot:
@@ -163,7 +165,7 @@ func _shoot():
 		if not equipped_weapon.is_automatic():
 			can_shoot = false
 
-func _not_shoot():
+func _stop_shooting():
 	can_shoot = true
 
 func _physics_process(delta):
@@ -173,7 +175,8 @@ func _physics_process(delta):
 	if knockback:
 		move_and_collide(knockback*delta)
 		emit_signal('player_moved', player_name, position)
-		
+	
+	velocity = dir * speed
 	if velocity.length() > 0:
 		move_and_slide(velocity)
 		emit_signal('player_moved', player_name, position)

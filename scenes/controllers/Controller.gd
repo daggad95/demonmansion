@@ -1,4 +1,11 @@
 extends Node
+
+const PLAYER_THRESHOLD = 0.1
+const MENU_THRESHOLD = 0.5
+const MENU_DELAY = 0.25
+
+enum Dir {NEG, POS, ANY, NONE}
+
 signal menu_up
 signal menu_down
 signal menu_left
@@ -6,65 +13,226 @@ signal menu_right
 signal menu_select
 signal menu_back
 signal menu_select_secondary
-signal player_move
+signal player_change_dir
 signal player_aim
-signal player_shoot
-signal player_not_shoot
-signal player_open_store
+signal player_start_shooting
+signal player_stop_shooting
+signal player_interact
 
-const min_joy_value = 0.05
-const menu_threshold = 0.8
 var device
-var mapping = {}
+var signals = [
+	{
+		"name": "menu_up",
+		"triggers": [
+			{
+				"inputs": [JOY_AXIS_1],
+				"eval_func": funcref(self, "_below_neg_threshold"),
+				"emit_func": funcref(self, "_no_data")
+			},
+			{
+				"inputs": [JOY_DPAD_UP],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "menu_down",
+		"triggers": [
+			{
+				"inputs": [JOY_AXIS_1],
+				"eval_func": funcref(self, "_above_pos_threshold"),
+				"emit_func": funcref(self, "_no_data")
+			},
+			{
+				"inputs": [JOY_DPAD_DOWN],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "menu_left",
+		"triggers": [
+			{
+				"inputs": [JOY_AXIS_0],
+				"eval_func": funcref(self, "_below_neg_threshold"),
+				"emit_func": funcref(self, "_no_data")
+			},
+			{
+				"inputs": [JOY_DPAD_LEFT],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "menu_right",
+		"triggers": [
+			{
+				"inputs": [JOY_AXIS_0],
+				"eval_func": funcref(self, "_above_pos_threshold"),
+				"emit_func": funcref(self, "_no_data")
+			},
+			{
+				"inputs": [JOY_DPAD_RIGHT],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "menu_select",
+		"triggers": [
+			{
+				"inputs": [JOY_XBOX_A],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "menu_select_secondary",
+		"triggers": [
+			{
+				"inputs": [JOY_XBOX_Y],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "menu_back",
+		"triggers": [
+			{
+				"inputs": [JOY_XBOX_B],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "player_interact",
+		"triggers": [
+			{
+				"inputs": [JOY_XBOX_A],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": MENU_DELAY
+	},
+	{
+		"name": "player_change_dir",
+		"triggers": [
+			{
+				"inputs": [JOY_AXIS_0, JOY_AXIS_1],
+				"eval_func": funcref(self, "_always_emit"),
+				"emit_func": funcref(self, "_flattened_data")
+			}
+		],
+		"delay": 0
+	},
+	{
+		"name": "player_aim",
+		"triggers": [
+			{
+				"inputs": [JOY_AXIS_2, JOY_AXIS_3],
+				"eval_func": funcref(self, "_always_emit"),
+				"emit_func": funcref(self, "_flattened_data")
+			}
+		],
+		"delay": 0
+	},
+	{
+		"name": "player_start_shooting",
+		"triggers": [
+			{
+				"inputs": [JOY_ANALOG_R2],
+				"eval_func": funcref(self, "_above_abs_threshold"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": 0
+	},
+	{
+		"name": "player_stop_shooting",
+		"triggers": [
+			{
+				"inputs": [JOY_ANALOG_R2],
+				"eval_func": funcref(self, "_below_abs_threshold"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": 0
+	},
+]
 
 func init(device):
 	self.device = device
-	self.mapping['menu_select'] = JOY_XBOX_A
-	self.mapping['menu_back'] = JOY_XBOX_B
-	self.mapping['menu_select_secondary'] = JOY_XBOX_Y
-	self.mapping['player_open_store'] = JOY_XBOX_Y
+	
+	for signal_data in signals:
+		signal_data['timer'] = Timer.new()
+		signal_data['timer'].one_shot = true
+		add_child(signal_data['timer'])
 
+func _handle_signal(signal_data):
+	var triggers = signal_data['triggers']
+	var signal_name = signal_data['name']
+	var timer = signal_data['timer']
+	var delay = signal_data['delay']
+	
+	for trigger in triggers:
+		if timer.is_stopped():
+			if trigger['eval_func'].call_func(trigger['inputs']):
+				trigger['emit_func'].call_func(
+					signal_name, 
+					trigger['inputs']
+				)
+				
+				if delay > 0:
+					timer.start(delay)
+				
 func _physics_process(delta):
-	var analog_values = {
-		'left_joy_x': Input.get_joy_axis(device, JOY_AXIS_0),
-		'left_joy_y': Input.get_joy_axis(device, JOY_AXIS_1),
-		'right_joy_x': Input.get_joy_axis(device, JOY_AXIS_2),
-		'right_joy_y': Input.get_joy_axis(device, JOY_AXIS_3),
-		'right_trigger': Input.get_joy_axis(device, JOY_AXIS_7)
-	}
+	for signal_data in signals:
+		_handle_signal(signal_data)
+
+func _above_pos_threshold(inputs, threshold := MENU_THRESHOLD):
+	return Input.get_joy_axis(device, inputs[0]) > threshold
+
+func _below_neg_threshold(inputs, threshold := MENU_THRESHOLD):
+	return Input.get_joy_axis(device, inputs[0]) < -threshold
+
+func _above_abs_threshold(inputs, threshold := MENU_THRESHOLD):
+	return abs(Input.get_joy_axis(device, inputs[0])) > threshold
+
+func _below_abs_threshold(inputs, threshold := MENU_THRESHOLD):
+	return abs(Input.get_joy_axis(device, inputs[0])) < threshold
 	
-	for key in analog_values.keys():
-		if abs(analog_values[key]) < min_joy_value:
-			analog_values[key] = 0
+func _pressed(inputs):
+	return Input.is_joy_button_pressed(device, inputs[0])
+
+func _always_emit(inputs):
+	return true
+
+func _no_data(signal_name, inputs):
+	emit_signal(signal_name)
+
+func _flattened_data(signal_name, inputs, threshold := PLAYER_THRESHOLD):
+	var values = []
 	
-	if abs(analog_values['left_joy_x']) > menu_threshold:
-		if analog_values['left_joy_x'] > 0:
-			emit_signal("menu_right")
-		if analog_values['left_joy_x'] < 0:
-			emit_signal("menu_left")
-	
-	if analog_values['left_joy_y'] > menu_threshold:
-		if analog_values['left_joy_y']  > 0:
-			emit_signal("menu_down")
-		if analog_values['left_joy_y'] < 0:
-			emit_signal("menu_up")
-		
-	emit_signal("player_move", Vector2(
-		analog_values['left_joy_x'], 
-		analog_values['left_joy_y']
-	).normalized())
-	
-	if abs(analog_values['right_joy_x']) > 0 or abs(analog_values['right_joy_y']) > 0:
-		emit_signal("player_aim", Vector2(
-			analog_values['right_joy_x'],
-			analog_values['right_joy_y']
-		).normalized())
-	
-	if abs(Input.get_joy_axis(device, JOY_AXIS_7)) > min_joy_value:
-		emit_signal("player_shoot")
-	else:
-		emit_signal("player_not_shoot")
-	
-	for signal_name in mapping.keys():
-		if Input.is_joy_button_pressed(device, mapping[signal_name]):
-			emit_signal(signal_name)
+	for input in inputs:
+		var value = Input.get_joy_axis(device, input)
+		values.append(
+			value if abs(value) > threshold
+			else 0
+		)
+	emit_signal(signal_name, values)
+
