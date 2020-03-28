@@ -17,6 +17,7 @@ script = ExtResource( 3 )
 [node name="MainContainer" type="MarginContainer" parent="."]
 margin_right = 416.0
 margin_bottom = 182.0
+rect_scale = Vector2( 0.75, 0.75 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme = ExtResource( 5 )

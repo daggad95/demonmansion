@@ -1,8 +1,19 @@
 extends CanvasLayer
 const WeaponFactory = preload("res://scenes/weapon/WeaponFactory.gd")
 const WeaponStoreItem = preload("res://scenes/store/StoreItem/WeaponStoreItem/WeaponStoreItem.tscn")
+const AmmoStoreItem = preload("res://scenes/store/StoreItem/AmmoStoreItem/AmmoStoreItem.tscn")
 const StoreItemType = preload("res://scenes/store/StoreItem/StoreItem.gd").StoreItemType
 
+var store_inventory = [
+	{
+		"name": "Sniper Ammo",
+		"item_type": StoreItemType.AMMO,
+		"price": 20,
+		"quantity": 10,
+		"ammo_type": Weapon.Ammo.SNIPER,
+		"icon": "res://assets/Ammo/sniper.png"
+	}
+]
 var player
 onready var item_grid = $MainContainer/MarginContainer/VBoxContainer/CenterContainer/GridContainer
 onready var player_health_label = $MainContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HealthLabel
@@ -21,6 +32,11 @@ func _ready():
 		var item = WeaponStoreItem.instance()
 		item.init(name)
 		item.connect("purchase_weapon", self, "_on_purchase_weapon")
+		item_grid.add_child(item)
+	
+	for item_data in store_inventory:
+		var item = AmmoStoreItem.instance()
+		item.init(item_data)
 		item_grid.add_child(item)
 	
 	_update_player_health(player.get_health())
