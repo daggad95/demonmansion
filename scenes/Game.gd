@@ -12,6 +12,7 @@ const Ammo = preload("res://scenes/items/Ammo/Ammo.tscn")
 const Money = preload("res://scenes/items/Money/Money.tscn")
 const Health = preload("res://scenes/items/Health/Health.tscn")
 
+
 export var num_players = 0
 export var num_zombies = 0
 export var num_fire_spirits = 0
