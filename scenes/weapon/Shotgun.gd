@@ -11,7 +11,7 @@ static func get_weapon_props():
 		'num_projectiles': 15,
 		'automatic': false,
 		'ammo_type': Ammo.SHOTGUN,
-		'texture': "res://assets/101-micro-pixel-guns/palette-1/guns/sheet-#1-with-firing.png"
+		'texture': "res://assets/WWIIweapons/Sten.png"
 	}
 	
 func _gen_projectile():

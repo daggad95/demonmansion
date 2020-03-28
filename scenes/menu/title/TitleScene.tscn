@@ -24,6 +24,9 @@ font_data = ExtResource( 2 )
 
 [node name="Control" type="Control" parent="."]
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="MainMenu" type="MarginContainer" parent="Control"]
 anchor_right = 1.0
@@ -32,6 +35,9 @@ custom_constants/margin_right = 120
 custom_constants/margin_top = 80
 custom_constants/margin_left = 120
 custom_constants/margin_bottom = 80
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="InsideMargins" type="HSplitContainer" parent="Control/MainMenu"]
 margin_left = 120.0
