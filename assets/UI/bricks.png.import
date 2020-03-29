@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/UI001.png-7a400413f0c446b93c31a224a4d856f3.stex"
+path="res://.import/bricks.png-2910a111f3e85ebbaae53d5b34e998c0.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/UI/UI001.png"
-dest_files=[ "res://.import/UI001.png-7a400413f0c446b93c31a224a4d856f3.stex" ]
+source_file="res://assets/UI/bricks.png"
+dest_files=[ "res://.import/bricks.png-2910a111f3e85ebbaae53d5b34e998c0.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=false
+flags/filter=true
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2
