@@ -11,6 +11,7 @@ const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
 const Ammo = preload("res://scenes/items/Ammo/Ammo.tscn")
 const Money = preload("res://scenes/items/Money/Money.tscn")
 const Health = preload("res://scenes/items/Health/Health.tscn")
+const StorePanel = preload("res://scenes/store/StorePanel/StorePanel.tscn")
 
 export var num_players = 0
 export var num_zombies = 0
@@ -44,12 +45,21 @@ func _ready():
 		var enemy = Hellhound.instance()
 		enemy.init(Vector2(25*i + 50, 200), $Map, players)
 		add_child(enemy)
+	
+	var controllers = get_node("/root/Controllers").get_controllers()
+	for i in range(len(controllers)):
+		var store = StorePanel.instance()
+		store.link_player(players[i])
+		players[i].link_store(store)
+		store.link_controller(controllers[i])
+
+		$StoreMenu.add_panel(store)
 		
 func _enter_tree():	
 	camera = GameCamera.instance()
 	camera.init(self, players)
 	add_child(camera)
-	
+#
 	var controllers = get_node("/root/Controllers").get_controllers()
 	for i in range(num_players):
 		var player = Player.instance()
@@ -67,8 +77,7 @@ func _enter_tree():
 		hud.init(player)
 		$CanvasLayer.add_child(hud)
 		
-	$StorePanel.link_controller(controllers[0])
-	$StorePanel.link_player(players[0])
+	
 	
 func _process(delta):
 	if Input.is_action_pressed("ui_cancel"):
