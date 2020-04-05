@@ -26,6 +26,7 @@ var burn_damage = 0
 var knockback = null
 var can_shoot = true # stop players from shooting when store open
 var aim_dir = Vector2(1, 0)
+var store_open = false
 var ammo = {
 	WEAPON.Ammo.SNIPER: 100,
 	WEAPON.Ammo.RIFLE: 1000,
@@ -55,10 +56,6 @@ func set_health(health):
 	self.health = health
 	emit_signal("health_change", health, max_health)
 #
-#func add_to_inventory(weapon):
-#	inventory.append(weapon)
-#
-# Get an array of weapon instances
 func get_inventory():
 	return inventory
 	
@@ -142,7 +139,11 @@ func init(init_pos, init_name, init_id):
 	equip_weapon(inventory[0])
 
 	add_to_group('player')
-	
+
+func link_store(store):
+	store.connect("open", self, "_on_store_change", [true])
+	store.connect("close", self, "_on_store_change", [false])
+
 func link_controller(controller):
 	controller.connect("player_change_dir", self, "_set_dir")
 	controller.connect("player_aim", self, "_aim")
@@ -153,8 +154,11 @@ func link_controller(controller):
 	controller.connect("player_inventory_3", self, "_switch_weapon", [2])
 	controller.connect("player_inventory_4", self, "_switch_weapon", [3])
 
+func _on_store_change(store_open):
+	self.store_open = store_open
+
 func _switch_weapon(weapon_num):
-	if inventory[weapon_num] != null:
+	if inventory[weapon_num] != null and not store_open:
 		equip_weapon(inventory[weapon_num])
 
 func _aim(dir):
@@ -168,7 +172,7 @@ func _set_dir(dir):
 	self.dir = Vector2(dir[0], dir[1]).normalized()
 
 func _shoot():
-	if can_shoot:
+	if can_shoot and not store_open:
 		if equipped_weapon.shoot(aim_dir, ammo):
 			emit_signal('fired_weapon', equipped_weapon, ammo)
 		
@@ -205,12 +209,6 @@ func _on_BurnTimer_timeout():
 func _on_KnockbackTimer_timeout():
 	knockback = null
 	
-func _on_store_opened():
-	can_shoot = false
-	
-func _on_store_closed():
-	can_shoot = true
-
 func _on_reload_finish():
 	emit_signal('reloaded', equipped_weapon, ammo)
 	
