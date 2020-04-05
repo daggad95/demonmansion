@@ -11,7 +11,11 @@ func _on_BackButton_pressed():
 
 func _ready():
 	var controllers = get_node("/root/Controllers").get_controllers()
-	for idx in range(len(controllers)):
+	for idx in range(4):
 		var new_userbox = Userbox.instance()
-		new_userbox.link_controller(controllers[idx])
+		new_userbox.init()
+
+		if(idx < len(controllers)):
+			new_userbox.link_controller(controllers[idx])
+		
 		hbox_userboxes.add_child(new_userbox)
