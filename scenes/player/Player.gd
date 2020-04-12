@@ -116,6 +116,7 @@ func add_weapon_to_inventory(weapon_name):
 	for idx in len(inventory):
 		if inventory[idx] == null:
 			var weapon = WEAPON_FACTORY.create(weapon_name)
+			weapon.hide()
 			inventory[idx] = weapon
 			add_child(weapon)
 			

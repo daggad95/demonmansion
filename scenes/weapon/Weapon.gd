@@ -96,12 +96,12 @@ func get_clip_size():
 func set_dir(dir):
 	if dir == LEFT:
 		$Sprite.set_position(Vector2(-right_position.x, right_position.y))
-		$Sprite.set_flip_h(true)
+		$Sprite.set_flip_h(false)
 		$Sprite.set_z_index(-1)
 		
 	elif dir == RIGHT:
 		$Sprite.set_position(right_position)
-		$Sprite.set_flip_h(false)
+		$Sprite.set_flip_h(true)
 		$Sprite.set_z_index(1)
 		
 	elif dir == FORWARD:
@@ -110,7 +110,7 @@ func set_dir(dir):
 		else:
 			$Sprite.set_position(Vector2(-right_position.x, right_position.y))
 			
-		$Sprite.set_flip_h(true)
+		$Sprite.set_flip_h(false)
 		$Sprite.set_z_index(1)
 		
 	elif dir == BACKWARD:
@@ -119,7 +119,7 @@ func set_dir(dir):
 			
 		else:
 			$Sprite.set_position(right_position)
-		$Sprite.set_flip_h(false)
+		$Sprite.set_flip_h(true)
 		$Sprite.set_z_index(-1)
 		
 	current_dir = dir
