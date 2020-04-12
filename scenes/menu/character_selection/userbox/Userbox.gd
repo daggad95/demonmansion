@@ -4,8 +4,10 @@ const StateMachine = preload("res://scripts/StateMachine.gd")
 const State = preload("res://scripts/State.gd")
 
 onready var NameSelector = $VBoxContainer/PlayerNameContainer/PlayerName
-var controller = null
+onready var UpArrow = $VBoxContainer/FrameContainer/VBoxContainer/UpArrow
+onready var DownArrow = $VBoxContainer/FrameContainer/VBoxContainer/DownArrow
 
+var controller = null
 var current_state = null
 var fsm
 
@@ -21,11 +23,20 @@ func link_controller(controller):
 	controller.connect("menu_down", fsm, "handle_input", ["menu_down"])
 
 func show():
-	set_modulate(Color(1,1,1,1))
+	$Background.set_modulate(Color(1,1,1,1))
+	$VBoxContainer.set_modulate(Color(1,1,1,1))
 	
 func hide():
-	set_modulate(Color(1,1,1,0))
-
+	$Background.set_modulate(Color(1,1,1,0))
+	$VBoxContainer.set_modulate(Color(1,1,1,0))
+	
+func show_player_arrows():
+	UpArrow.set_modulate(Color(1,1,1,1))
+	DownArrow.set_modulate(Color(1,1,1,1))
+	
+func hide_player_arrows():
+	UpArrow.set_modulate(Color(1,1,1,0))
+	DownArrow.set_modulate(Color(1,1,1,0))
 
 class Empty extends State:
 	func enter(model):
@@ -41,7 +52,7 @@ class Empty extends State:
 		
 	func exit():
 		model.show()
-		
+		model.hide_player_arrows()
 		
 class NameFocused extends State:
 	func enter(model):
@@ -72,10 +83,24 @@ class PlayerFocused extends State:
 	func enter(model):
 		state_name = "PlayerFocused"
 		.enter(model)
+		model.show_player_arrows()
 		
 	func handle_input(input_name):
 		if(input_name == "menu_select"):
-			pass
+			model.hide_player_arrows()
+			return Ready.new()
 		elif(input_name == "menu_back"):
+			model.hide_player_arrows()
 			return NameFocused.new()
+			
 		
+class Ready extends State:
+	func enter(model):
+		state_name = "Ready"
+		.enter(model)
+		model.hide_player_arrows()
+		
+	func handle_input(input_name):
+		if(input_name == "menu_back"):
+			model.show_player_arrows()
+			return PlayerFocused.new()

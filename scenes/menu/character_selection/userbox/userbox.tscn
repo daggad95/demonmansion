@@ -41,6 +41,25 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Placeholder" type="MarginContainer" parent="."]
+margin_right = 387.0
+margin_bottom = 721.0
+
+[node name="TextureRect" type="ColorRect" parent="Placeholder"]
+margin_right = 387.0
+margin_bottom = 721.0
+color = Color( 0.313726, 0.329412, 0.313726, 1 )
+
+[node name="Label" type="Label" parent="Placeholder"]
+margin_top = 336.0
+margin_right = 387.0
+margin_bottom = 384.0
+text = "PRESS
+A
+TO JOIN"
+align = 1
+valign = 1
+
 [node name="Background" type="NinePatchRect" parent="."]
 margin_right = 387.0
 margin_bottom = 721.0
