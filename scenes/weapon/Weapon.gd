@@ -1,9 +1,15 @@
 extends Sprite
 class_name Weapon
+const Z_INDEX_FRONT = 100
+const Z_INDEX_BACK = 1
 const Projectile = preload("res://scenes/projectile/Projectile.tscn")
 enum Ammo {RIFLE, SNIPER, SHOTGUN, NONE}
+enum {FORWARD, LEFT, RIGHT, BACKWARD}
 signal reload_finish
 
+export var two_handed = false
+export var right_position : Vector2
+export var forward_position : Vector2
 var clip_size   = 0
 var clip        = 0
 var weapon_name = '<UNDEFINED>'
@@ -19,6 +25,8 @@ var automatic = false
 var fire_rate = 0 # per second
 var can_fire = true
 var reload_amount = 0
+var current_dir = RIGHT
+
 
 static func get_weapon_props():
 	return {
@@ -70,7 +78,6 @@ func shoot(aim_dir, ammo):
 				$ReloadTimer.start(reload_time)
 		return false
 		
-		
 func get_name():
 	return weapon_name
 
@@ -85,6 +92,37 @@ func get_clip():
 
 func get_clip_size():
 	return clip_size
+
+func set_dir(dir):
+	if dir == LEFT:
+		$Sprite.set_position(Vector2(-right_position.x, right_position.y))
+		$Sprite.set_flip_h(true)
+		$Sprite.set_z_index(-1)
+		
+	elif dir == RIGHT:
+		$Sprite.set_position(right_position)
+		$Sprite.set_flip_h(false)
+		$Sprite.set_z_index(1)
+		
+	elif dir == FORWARD:
+		if two_handed:
+			$Sprite.set_position(forward_position)
+		else:
+			$Sprite.set_position(Vector2(-right_position.x, right_position.y))
+			
+		$Sprite.set_flip_h(true)
+		$Sprite.set_z_index(1)
+		
+	elif dir == BACKWARD:
+		if two_handed:
+			$Sprite.set_position(forward_position)
+			
+		else:
+			$Sprite.set_position(right_position)
+		$Sprite.set_flip_h(false)
+		$Sprite.set_z_index(-1)
+		
+	current_dir = dir
 
 func _process_projectile(projectile):
 	projectile.rotate_dir(rand_range(-spread/2, spread/2))

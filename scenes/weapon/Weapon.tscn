@@ -1,20 +1,21 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://assets/101-micro-pixel-guns/palette-4/guns/sheet-#2-without-firing.png" type="Texture" id=1]
+[ext_resource path="res://assets/WWIIweapons/Colt M1911.png" type="Texture" id=1]
 [ext_resource path="res://scenes/weapon/Weapon.gd" type="Script" id=2]
 
 [node name="Weapon" type="Sprite"]
-position = Vector2( 29.7738, 4.62008 )
-z_index = 10
-texture = ExtResource( 1 )
-vframes = 25
-hframes = 7
-frame = 7
+position = Vector2( 0, -0.5 )
+z_index = -1
 script = ExtResource( 2 )
 
 [node name="ReloadTimer" type="Timer" parent="."]
 one_shot = true
 
 [node name="FireTimer" type="Timer" parent="."]
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 5.02435, 1.57011 )
+scale = Vector2( 0.25, 0.25 )
+texture = ExtResource( 1 )
 [connection signal="timeout" from="ReloadTimer" to="." method="_on_ReloadTimer_timeout"]
 [connection signal="timeout" from="FireTimer" to="." method="_on_FireTimer_timeout"]
