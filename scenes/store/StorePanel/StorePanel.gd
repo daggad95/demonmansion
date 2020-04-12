@@ -106,6 +106,9 @@ func _on_open_store():
 	_toggle_open()
 
 func _on_menu_input(dir):
+	if is_transparent:
+		return 
+		
 	var next_item
 	var num_children = len(item_grid.get_children())
 	

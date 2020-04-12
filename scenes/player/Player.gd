@@ -1,5 +1,6 @@
 extends KinematicBody2D
 
+enum {FORWARD, LEFT, RIGHT, BACKWARD}
 const WEAPON_FACTORY = preload("res://scenes/weapon/WeaponFactory.gd")
 const WEAPON = preload("res://scenes/weapon/Weapon.gd")
 class_name Player
@@ -27,6 +28,7 @@ var knockback = null
 var can_shoot = true # stop players from shooting when store open
 var aim_dir = Vector2(1, 0)
 var store_open = false
+var current_dir = FORWARD
 var ammo = {
 	WEAPON.Ammo.SNIPER: 100,
 	WEAPON.Ammo.RIFLE: 1000,
@@ -86,7 +88,12 @@ func add_ammo(ammo_type, amount):
 	emit_signal('reloaded', equipped_weapon, ammo)
 
 func equip_weapon(weapon):
+	if equipped_weapon != null:
+		equipped_weapon.hide()
+		
 	equipped_weapon = weapon
+	equipped_weapon.set_dir(current_dir)
+	equipped_weapon.show()
 	equipped_weapon.connect("reload_finish", self, "_on_reload_finish")
 	emit_signal('switch_weapon', equipped_weapon, ammo)
 	
@@ -109,6 +116,7 @@ func add_weapon_to_inventory(weapon_name):
 	for idx in len(inventory):
 		if inventory[idx] == null:
 			var weapon = WEAPON_FACTORY.create(weapon_name)
+			weapon.hide()
 			inventory[idx] = weapon
 			add_child(weapon)
 			
@@ -174,6 +182,8 @@ func _set_dir(dir):
 func _shoot():
 	if can_shoot and not store_open:
 		if equipped_weapon.shoot(aim_dir, ammo):
+			_set_sprite_dir(aim_dir)
+			$Sprite/FrameTimer.start()
 			emit_signal('fired_weapon', equipped_weapon, ammo)
 		
 		if not equipped_weapon.is_automatic():
@@ -194,10 +204,39 @@ func _physics_process(delta):
 	if velocity.length() > 0:
 		move_and_slide(velocity)
 		emit_signal('player_moved', player_name, position)
+		
+		_animate_movement()
 
 func showMessage():
 	$NotInStoreMessage.visible = true
 	$NotInStoreMessage/Timer.start(1)
+
+func _set_sprite_dir(dir_vector):
+	if abs(dir_vector.x) > abs(dir_vector.y):
+		if dir_vector.x < 0:
+			$Sprite.set_frame(LEFT)
+			equipped_weapon.set_dir(LEFT)
+			current_dir = LEFT
+		else:
+			$Sprite.set_frame(RIGHT)
+			equipped_weapon.set_dir(RIGHT)
+			current_dir = RIGHT
+	else:
+		if dir_vector.y < 0:
+			$Sprite.set_frame(BACKWARD)
+			equipped_weapon.set_dir(BACKWARD)
+			current_dir = BACKWARD
+		else:
+			$Sprite.set_frame(FORWARD)
+			equipped_weapon.set_dir(FORWARD)
+			current_dir = FORWARD
+
+func _animate_movement():
+	if !$Sprite/AnimationPlayer.is_playing():
+		$Sprite/AnimationPlayer.play("Hop")
+	
+	if $Sprite/FrameTimer.get_time_left() == 0:
+		_set_sprite_dir(velocity)
 
 func _on_Timer_timeout():
 	$NotInStoreMessage.visible = false

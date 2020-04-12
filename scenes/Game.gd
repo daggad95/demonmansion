@@ -76,7 +76,6 @@ func _enter_tree():
 		var hud = HUD.instance()
 		hud.init(player)
 		$CanvasLayer.add_child(hud)
-		
 	
 	
 func _process(delta):
