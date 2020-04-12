@@ -5,3 +5,4 @@
 
 [node name="AmmoStoreItem" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
+[connection signal="pressed" from="CenterContainer/VBoxContainer/CenterContainer/MarginContainer/Button" to="." method="_on_Button_pressed"]

@@ -13,7 +13,6 @@ static func get_weapon_props():
 		'ammo_type': Ammo.RIFLE,
 		'texture': "res://assets/Store/Assault Rifle.png"
 	}
-
 	
 func _gen_projectile():
 	var projectile = Projectile.instance()

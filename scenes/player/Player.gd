@@ -1,5 +1,6 @@
 extends KinematicBody2D
 
+enum {FORWARD, LEFT, RIGHT, BACKWARD}
 const WEAPON_FACTORY = preload("res://scenes/weapon/WeaponFactory.gd")
 const WEAPON = preload("res://scenes/weapon/Weapon.gd")
 class_name Player
@@ -26,6 +27,8 @@ var burn_damage = 0
 var knockback = null
 var can_shoot = true # stop players from shooting when store open
 var aim_dir = Vector2(1, 0)
+var store_open = false
+var current_dir = FORWARD
 var ammo = {
 	WEAPON.Ammo.SNIPER: 100,
 	WEAPON.Ammo.RIFLE: 1000,
@@ -55,10 +58,6 @@ func set_health(health):
 	self.health = health
 	emit_signal("health_change", health, max_health)
 #
-#func add_to_inventory(weapon):
-#	inventory.append(weapon)
-#
-# Get an array of weapon instances
 func get_inventory():
 	return inventory
 	
@@ -89,7 +88,12 @@ func add_ammo(ammo_type, amount):
 	emit_signal('reloaded', equipped_weapon, ammo)
 
 func equip_weapon(weapon):
+	if equipped_weapon != null:
+		equipped_weapon.hide()
+		
 	equipped_weapon = weapon
+	equipped_weapon.set_dir(current_dir)
+	equipped_weapon.show()
 	equipped_weapon.connect("reload_finish", self, "_on_reload_finish")
 	emit_signal('switch_weapon', equipped_weapon, ammo)
 	
@@ -112,6 +116,7 @@ func add_weapon_to_inventory(weapon_name):
 	for idx in len(inventory):
 		if inventory[idx] == null:
 			var weapon = WEAPON_FACTORY.create(weapon_name)
+			weapon.hide()
 			inventory[idx] = weapon
 			add_child(weapon)
 			
@@ -142,7 +147,11 @@ func init(init_pos, init_name, init_id):
 	equip_weapon(inventory[0])
 
 	add_to_group('player')
-	
+
+func link_store(store):
+	store.connect("open", self, "_on_store_change", [true])
+	store.connect("close", self, "_on_store_change", [false])
+
 func link_controller(controller):
 	controller.connect("player_change_dir", self, "_set_dir")
 	controller.connect("player_aim", self, "_aim")
@@ -153,8 +162,11 @@ func link_controller(controller):
 	controller.connect("player_inventory_3", self, "_switch_weapon", [2])
 	controller.connect("player_inventory_4", self, "_switch_weapon", [3])
 
+func _on_store_change(store_open):
+	self.store_open = store_open
+
 func _switch_weapon(weapon_num):
-	if inventory[weapon_num] != null:
+	if inventory[weapon_num] != null and not store_open:
 		equip_weapon(inventory[weapon_num])
 
 func _aim(dir):
@@ -168,8 +180,10 @@ func _set_dir(dir):
 	self.dir = Vector2(dir[0], dir[1]).normalized()
 
 func _shoot():
-	if can_shoot:
+	if can_shoot and not store_open:
 		if equipped_weapon.shoot(aim_dir, ammo):
+			_set_sprite_dir(aim_dir)
+			$Sprite/FrameTimer.start()
 			emit_signal('fired_weapon', equipped_weapon, ammo)
 		
 		if not equipped_weapon.is_automatic():
@@ -190,10 +204,39 @@ func _physics_process(delta):
 	if velocity.length() > 0:
 		move_and_slide(velocity)
 		emit_signal('player_moved', player_name, position)
+		
+		_animate_movement()
 
 func showMessage():
 	$NotInStoreMessage.visible = true
 	$NotInStoreMessage/Timer.start(1)
+
+func _set_sprite_dir(dir_vector):
+	if abs(dir_vector.x) > abs(dir_vector.y):
+		if dir_vector.x < 0:
+			$Sprite.set_frame(LEFT)
+			equipped_weapon.set_dir(LEFT)
+			current_dir = LEFT
+		else:
+			$Sprite.set_frame(RIGHT)
+			equipped_weapon.set_dir(RIGHT)
+			current_dir = RIGHT
+	else:
+		if dir_vector.y < 0:
+			$Sprite.set_frame(BACKWARD)
+			equipped_weapon.set_dir(BACKWARD)
+			current_dir = BACKWARD
+		else:
+			$Sprite.set_frame(FORWARD)
+			equipped_weapon.set_dir(FORWARD)
+			current_dir = FORWARD
+
+func _animate_movement():
+	if !$Sprite/AnimationPlayer.is_playing():
+		$Sprite/AnimationPlayer.play("Hop")
+	
+	if $Sprite/FrameTimer.get_time_left() == 0:
+		_set_sprite_dir(velocity)
 
 func _on_Timer_timeout():
 	$NotInStoreMessage.visible = false
@@ -205,12 +248,6 @@ func _on_BurnTimer_timeout():
 func _on_KnockbackTimer_timeout():
 	knockback = null
 	
-func _on_store_opened():
-	can_shoot = false
-	
-func _on_store_closed():
-	can_shoot = true
-
 func _on_reload_finish():
 	emit_signal('reloaded', equipped_weapon, ammo)
 	
