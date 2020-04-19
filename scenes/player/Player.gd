@@ -12,6 +12,8 @@ signal money_change
 signal health_change
 signal reloaded
 
+onready var PlayerSprite = $Sprite
+
 var max_health = 100.0
 var health = 80.0
 var money = 1000
@@ -22,6 +24,7 @@ var velocity = Vector2()
 var dir = Vector2()
 var player_name = "<UNDEFINED>"
 var player_id = -1
+var player_texture = null
 var burning = false
 var burn_damage = 0
 var knockback = null
@@ -40,6 +43,18 @@ var timer = 0.0
 
 func _ready():
 	emit_signal('player_moved', player_name, position)
+	PlayerSprite.set_texture(player_texture)
+	
+func init(init_pos, init_name, init_id, init_texture):
+	position = init_pos
+	player_name = init_name
+	player_id = init_id
+	player_texture = init_texture
+	
+	add_weapon_to_inventory('Pistol')
+	equip_weapon(inventory[0])
+
+	add_to_group('player')
 
 func get_money():
 	return money
@@ -136,17 +151,6 @@ func remove_weapon_from_inventory(weapon_name):
 func apply_knockback(dir, speed, duration):
 	knockback = dir * speed
 	$KnockbackTimer.start(duration)
-
-	
-func init(init_pos, init_name, init_id):
-	position = init_pos
-	player_name = init_name
-	player_id = init_id
-	
-	add_weapon_to_inventory('Pistol')
-	equip_weapon(inventory[0])
-
-	add_to_group('player')
 
 func link_store(store):
 	store.connect("open", self, "_on_store_change", [true])

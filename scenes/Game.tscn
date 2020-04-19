@@ -44,6 +44,20 @@ text = "FPS"
 
 [node name="StoreMenu" parent="." instance=ExtResource( 4 )]
 
+[node name="PlayerSpawns" type="Node2D" parent="."]
+
+[node name="Spawn1" type="Node2D" parent="PlayerSpawns"]
+position = Vector2( 120.798, 138.655 )
+
+[node name="Spawn2" type="Node2D" parent="PlayerSpawns"]
+position = Vector2( 171.848, 134.873 )
+
+[node name="Spawn3" type="Node2D" parent="PlayerSpawns"]
+position = Vector2( 122.059, 189.075 )
+
+[node name="Spawn4" type="Node2D" parent="PlayerSpawns"]
+position = Vector2( 171.218, 189.705 )
+
 [node name="Spawners" type="Node2D" parent="."]
 
 [node name="SpawnPoint" parent="Spawners" instance=ExtResource( 5 )]
