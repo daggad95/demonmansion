@@ -40,6 +40,20 @@ margin_bottom = 44.2937
 text = "FPS"
 
 [node name="StoreMenu" parent="." instance=ExtResource( 4 )]
+
+[node name="PlayerSpawns" type="Node2D" parent="."]
+
+[node name="Spawn1" type="Node2D" parent="PlayerSpawns"]
+position = Vector2( 120.798, 138.655 )
+
+[node name="Spawn2" type="Node2D" parent="PlayerSpawns"]
+position = Vector2( 171.848, 134.873 )
+
+[node name="Spawn3" type="Node2D" parent="PlayerSpawns"]
+position = Vector2( 122.059, 189.075 )
+
+[node name="Spawn4" type="Node2D" parent="PlayerSpawns"]
+position = Vector2( 171.218, 189.705 )
 [connection signal="esc_pressed" from="." to="CanvasLayer/ExitConfirmation" method="_on_Game_esc_pressed"]
 [connection signal="confirmed" from="CanvasLayer/ExitConfirmation" to="." method="_on_ExitConfirmation_confirmed"]
 [connection signal="popup_hide" from="CanvasLayer/ExitConfirmation" to="." method="_on_ExitConfirmation_popup_hide"]

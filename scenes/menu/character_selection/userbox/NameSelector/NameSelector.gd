@@ -48,5 +48,11 @@ func set_current_letter(idx):
 	
 func is_input_started():
 	return input_started
+	
+func get_name():
+	var name = ""
+	for child in get_children():
+		name += child.get_letter()
+	return name
 
 	

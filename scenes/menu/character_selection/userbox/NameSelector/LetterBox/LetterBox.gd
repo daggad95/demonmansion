@@ -25,6 +25,9 @@ func decrement_letter():
 		new_letter = char(int(current_letter.to_ascii()[0]) - 1)
 	letter.set_text(new_letter)
 	
+func get_letter():
+	return letter.text
+	
 func set_letter(new_letter):
 	letter.set_text(new_letter)
 	

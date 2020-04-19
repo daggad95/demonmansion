@@ -44,6 +44,7 @@ run/main_scene="res://scenes/menu/title/TitleScene.tscn"
 [autoload]
 
 Controllers="*res://scenes/controllers/Controllers.gd"
+PlayerData="*res://scenes/PlayerData/PlayerData.gd"
 
 [display]
 

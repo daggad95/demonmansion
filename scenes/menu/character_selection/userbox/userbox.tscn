@@ -29,7 +29,7 @@ region = Rect2( 138, 278, 11, 10 )
 
 [sub_resource type="AtlasTexture" id=6]
 atlas = ExtResource( 3 )
-region = Rect2( 137, 436, 12, 12 )
+region = Rect2( 138, 468, 12, 12 )
 
 [node name="PlayerSelect" type="MarginContainer"]
 margin_right = 387.0
