@@ -9,7 +9,7 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "RigidBody2D",
+"base": "KinematicBody2D",
 "class": "Enemy",
 "language": "GDScript",
 "path": "res://scenes/enemy/Enemy.gd"
@@ -44,6 +44,7 @@ run/main_scene="res://scenes/menu/title/TitleScene.tscn"
 [autoload]
 
 Controllers="*res://scenes/controllers/Controllers.gd"
+EnemyFactory="*res://scenes/enemy/EnemyFactory.gd"
 
 [display]
 

@@ -1,5 +1,6 @@
-extends RigidBody2D
+extends KinematicBody2D
 class_name Enemy
+signal dead
 
 const Money = preload("res://scenes/items/Money/Money.tscn")
 const Health = preload("res://scenes/items/Health/Health.tscn")
@@ -9,7 +10,7 @@ const DROP_RATE = 0.25
 onready var Game = get_tree().get_root().get_node('Game')
 
 var speed = 50.0
-var steer_rate = 300.0
+var steer_rate = 500.0
 var health = 100.0
 var knockback_speed = 50
 var knockback_duration = 0.1
@@ -18,13 +19,36 @@ var face_right = true
 var map
 var target
 var players
+var nav_path
+var nav_line
+var velocity = Vector2(0,0)
+var accel_rate = 100
+var target_velocity
+var path_update_delay = 0.5
+var rng = RandomNumberGenerator.new()
+var dead = false
+export var show_nav_path = false
 
-func init(init_pos, init_map, init_players):
-	position = init_pos
+func init(init_map, init_players):
 	map = init_map
 	players = init_players
-	target = _get_nearest_player()
 	add_to_group('enemy')
+	
+func take_damage(damage):
+	print("taking %d damage" % damage)
+	health -= damage
+	
+	if health <= 0 and not dead:
+		_drop_item()
+		emit_signal("dead")
+		queue_free()
+		dead = true
+
+func _ready():
+	$PathUpdateTimer.start(
+		path_update_delay 
+		+ rng.randf_range(-path_update_delay/2, path_update_delay/2)
+	)
 	
 func _get_nearest_player():
 	var min_dist = INF
@@ -37,14 +61,6 @@ func _get_nearest_player():
 			min_dist = dist
 			nearest = player
 	return nearest
-
-func take_damage(damage):
-	print("taking %d damage" % damage)
-	health -= damage
-	
-	if health <= 0:
-		_drop_item()
-		queue_free()
 
 func _drop_item():
 	var item
@@ -64,126 +80,104 @@ func _drop_item():
 		item.init(position)
 		Game.add_child(item)
 
+func _show_nav_path():
+	if nav_path == null:
+		return
+		
+	if nav_line != null:
+		nav_line.queue_free()
 
-func _seek_force():
-	var target_dir
-	var target_vel
+	nav_line = Line2D.new()
+	nav_line.add_point(global_position)
+	nav_line.width = 2
+	for i in len(nav_path):
+		nav_line.add_point(Vector2(nav_path[i].x, nav_path[i].y))
+	get_tree().get_root().add_child(nav_line)
 
-	target_dir = map.get_vector_to_target(target.get_name(), position)
-	target_vel = target_dir.normalized() * speed
-	return (target_vel - linear_velocity).normalized()
+func _follow_path_force():
+	if nav_path != null and len(nav_path) > 0:
+		var next_point = nav_path[0]
+		
+		if (
+			global_position.distance_to(next_point) < map.get_cell_size().x * 4
+			and len(nav_path) > 1
+		):
+			next_point = nav_path[1]
+		
+		return global_position.direction_to(next_point)
+	return Vector2(0, 0)
 
 func _separate_force():
-	var near_enemy = false
-	var nearby_enemies = []
-	var target_dir
-	var target_vel 
-	
-	if len($Bubble.get_overlapping_bodies()) > 0:
-		for body in $Bubble.get_overlapping_bodies():
-			if body.is_in_group('enemy')and body != self:
-				near_enemy = true
-				nearby_enemies.append(body)
-	
-	if near_enemy:
-		target_dir = Vector2(0, 0)
-		for enemy in nearby_enemies:
-			target_dir = enemy.global_position.direction_to(global_position)
-		target_vel = target_dir.normalized() * speed
-		return (target_vel - linear_velocity).normalized()
-	else:
-		return Vector2(0, 0)
+	var separate_force = Vector2(0, 0)
+	for body in $Sensor.get_overlapping_bodies():
+		if body != self:
+			separate_force += (
+				-global_position.direction_to(body.global_position).normalized()
+				* 200 / global_position.distance_to(body.global_position)
+			)
+	return separate_force
 
-func _avoid_obstacle_from(dir_name, dir):
-	var rotation_dir
+func _avoid_force():
+	var avoid_force = Vector2(0, 0)
 	
-	if dir_name == 'top' or dir_name == 'bot':
-		if linear_velocity.x >= 0:
-			rotation_dir = 1
-		else:
-			rotation_dir = -1
-	if dir_name == 'bot':
-		rotation_dir = -rotation_dir
+	if $ClockwiseFeeler.is_colliding():
+		avoid_force += (
+			velocity.normalized().rotated(-PI/2) 
+			* 100 / $ClockwiseFeeler.get_collision_point().distance_to(global_position)
+		)
 	
-	if dir_name == 'left' or dir_name == 'right':
-		if linear_velocity.y <= 0:
-			rotation_dir = -1
-		else:
-			rotation_dir = 1
-	if dir_name == 'left':
-		rotation_dir = -rotation_dir
+	if $CounterClockwiseFeeler.is_colliding():
+		avoid_force += (
+			velocity.normalized().rotated(PI/2) 
+			* 100 / $ClockwiseFeeler.get_collision_point().distance_to(global_position)
+		)
 		
-	$RayCast.set_position(dir)
-	$RayCast.set_cast_to(linear_velocity/8)
-	$RayCast.force_raycast_update()
-	var i = 0
-	while $RayCast.is_colliding() and i < 12:
-		i += 1
-		$RayCast.set_cast_to(linear_velocity.rotated(rotation_dir * PI/12*i))
-		$RayCast.force_raycast_update()
-	return linear_velocity.rotated(PI/12*i)
-	
-func _avoid_obstacle_force():
-	var target_dir = Vector2(0, 0)
-	var target_vel
-	var top = Vector2(0, -$CollisionShape2D.get_shape().get_extents().y)
-	var bot = Vector2(0, $CollisionShape2D.get_shape().get_extents().y)
-	var left = Vector2(-$CollisionShape2D.get_shape().get_extents().x, 0)
-	var right = Vector2($CollisionShape2D.get_shape().get_extents().x, 0)
-	
-	if abs(linear_velocity.x) > abs(linear_velocity.y):
-		target_dir += _avoid_obstacle_from('top', top)
-		target_dir += _avoid_obstacle_from('bot', bot)
-	else:
-		target_dir += _avoid_obstacle_from('left', left)
-		target_dir += _avoid_obstacle_from('right', right)
+	return avoid_force
 
-	target_vel = target_dir.normalized() * speed
-	return (target_vel - linear_velocity).normalized() 
-	
-func _brake_force():
-	var target_vel = Vector2(0, 0)
-	return (target_vel - linear_velocity).normalized() * (linear_velocity.length() / speed)
-	
 func _chase_target():
-	var steer_force = Vector2(0, 0)
-	steer_force += _seek_force() 
-	steer_force += _avoid_obstacle_force() * 2
-	steer_force += _separate_force() * 2
-	steer_force = steer_force.normalized()
-	steer_force *= steer_rate
-	
-	add_central_force(steer_force)
-	
-func _close_in():
-	add_central_force(_seek_force() * steer_rate)
+	target_velocity = Vector2(0, 0)
+	target_velocity += _follow_path_force() 
+	target_velocity += _separate_force()
+	target_velocity += _avoid_force() 
+	target_velocity = target_velocity.normalized() * speed
 
-func _brake():
-	if linear_velocity.length() > 5:
-		var steer_force = _brake_force() * steer_rate
-		add_central_force(steer_force)
-	else:
-		linear_velocity = Vector2(0, 0)
-
-func _charge(charge_target):
-	var target_dir = position.direction_to(charge_target)
-	var target_vel = target_dir.normalized() * speed
-	var steer_force = (target_vel - linear_velocity).normalized() * steer_rate
-	add_central_force(steer_force)
-
-func _shared_update(delta):
-	rotation = 0
-	applied_force = Vector2(0, 0)
-	
-	for body in $Bubble.get_overlapping_bodies():
-		if body.is_in_group('player'):
-			body.apply_knockback(
-				position.direction_to(body.get_position()),
-				knockback_speed,
-				knockback_duration)
-			body.take_damage(base_hit)
+func _set_path_to_target():
+	if target != null:
+		nav_path = map.get_nav_path(global_position, target.global_position)
 		
-	if linear_velocity.x > 0:
-		$Sprite.set_flip_h(!face_right)
-	elif linear_velocity.x <  0:
-		$Sprite.set_flip_h(face_right)
+func _shared_update(delta):
+	var accel_dir = velocity.direction_to(target_velocity)
+	var acceleration = accel_dir * min(accel_rate, velocity.distance_to(target_velocity))
+	velocity += acceleration * delta
+	
+	var clockwise = velocity.normalized().rotated(PI/4) * 20
+	var counter_clockwise = velocity.normalized().rotated(-PI/4) * 20
+	$ClockwiseFeeler.set_cast_to(clockwise)
+	$CounterClockwiseFeeler.set_cast_to(counter_clockwise)
+	$DesiredVelocity.set_cast_to(target_velocity)
+	
+	if show_nav_path:
+		_show_nav_path()
+	
+	move_and_slide(velocity)
+	
+#	for body in $Bubble.get_overlapping_bodies():
+#		if body.is_in_group('player'):
+#			body.apply_knockback(
+#				position.direction_to(body.get_position()),
+#				knockback_speed,
+#				knockback_duration)
+#			body.take_damage(base_hit)
+		
+#	if linear_velocity.x > 0:
+#		$Sprite.set_flip_h(!face_right)
+#	elif linear_velocity.x <  0:
+#		$Sprite.set_flip_h(face_right)
+
+
+func _on_PathUpdateTimer_timeout():
+	_set_path_to_target()
+	$PathUpdateTimer.start(
+		path_update_delay 
+		+ rng.randf_range(-path_update_delay/2, path_update_delay/2)
+	)
