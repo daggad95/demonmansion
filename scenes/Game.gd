@@ -4,7 +4,6 @@ const Map = preload("res://scenes/map/Map.tscn")
 const Player = preload("res://scenes/player/Player.tscn")
 const HUD = preload("res://scenes/hud/HUD.tscn")
 const Zombie = preload("res://scenes/enemy/Zombie.tscn")
-const FireSpirit = preload("res://scenes/enemy/FireSpirit.tscn")
 const Ogre = preload("res://scenes/enemy/Ogre.tscn")
 const Hellhound = preload("res://scenes/enemy/Hellhound.tscn")
 const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
@@ -12,6 +11,7 @@ const Ammo = preload("res://scenes/items/Ammo/Ammo.tscn")
 const Money = preload("res://scenes/items/Money/Money.tscn")
 const Health = preload("res://scenes/items/Health/Health.tscn")
 const StorePanel = preload("res://scenes/store/StorePanel/StorePanel.tscn")
+const RoundManager = preload("res://scenes/roundmanager/RoundManager.tscn")
 
 export var num_players = 0
 export var num_zombies = 0
@@ -21,62 +21,56 @@ export var num_hellhound = 0
 
 var players = []
 var camera
+var round_manager
 
 signal esc_pressed
 signal store_button_pressed
 
-func _ready():
-	for i in range(num_zombies):
-		var enemy = Zombie.instance()
-		enemy.init(Vector2(25*i + 50, 50), $Map, players)
-		add_child(enemy)
-		
-	for i in range(num_fire_spirits):
-		var enemy = FireSpirit.instance()
-		enemy.init(Vector2(25*i + 50, 100), $Map, players)
-		add_child(enemy)
+func get_player_count():
+	return num_players
 	
-	for i in range(num_ogres):
-		var enemy = Ogre.instance()
-		enemy.init(Vector2(25*i + 50, 150), $Map, players)
-		add_child(enemy)
-	
-	for i in range(num_hellhound):
-		var enemy = Hellhound.instance()
-		enemy.init(Vector2(25*i + 50, 200), $Map, players)
-		add_child(enemy)
-	
-	var controllers = get_node("/root/Controllers").get_controllers()
-	for i in range(len(controllers)):
-		var store = StorePanel.instance()
-		store.link_player(players[i])
-		players[i].link_store(store)
-		store.link_controller(controllers[i])
+func get_players():
+	return players
 
-		$StoreMenu.add_panel(store)
+func get_map():
+	return $Map
+
+func _ready():
+	$RoundManager.init($Spawners.get_children())
 		
 func _enter_tree():	
 	camera = GameCamera.instance()
 	camera.init(self, players)
 	add_child(camera)
-#
-	var controllers = get_node("/root/Controllers").get_controllers()
-	for i in range(num_players):
-		var player = Player.instance()
-		player.init(Vector2(100*i + 100, 100), "Player%d" % (i+1), i+1)
-		player.connect("player_moved", $Map, "_on_player_moved")
-		player.connect("player_moved", camera, "_on_player_moved")
-		
-		if i < len(controllers):
-			player.link_controller(controllers[i])
-			
-		players.append(player)
-		add_child(player)
-		
-		var hud = HUD.instance()
-		hud.init(player)
-		$CanvasLayer.add_child(hud)
 	
+	var player_data_node = get_node("/root/PlayerData")
+	var player_count = player_data_node.player_count
+	var controllers = get_node("/root/Controllers").get_controllers()
+	var spawns = $PlayerSpawns.get_children()
+	
+	# player_data: dictionary with id, name, sprite
+	for player_data in player_data_node.player_datum:
+		if player_data != null:
+			var player = Player.instance()
+			var id = player_data["id"]
+			
+			player.init(spawns[id].position, player_data["name"], id, player_data["texture"])
+			player.link_controller(player_data["controller"])
+			player.connect("player_moved", $Map, "_on_player_moved")
+			player.connect("player_moved", camera, "_on_player_moved")
+
+			var store = StorePanel.instance()
+			store.link_player(player)
+			player.link_store(store)
+			store.link_controller(player_data["controller"])
+			$StoreMenu.add_panel(store)
+			
+			players.append(player)
+			add_child(player)
+			
+			var hud = HUD.instance()
+			hud.init(player)
+			$CanvasLayer.add_child(hud)
 	
 func _process(delta):
 	if Input.is_action_pressed("ui_cancel"):
@@ -92,7 +86,6 @@ func _process(delta):
 		_spawn_enemy(get_global_mouse_position())
 	
 	$CanvasLayer/Label.set_text(str(Engine.get_frames_per_second()))
-	
 
 func _on_ExitConfirmation_popup_hide():
 	get_tree().paused = false
@@ -103,7 +96,8 @@ func _on_ExitConfirmation_confirmed():
 
 func _spawn_enemy(pos):
 	var enemy = Zombie.instance()
-	enemy.init(pos, $Map, players)
+	enemy.init($Map, players)
+	enemy.position = pos
 	add_child(enemy)
 	
 func _spawn_ammo(pos):
@@ -121,8 +115,4 @@ func _spawn_money(pos):
 	money.init(pos)
 	add_child(money)
 
-func get_player_count():
-	return num_players
-	
-func get_players():
-	return players
+

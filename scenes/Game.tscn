@@ -1,14 +1,17 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/Game.gd" type="Script" id=1]
 [ext_resource path="res://scenes/map/Map.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/ExitConfirmation.gd" type="Script" id=3]
 [ext_resource path="res://scenes/store/StoreMenu/StoreMenu.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/spawnpoint/SpawnPoint.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/roundmanager/RoundManager.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/roundmanager/Wave/Wave.tscn" type="PackedScene" id=7]
+[ext_resource path="res://scenes/roundmanager/Round/Round.tscn" type="PackedScene" id=8]
 
 [node name="Game" type="Node2D"]
-position = Vector2( 10, 0 )
 script = ExtResource( 1 )
-num_players = 2
+num_players = 1
 
 [node name="Map" parent="." instance=ExtResource( 2 )]
 
@@ -40,6 +43,50 @@ margin_bottom = 44.2937
 text = "FPS"
 
 [node name="StoreMenu" parent="." instance=ExtResource( 4 )]
+
+[node name="PlayerSpawns" type="Node2D" parent="."]
+
+[node name="Spawn1" type="Node2D" parent="PlayerSpawns"]
+position = Vector2( 120.798, 138.655 )
+
+[node name="Spawn2" type="Node2D" parent="PlayerSpawns"]
+position = Vector2( 171.848, 134.873 )
+
+[node name="Spawn3" type="Node2D" parent="PlayerSpawns"]
+position = Vector2( 122.059, 189.075 )
+
+[node name="Spawn4" type="Node2D" parent="PlayerSpawns"]
+position = Vector2( 171.218, 189.705 )
+
+[node name="Spawners" type="Node2D" parent="."]
+
+[node name="SpawnPoint" parent="Spawners" instance=ExtResource( 5 )]
+position = Vector2( 334.982, 111.862 )
+
+[node name="SpawnPoint2" parent="Spawners" instance=ExtResource( 5 )]
+position = Vector2( 116.427, 4.62013 )
+
+[node name="RoundManager" parent="." instance=ExtResource( 6 )]
+
+[node name="Round1" parent="RoundManager" instance=ExtResource( 8 )]
+
+[node name="Wave1" parent="RoundManager/Round1" instance=ExtResource( 7 )]
+timeout = 120
+spawn_delay = 1
+zombies = 5
+
+[node name="Wave2" parent="RoundManager/Round1" instance=ExtResource( 7 )]
+timeout = 120
+spawn_delay = 1
+imps = 5
+
+[node name="Round" parent="RoundManager" instance=ExtResource( 8 )]
+
+[node name="Wave" parent="RoundManager/Round" instance=ExtResource( 7 )]
+timeout = 60
+spawn_delay = 1
+zombies = 10
+imps = 10
 [connection signal="esc_pressed" from="." to="CanvasLayer/ExitConfirmation" method="_on_Game_esc_pressed"]
 [connection signal="confirmed" from="CanvasLayer/ExitConfirmation" to="." method="_on_ExitConfirmation_confirmed"]
 [connection signal="popup_hide" from="CanvasLayer/ExitConfirmation" to="." method="_on_ExitConfirmation_popup_hide"]

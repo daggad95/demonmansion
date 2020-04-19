@@ -1,7 +1,6 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://scenes/player/Player.gd" type="Script" id=1]
-[ext_resource path="res://assets/sprites/player7.png" type="Texture" id=2]
 [ext_resource path="res://assets/Fires/Small_Fireball_10x26.png" type="Texture" id=3]
 [ext_resource path="res://assets/misc/crosshair.png" type="Texture" id=4]
 
@@ -66,7 +65,6 @@ texture = ExtResource( 4 )
 
 [node name="Sprite" type="Sprite" parent="."]
 scale = Vector2( 0.2, 0.2 )
-texture = ExtResource( 2 )
 hframes = 4
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite"]

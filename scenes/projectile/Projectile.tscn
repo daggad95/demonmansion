@@ -37,11 +37,11 @@ scale = Vector2( 0.1, 0.1 )
 shape = SubResource( 1 )
 
 [node name="DefaultSprite" type="Sprite" parent="."]
-visible = false
 scale = Vector2( 0.1, 0.1 )
 texture = ExtResource( 2 )
 
 [node name="FireballSprite" type="Sprite" parent="."]
+visible = false
 position = Vector2( 0.0285873, -1.56034 )
 scale = Vector2( 0.25, 0.25 )
 texture = ExtResource( 3 )

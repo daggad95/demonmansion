@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/roundmanager/Wave/Wave.gd" type="Script" id=1]
+
+[node name="Wave" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="WaveTimer" type="Timer" parent="."]
+one_shot = true
+[connection signal="timeout" from="WaveTimer" to="." method="_on_wave_end"]

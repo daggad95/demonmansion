@@ -1,0 +1,85 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://scenes/enemy/Enemy.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/enemy/Imp.gd" type="Script" id=2]
+[ext_resource path="res://assets/Enemies/Imp Sprite Sheet.png" type="Texture" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 5.5549, 6.58665 )
+
+[sub_resource type="Animation" id=2]
+resource_name = "attack"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 16, 21 ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.4 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "_shoot_projectile"
+} ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "move_hop"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 8, 16 ]
+}
+
+[sub_resource type="CircleShape2D" id=4]
+radius = 10.6358
+
+[node name="Imp" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="." index="0"]
+position = Vector2( -0.197029, -4.38636 )
+scale = Vector2( 0.75, 0.75 )
+texture = ExtResource( 3 )
+vframes = 12
+hframes = 8
+frame = 16
+
+[node name="LineOfSight" type="RayCast2D" parent="." index="1"]
+visible = false
+
+[node name="FireTimer" type="Timer" parent="." index="2"]
+one_shot = true
+
+[node name="CollisionShape2D" parent="." index="3"]
+shape = SubResource( 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8"]
+autoplay = "move_hop"
+anims/attack = SubResource( 2 )
+anims/move_hop = SubResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sensor" index="0"]
+shape = SubResource( 4 )
+[connection signal="timeout" from="FireTimer" to="." method="_on_FireTimer_timeout"]
