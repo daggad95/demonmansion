@@ -2,7 +2,7 @@ extends Node2D
 
 const Map = preload("res://scenes/map/Map.tscn")
 const Player = preload("res://scenes/player/Player.tscn")
-const HUD = preload("res://scenes/hud/HUD.tscn")
+const PlayerHUD = preload("res://scenes/hud/PlayerHUD.tscn")
 const Zombie = preload("res://scenes/enemy/zombie/Zombie.tscn")
 const Imp = preload("res://scenes/enemy/Imp.tscn")
 const Ogre = preload("res://scenes/enemy/Ogre.tscn")
@@ -36,11 +36,9 @@ func get_players():
 
 func get_map():
 	return $Map
-
+		
 func _ready():
 	$RoundManager.init($Spawners.get_children())
-		
-func _enter_tree():	
 	camera = GameCamera.instance()
 	camera.init(self, players)
 	add_child(camera)
@@ -54,6 +52,24 @@ func _enter_tree():
 		player_data_node.player_datum[0] = {
 			"name": "DAAG",
 			"id": 0,
+			"texture": load("res://assets/sprites/player/player1.png"),
+			"controller": controllers[0]
+		}
+		player_data_node.player_datum[1] = {
+			"name": "blahg",
+			"id": 1,
+			"texture": load("res://assets/sprites/player/player1.png"),
+			"controller": controllers[0]
+		}
+		player_data_node.player_datum[2] = {
+			"name": "blahg",
+			"id": 2,
+			"texture": load("res://assets/sprites/player/player1.png"),
+			"controller": controllers[0]
+		}
+		player_data_node.player_datum[3] = {
+			"name": "blahg",
+			"id": 3,
 			"texture": load("res://assets/sprites/player/player1.png"),
 			"controller": controllers[0]
 		}
@@ -77,9 +93,9 @@ func _enter_tree():
 			players.append(player)
 			add_child(player)
 			
-			var hud = HUD.instance()
-			hud.init(player)
-			$CanvasLayer.add_child(hud)
+			var player_hud = PlayerHUD.instance()
+			player_hud.init(player)
+			$HUD.add_player_hud(player_hud)
 	
 func _process(delta):
 	if Input.is_action_pressed("ui_cancel"):
