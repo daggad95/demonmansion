@@ -16,6 +16,10 @@ func start(spawners):
 	
 	_queue_enemies(EnemyType.ZOMBIE, zombies, spawners)
 	_queue_enemies(EnemyType.IMP, imps, spawners)
+	
+	for spawner in spawners:
+		spawner.shuffle_queue()
+		
 	emit_signal("num_enemies_change", num_enemies)
 	
 	$WaveTimer.start(timeout)

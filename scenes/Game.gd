@@ -3,7 +3,8 @@ extends Node2D
 const Map = preload("res://scenes/map/Map.tscn")
 const Player = preload("res://scenes/player/Player.tscn")
 const HUD = preload("res://scenes/hud/HUD.tscn")
-const Zombie = preload("res://scenes/enemy/Zombie.tscn")
+const Zombie = preload("res://scenes/enemy/zombie/Zombie.tscn")
+const Imp = preload("res://scenes/enemy/Imp.tscn")
 const Ogre = preload("res://scenes/enemy/Ogre.tscn")
 const Hellhound = preload("res://scenes/enemy/Hellhound.tscn")
 const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
@@ -18,6 +19,7 @@ export var num_zombies = 0
 export var num_fire_spirits = 0
 export var num_ogres = 0
 export var num_hellhound = 0
+export var skip_menu = false
 
 var players = []
 var camera
@@ -48,6 +50,14 @@ func _enter_tree():
 	var controllers = get_node("/root/Controllers").get_controllers()
 	var spawns = $PlayerSpawns.get_children()
 	
+	if skip_menu:
+		player_data_node.player_datum[0] = {
+			"name": "DAAG",
+			"id": 0,
+			"texture": load("res://assets/sprites/player/player1.png"),
+			"controller": controllers[0]
+		}
+		
 	# player_data: dictionary with id, name, sprite
 	for player_data in player_data_node.player_datum:
 		if player_data != null:
@@ -56,7 +66,6 @@ func _enter_tree():
 			
 			player.init(spawns[id].position, player_data["name"], id, player_data["texture"])
 			player.link_controller(player_data["controller"])
-			player.connect("player_moved", $Map, "_on_player_moved")
 			player.connect("player_moved", camera, "_on_player_moved")
 
 			var store = StorePanel.instance()
@@ -95,7 +104,7 @@ func _on_ExitConfirmation_confirmed():
 	get_tree().quit()
 
 func _spawn_enemy(pos):
-	var enemy = Zombie.instance()
+	var enemy = Imp.instance()
 	enemy.init($Map, players)
 	enemy.position = pos
 	add_child(enemy)

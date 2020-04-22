@@ -10,7 +10,10 @@ signal fired_weapon
 signal switch_weapon
 signal money_change
 signal health_change
-signal reloaded
+signal ammo_change
+signal ammo_stock_change
+signal weapon_change
+signal inventory_change
 
 onready var PlayerSprite = $Sprite
 
@@ -100,17 +103,19 @@ func get_ammo():
 
 func add_ammo(ammo_type, amount):
 	ammo[ammo_type] += amount
-	emit_signal('reloaded', equipped_weapon, ammo)
+	emit_signal("ammo_stock_change", ammo)
+	emit_signal('ammo_change', equipped_weapon.clip, equipped_total_ammo_str())
 
 func equip_weapon(weapon):
 	if equipped_weapon != null:
 		equipped_weapon.hide()
+		equipped_weapon.disconnect("reload_finish", self, "_on_reload_finish")
 		
 	equipped_weapon = weapon
 	equipped_weapon.set_dir(current_dir)
 	equipped_weapon.show()
 	equipped_weapon.connect("reload_finish", self, "_on_reload_finish")
-	emit_signal('switch_weapon', equipped_weapon, ammo)
+	emit_signal('ammo_change', equipped_weapon.clip, equipped_total_ammo_str())
 	
 func take_damage(damage):
 	health -= damage
@@ -134,6 +139,7 @@ func add_weapon_to_inventory(weapon_name):
 			weapon.hide()
 			inventory[idx] = weapon
 			add_child(weapon)
+			emit_signal("inventory_change", inventory)
 			
 			return true
 	return false
@@ -166,12 +172,19 @@ func link_controller(controller):
 	controller.connect("player_inventory_3", self, "_switch_weapon", [2])
 	controller.connect("player_inventory_4", self, "_switch_weapon", [3])
 
+func equipped_total_ammo_str():
+	if equipped_weapon.ammo_type != Weapon.Ammo.NONE:
+		return str(ammo[equipped_weapon.ammo_type])
+	else: 
+		return "∞"
+
 func _on_store_change(store_open):
 	self.store_open = store_open
 
 func _switch_weapon(weapon_num):
 	if inventory[weapon_num] != null and not store_open:
 		equip_weapon(inventory[weapon_num])
+		emit_signal("weapon_change", weapon_num)
 
 func _aim(dir):
 	aim_dir = Vector2(dir[0], dir[1]).normalized()
@@ -188,7 +201,7 @@ func _shoot():
 		if equipped_weapon.shoot(aim_dir, ammo):
 			_set_sprite_dir(aim_dir)
 			$Sprite/FrameTimer.start()
-			emit_signal('fired_weapon', equipped_weapon, ammo)
+			emit_signal('ammo_change', equipped_weapon.clip, equipped_total_ammo_str())
 		
 		if not equipped_weapon.is_automatic():
 			can_shoot = false
@@ -225,15 +238,15 @@ func _set_sprite_dir(dir_vector):
 			$Sprite.set_frame(RIGHT)
 			equipped_weapon.set_dir(RIGHT)
 			current_dir = RIGHT
-	else:
-		if dir_vector.y < 0:
-			$Sprite.set_frame(BACKWARD)
-			equipped_weapon.set_dir(BACKWARD)
-			current_dir = BACKWARD
-		else:
-			$Sprite.set_frame(FORWARD)
-			equipped_weapon.set_dir(FORWARD)
-			current_dir = FORWARD
+#	else:
+#		if dir_vector.y < 0:
+#			$Sprite.set_frame(BACKWARD)
+#			equipped_weapon.set_dir(BACKWARD)
+#			current_dir = BACKWARD
+#		else:
+#			$Sprite.set_frame(FORWARD)
+#			equipped_weapon.set_dir(FORWARD)
+#			current_dir = FORWARD
 
 func _animate_movement():
 	if !$Sprite/AnimationPlayer.is_playing():
@@ -253,6 +266,6 @@ func _on_KnockbackTimer_timeout():
 	knockback = null
 	
 func _on_reload_finish():
-	emit_signal('reloaded', equipped_weapon, ammo)
+	emit_signal('ammo_change', equipped_weapon.clip, equipped_total_ammo_str())
 	
 

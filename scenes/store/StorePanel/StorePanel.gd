@@ -58,7 +58,7 @@ func link_player(player):
 	self.player = player
 	player.connect("health_change", self, "_update_player_health")
 	player.connect("money_change", self, "_update_player_money")
-	player.connect("reloaded", self, "_update_player_ammo")
+	player.connect("ammo_stock_change", self, "_update_player_ammo")
 
 func _ready():
 	for name in WeaponFactory.get_weapon_names():
@@ -73,7 +73,7 @@ func _ready():
 	
 	_update_player_health(player.get_health())
 	_update_player_money(player.get_money())
-	_update_player_ammo(null, player.get_ammo())
+	_update_player_ammo(player.get_ammo())
 	_update_items()
 	
 	is_transparent = false
@@ -91,7 +91,7 @@ func _toggle_open():
 	
 	is_transparent = !is_transparent
 	
-func _update_player_ammo(weapon, ammo):
+func _update_player_ammo(ammo):
 	rifle_ammo_label.set_text("Rifle Ammo: {0}".format([ammo[Weapon.Ammo.RIFLE]]))
 	sniper_ammo_label.set_text("Sniper Ammo: {0}".format([ammo[Weapon.Ammo.SNIPER]]))
 	shotgun_ammo_label.set_text("Shotgun Ammo: {0}".format([ammo[Weapon.Ammo.SHOTGUN]]))

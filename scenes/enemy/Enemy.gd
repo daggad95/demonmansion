@@ -35,7 +35,6 @@ func init(init_map, init_players):
 	add_to_group('enemy')
 	
 func take_damage(damage):
-	print("taking %d damage" % damage)
 	health -= damage
 	
 	if health <= 0 and not dead:

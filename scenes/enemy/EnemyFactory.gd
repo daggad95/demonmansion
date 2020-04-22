@@ -1,5 +1,5 @@
 extends Node
-const Zombie = preload("res://scenes/enemy/Zombie.tscn")
+const Zombie = preload("res://scenes/enemy/zombie/Zombie.tscn")
 const Imp = preload("res://scenes/enemy/Imp.tscn")
 enum EnemyType {ZOMBIE, IMP}
 
