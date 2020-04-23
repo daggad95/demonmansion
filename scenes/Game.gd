@@ -55,24 +55,6 @@ func _ready():
 			"texture": load("res://assets/sprites/player/player1.png"),
 			"controller": controllers[0]
 		}
-		player_data_node.player_datum[1] = {
-			"name": "blahg",
-			"id": 1,
-			"texture": load("res://assets/sprites/player/player1.png"),
-			"controller": controllers[0]
-		}
-		player_data_node.player_datum[2] = {
-			"name": "blahg",
-			"id": 2,
-			"texture": load("res://assets/sprites/player/player1.png"),
-			"controller": controllers[0]
-		}
-		player_data_node.player_datum[3] = {
-			"name": "blahg",
-			"id": 3,
-			"texture": load("res://assets/sprites/player/player1.png"),
-			"controller": controllers[0]
-		}
 		
 	# player_data: dictionary with id, name, sprite
 	for player_data in player_data_node.player_datum:

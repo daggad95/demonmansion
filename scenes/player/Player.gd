@@ -146,13 +146,16 @@ func add_weapon_to_inventory(weapon_name):
 
 func remove_weapon_from_inventory(weapon_name):
 	var match_idx = -1
+	
 	for i in range(len(inventory)):
-		if weapon_name == inventory[i].get_name():
+		if inventory[i] != null and  weapon_name == inventory[i].get_name():
 			match_idx = i
 			break
+			
 	if match_idx != -1:
+	
 		inventory[match_idx].queue_free()
-		inventory.remove(match_idx)
+		inventory[match_idx] = null
 
 func apply_knockback(dir, speed, duration):
 	knockback = dir * speed

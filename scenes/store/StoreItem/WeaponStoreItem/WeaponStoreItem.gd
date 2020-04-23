@@ -13,8 +13,14 @@ func init(weapon_name):
 func get_weapon_props():
 	return weapon_props
 
-func set_purchased():
-	set_modulate(Color(1, 0, 0, 1))
+func set_price(price):
+	weapon_props["price"] = price
+
+func set_purchased(purchased):
+	if purchased:
+		set_modulate(Color(1, 0, 0, 1))
+	else:
+		set_modulate(Color(1, 1, 1, 1))
 
 func _ready():
 	var texture = load(weapon_props["texture"])
