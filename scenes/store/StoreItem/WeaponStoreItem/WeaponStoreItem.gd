@@ -23,7 +23,7 @@ func set_purchased(purchased):
 		set_modulate(Color(1, 1, 1, 1))
 
 func _ready():
-	var texture = load(weapon_props["texture"])
+	var texture = weapon_props["texture"]
 	item_texture.set_texture(texture)
 	name_label.set_text(weapon_props["weapon_name"])
 	price_label.set_text("${0}".format([weapon_props["price"]]))

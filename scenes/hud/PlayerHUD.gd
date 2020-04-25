@@ -55,7 +55,7 @@ func _set_weapon_box_icon(weapon_box, weapon):
 	var icon = weapon_box.find_node("WeaponIcon")
 	
 	if weapon != null:
-		icon.texture = load(weapon.get_weapon_props()["texture"])
+		icon.texture = weapon.get_weapon_props()["texture"]
 	else:
 		icon.texture = null
 

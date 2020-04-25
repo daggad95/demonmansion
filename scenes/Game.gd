@@ -13,6 +13,7 @@ const Money = preload("res://scenes/items/Money/Money.tscn")
 const Health = preload("res://scenes/items/Health/Health.tscn")
 const StorePanel = preload("res://scenes/store/StorePanel/StorePanel.tscn")
 const RoundManager = preload("res://scenes/roundmanager/RoundManager.tscn")
+const SmokeTrail = preload("res://scenes/effects/SmokeTrail/SmokeTrail.tscn")
 
 export var num_players = 0
 export var num_zombies = 0
@@ -90,7 +91,7 @@ func _process(delta):
 	elif Input.is_action_just_pressed("spawn_money"):
 		_spawn_money(get_global_mouse_position())
 	elif Input.is_action_just_pressed("spawn_enemy"):
-		_spawn_enemy(get_global_mouse_position())
+		_spawn_effect(get_global_mouse_position())
 	
 	$CanvasLayer/Label.set_text(str(Engine.get_frames_per_second()))
 
@@ -106,6 +107,11 @@ func _spawn_enemy(pos):
 	enemy.init($Map, players)
 	enemy.position = pos
 	add_child(enemy)
+
+func _spawn_effect(pos):
+	var trail = SmokeTrail.instance()
+	trail.position = pos
+	add_child(trail)
 	
 func _spawn_ammo(pos):
 	var ammo = Ammo.instance()

@@ -7,53 +7,47 @@ enum Ammo {RIFLE, SNIPER, SHOTGUN, NONE}
 enum {FORWARD, LEFT, RIGHT, BACKWARD}
 signal reload_finish
 
+export var clip_size   = 0
+export var weapon_name = '<UNDEFINED>'
+export var price       = 0
+export var reload_time = 0
 export var two_handed = false
+export var spread = 0
+export var num_projectiles = 1
+export var ammo_type = Ammo.NONE
+export var automatic = false
 export var right_position : Vector2
 export var forward_position : Vector2
-var clip_size   = 0
-var clip        = 0
-var weapon_name = '<UNDEFINED>'
-var price       = 0
-var reload_time = 0
+export var fire_rate = 0 # per second
+export var damage = 0
+export var proj_range = 0
+export var proj_speed = 0
+export var penetration = 0
+export var damage_dropoff = 0
+var clip = 0
 var reloading = false
-var spread = 0
-var num_projectiles = 1
-var ammo_type = Ammo.NONE
 var aim_dir = Vector2(1,0)
 var img_offset = Vector2(-56, 0)
-var automatic = false
-var fire_rate = 0 # per second
 var can_fire = true
 var reload_amount = 0
 var current_dir = RIGHT
 
-
-static func get_weapon_props():
+func get_weapon_props():
 	return {
-		'clip_size': 0,
-		'weapon_name': '<UNDEFINED>',
-		'price': 0,
-		'reload_time': 0,
-		'fire_rate': 0,
-		'spread': 0,
-		'num_projectiles': 0,
-		'automatic': false,
-		'ammo_type': Ammo.NONE,
-		'texture': ""
+		'clip_size': clip_size,
+		'weapon_name': weapon_name,
+		'price': price,
+		'reload_time': reload_time,
+		'fire_rate': fire_rate,
+		'spread': spread,
+		'num_projectiles': num_projectiles,
+		'automatic': automatic,
+		'ammo_type': ammo_type,
+		'texture': $Sprite.texture
 	}
 
-func init():
-	var weapon_props = get_weapon_props()
-	clip_size   	= weapon_props['clip_size']
-	clip        	= weapon_props['clip_size']
-	weapon_name 	= weapon_props['weapon_name']
-	price       	= weapon_props['price']
-	reload_time 	= weapon_props['reload_time']
-	fire_rate   	= weapon_props['fire_rate']
-	spread      	= weapon_props['spread']
-	num_projectiles = weapon_props['num_projectiles']
-	automatic 		= weapon_props['automatic']
-	ammo_type       = weapon_props['ammo_type']
+func _ready():
+	clip = clip_size
 
 func shoot(aim_dir, ammo):
 	self.aim_dir = aim_dir
@@ -130,7 +124,16 @@ func _process_projectile(projectile):
 	return projectile
 
 func _gen_projectile():
-	return null
+	var projectile = Projectile.instance()
+	projectile.init(
+		aim_dir, 
+		proj_speed,  
+		proj_range, 
+		penetration,   
+		damage,  
+		damage_dropoff, 
+		global_position - position)
+	return projectile
 
 func _on_ReloadTimer_timeout():
 	clip = reload_amount

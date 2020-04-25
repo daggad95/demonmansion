@@ -1,31 +1,18 @@
 extends Node
 
-const Weapons = {
-	'Sniper': {
-		'script': preload("res://scenes/weapon/Sniper.gd"),
-		'scene':  preload("res://scenes/weapon/Sniper.tscn")
-	},
-	'Shotgun': {
-		'script': preload("res://scenes/weapon/Shotgun.gd"),
-		'scene':  preload("res://scenes/weapon/Shotgun.tscn")
-	},
-	'Pistol': {
-		'script': preload("res://scenes/weapon/Pistol.gd"),
-		'scene':  preload("res://scenes/weapon/Pistol.tscn")
-	},
-	'Assault Rifle': {
-		'script': preload("res://scenes/weapon/AssaultRifle.gd"),
-		'scene':  preload("res://scenes/weapon/AssaultRifle.tscn")
-	}
+const WEAPONS = {
+	"Sniper": preload("res://scenes/weapon/Sniper/Sniper.tscn"),
+	"Shotgun": preload("res://scenes/weapon/Shotgun/Shotgun.tscn"),
+	"Assault Rifle": preload("res://scenes/weapon/AssaultRifle/AssaultRifle.tscn"),
+	"Pistol": preload("res://scenes/weapon/Pistol/Pistol.tscn")
 }
 
 static func create(weapon_name):
-	var weapon = Weapons[weapon_name]['scene'].instance()
-	weapon.init()
+	var weapon = WEAPONS[weapon_name].instance()
 	return weapon
 
 static func get_props(weapon_name):
-	return Weapons[weapon_name]['script'].get_weapon_props()
+	return create(weapon_name).get_weapon_props()
 
 static func get_weapon_names():
-	return Weapons.keys()
+	return WEAPONS.keys()
