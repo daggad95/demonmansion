@@ -1,4 +1,5 @@
 extends Area2D
+const SmokeTrail = preload("res://scenes/effects/SmokeTrail/SmokeTrail.tscn")
 const PLAYER_COLLISION = 5
 const ENEMY_COLLISION = 6
 
@@ -69,9 +70,11 @@ func set_sprite(sprite_name):
 
 func rotate_sprite(dir):
 	sprite.rotate(dir - PI/2)
+	
 
 func rotate_dir(dir):
 	direction = direction.rotated(dir)
+
 
 func scale_speed(factor):
 	speed = speed * factor
@@ -97,5 +100,12 @@ func _physics_process(delta):
 		var velocity = direction.normalized() * speed * delta
 		position += velocity
 		dist_travelled += velocity.length()
+		
+		var dist_travelled = int(delta * speed)
+		var density = 2
+		for i in range(dist_travelled/density):
+			var smoke = SmokeTrail.instance()
+			smoke.position = position - direction.normalized() * i * density
+			get_tree().get_root().add_child(smoke)
 	else:
 		queue_free()

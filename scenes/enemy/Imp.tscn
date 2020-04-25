@@ -64,7 +64,7 @@ scale = Vector2( 0.75, 0.75 )
 texture = ExtResource( 3 )
 vframes = 12
 hframes = 8
-frame = 16
+frame = 8
 
 [node name="LineOfSight" type="RayCast2D" parent="." index="1"]
 visible = false

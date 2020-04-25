@@ -14,6 +14,9 @@ func _ready():
 func set_spawn_delay(spawn_delay):
 	spawn_delay = spawn_delay
 	$SpawnTimer.wait_time = spawn_delay
+
+func shuffle_queue():
+	spawn_queue.shuffle()
 	
 func _on_SpawnTimer_timeout():
 	for i in range(spawn_quantity):

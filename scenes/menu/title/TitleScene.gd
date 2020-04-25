@@ -1,7 +1,12 @@
 extends Control
+export var skip_menu = false
 
 # Buttons are instancess of base_MainMenuButton.tscn so that the properties of every main menu 
 # button can be changed by changing the properies of base_MainMenuButton.tscn
+
+func _ready():
+	if skip_menu:
+		get_tree().change_scene("res://scenes/Game.tscn")
 
 func _on_NewGame_pressed():
 	get_tree().change_scene("res://scenes/menu/character_selection/SelectionScreen/SelectionScene.tscn")

@@ -2,8 +2,9 @@ extends Node2D
 
 const Map = preload("res://scenes/map/Map.tscn")
 const Player = preload("res://scenes/player/Player.tscn")
-const HUD = preload("res://scenes/hud/HUD.tscn")
-const Zombie = preload("res://scenes/enemy/Zombie.tscn")
+const PlayerHUD = preload("res://scenes/hud/PlayerHUD.tscn")
+const Zombie = preload("res://scenes/enemy/zombie/Zombie.tscn")
+const Imp = preload("res://scenes/enemy/Imp.tscn")
 const Ogre = preload("res://scenes/enemy/Ogre.tscn")
 const Hellhound = preload("res://scenes/enemy/Hellhound.tscn")
 const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
@@ -12,12 +13,14 @@ const Money = preload("res://scenes/items/Money/Money.tscn")
 const Health = preload("res://scenes/items/Health/Health.tscn")
 const StorePanel = preload("res://scenes/store/StorePanel/StorePanel.tscn")
 const RoundManager = preload("res://scenes/roundmanager/RoundManager.tscn")
+const SmokeTrail = preload("res://scenes/effects/SmokeTrail/SmokeTrail.tscn")
 
 export var num_players = 0
 export var num_zombies = 0
 export var num_fire_spirits = 0
 export var num_ogres = 0
 export var num_hellhound = 0
+export var skip_menu = false
 
 var players = []
 var camera
@@ -34,11 +37,9 @@ func get_players():
 
 func get_map():
 	return $Map
-
+		
 func _ready():
 	$RoundManager.init($Spawners.get_children())
-		
-func _enter_tree():	
 	camera = GameCamera.instance()
 	camera.init(self, players)
 	add_child(camera)
@@ -48,6 +49,14 @@ func _enter_tree():
 	var controllers = get_node("/root/Controllers").get_controllers()
 	var spawns = $PlayerSpawns.get_children()
 	
+	if skip_menu:
+		player_data_node.player_datum[0] = {
+			"name": "DAAG",
+			"id": 0,
+			"texture": load("res://assets/sprites/player/player1.png"),
+			"controller": controllers[0]
+		}
+		
 	# player_data: dictionary with id, name, sprite
 	for player_data in player_data_node.player_datum:
 		if player_data != null:
@@ -56,7 +65,6 @@ func _enter_tree():
 			
 			player.init(spawns[id].position, player_data["name"], id, player_data["texture"])
 			player.link_controller(player_data["controller"])
-			player.connect("player_moved", $Map, "_on_player_moved")
 			player.connect("player_moved", camera, "_on_player_moved")
 
 			var store = StorePanel.instance()
@@ -68,9 +76,9 @@ func _enter_tree():
 			players.append(player)
 			add_child(player)
 			
-			var hud = HUD.instance()
-			hud.init(player)
-			$CanvasLayer.add_child(hud)
+			var player_hud = PlayerHUD.instance()
+			player_hud.init(player)
+			$HUD.add_player_hud(player_hud)
 	
 func _process(delta):
 	if Input.is_action_pressed("ui_cancel"):
@@ -83,7 +91,7 @@ func _process(delta):
 	elif Input.is_action_just_pressed("spawn_money"):
 		_spawn_money(get_global_mouse_position())
 	elif Input.is_action_just_pressed("spawn_enemy"):
-		_spawn_enemy(get_global_mouse_position())
+		_spawn_effect(get_global_mouse_position())
 	
 	$CanvasLayer/Label.set_text(str(Engine.get_frames_per_second()))
 
@@ -95,10 +103,15 @@ func _on_ExitConfirmation_confirmed():
 	get_tree().quit()
 
 func _spawn_enemy(pos):
-	var enemy = Zombie.instance()
+	var enemy = Imp.instance()
 	enemy.init($Map, players)
 	enemy.position = pos
 	add_child(enemy)
+
+func _spawn_effect(pos):
+	var trail = SmokeTrail.instance()
+	trail.position = pos
+	add_child(trail)
 	
 func _spawn_ammo(pos):
 	var ammo = Ammo.instance()

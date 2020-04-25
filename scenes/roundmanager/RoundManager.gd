@@ -18,12 +18,13 @@ func init(spawners):
 func _next_round():
 	var next_round = rounds.pop_front()
 	
-	current_round += 1
-	next_round.connect("wave_change", self, "_on_wave_change")
-	next_round.connect("end_round", self, "_on_end_round")
-	next_round.start(self, spawners)
-	message.text = "Round %d" % current_round
-	$AnimationPlayer.play("MessageAnimation")
+	if next_round:
+		current_round += 1
+		next_round.connect("wave_change", self, "_on_wave_change")
+		next_round.connect("end_round", self, "_on_end_round")
+		next_round.start(self, spawners)
+		message.text = "Round %d" % current_round
+		$AnimationPlayer.play("MessageAnimation")
 
 func _on_wave_change(wave, total_waves):
 	wave_text.text = "Wave %d/%d" % [wave, total_waves]
