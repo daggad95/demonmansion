@@ -1,143 +1,123 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scenes/menu/title/TitleScene.gd" type="Script" id=1]
-[ext_resource path="res://assets/fonts/source-code-pro/source-code-pro-2.010R-ro-1.030R-it/TTF/SourceCodePro-Regular.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://scenes/menu/title/NewGameButton.tscn" type="PackedScene" id=3]
-[ext_resource path="res://scenes/menu/title/ContinueButton.tscn" type="PackedScene" id=4]
-[ext_resource path="res://scenes/menu/title/OptionsButton.tscn" type="PackedScene" id=5]
-[ext_resource path="res://scenes/menu/title/ExitButton.tscn" type="PackedScene" id=6]
-[ext_resource path="res://assets/TilesetGrass/preview.png" type="Texture" id=7]
-[ext_resource path="res://scenes/menu/misc/FadeIn.tscn" type="PackedScene" id=8]
-[ext_resource path="res://scenes/menu/title/ExitConfirmation.gd" type="Script" id=9]
-
-[sub_resource type="Theme" id=1]
-
-[sub_resource type="DynamicFont" id=2]
-size = 48
-font_data = ExtResource( 2 )
-
-[sub_resource type="DynamicFont" id=3]
-size = 22
-font_data = ExtResource( 2 )
+[ext_resource path="res://assets/fonts/custom/sourcecodepro_24.tres" type="DynamicFont" id=2]
+[ext_resource path="res://assets/fonts/custom/source-code-pro_size38.tres" type="DynamicFont" id=3]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
-[node name="Control" type="Control" parent="."]
+[node name="TitleScene" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MainMenu" type="MarginContainer" parent="Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = 1213.0
-margin_bottom = 622.0
-custom_constants/margin_right = 120
-custom_constants/margin_top = 80
-custom_constants/margin_left = 120
-custom_constants/margin_bottom = 80
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="ColorRect" type="ColorRect" parent="TitleScene"]
+margin_right = 1280.0
+margin_bottom = 720.0
+color = Color( 0.12549, 0.141176, 0.12549, 1 )
 
-[node name="InsideMargins" type="HSplitContainer" parent="Control/MainMenu"]
-margin_left = 120.0
-margin_top = 80.0
-margin_right = 1093.0
-margin_bottom = 542.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.0
+[node name="TitleContainer" type="MarginContainer" parent="TitleScene"]
+margin_right = 449.0
+margin_bottom = 720.0
+size_flags_horizontal = 0
+custom_constants/margin_top = 150
+custom_constants/margin_left = 150
 
-[node name="LeftTextBox" type="VBoxContainer" parent="Control/MainMenu/InsideMargins"]
-margin_right = 377.0
-margin_bottom = 462.0
-size_flags_horizontal = 3
-alignment = 1
-
-[node name="Title" type="Label" parent="Control/MainMenu/InsideMargins/LeftTextBox"]
-margin_right = 377.0
-margin_bottom = 62.0
-theme = SubResource( 1 )
-custom_fonts/font = SubResource( 2 )
-text = "Demon Mansion"
-
-[node name="Version" type="Label" parent="Control/MainMenu/InsideMargins/LeftTextBox"]
-margin_top = 66.0
-margin_right = 377.0
-margin_bottom = 94.0
-theme = SubResource( 1 )
-custom_fonts/font = SubResource( 3 )
-text = "ver 0.1"
-
-[node name="MenuButtons" type="VBoxContainer" parent="Control/MainMenu/InsideMargins/LeftTextBox"]
-margin_top = 98.0
-margin_right = 377.0
-margin_bottom = 414.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_constants/separation = 10
-alignment = 1
-
-[node name="NewGame" parent="Control/MainMenu/InsideMargins/LeftTextBox/MenuButtons" instance=ExtResource( 3 )]
-margin_top = 82.0
-margin_right = 377.0
-margin_bottom = 126.0
-
-[node name="Continue" parent="Control/MainMenu/InsideMargins/LeftTextBox/MenuButtons" instance=ExtResource( 4 )]
-margin_top = 136.0
-margin_right = 377.0
-margin_bottom = 180.0
-
-[node name="Options" parent="Control/MainMenu/InsideMargins/LeftTextBox/MenuButtons" instance=ExtResource( 5 )]
-margin_top = 190.0
-margin_right = 377.0
-margin_bottom = 234.0
-
-[node name="Exit" parent="Control/MainMenu/InsideMargins/LeftTextBox" instance=ExtResource( 6 )]
-margin_top = 418.0
-margin_right = 377.0
-margin_bottom = 462.0
-
-[node name="RightPictureBox" type="CenterContainer" parent="Control/MainMenu/InsideMargins"]
-margin_left = 389.0
-margin_right = 973.0
-margin_bottom = 462.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="TitleLabel" type="Label" parent="TitleScene/TitleContainer"]
+margin_left = 150.0
+margin_top = 150.0
+margin_right = 449.0
+margin_bottom = 199.0
+size_flags_horizontal = 0
 size_flags_vertical = 0
-size_flags_stretch_ratio = 0.0
+custom_fonts/font = ExtResource( 3 )
+text = "Demon Mansion"
+uppercase = true
 
-[node name="TextureRect" type="TextureRect" parent="Control/MainMenu/InsideMargins/RightPictureBox"]
-margin_right = 584.0
-margin_bottom = 462.0
-grow_horizontal = 0
-grow_vertical = 0
-mouse_filter = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.0
-texture = ExtResource( 7 )
-stretch_mode = 7
+[node name="OptionsContainer" type="VBoxContainer" parent="TitleScene/TitleContainer"]
+margin_left = 150.0
+margin_top = 373.0
+margin_right = 449.0
+margin_bottom = 496.0
+size_flags_vertical = 4
+custom_constants/separation = 15
 
-[node name="FadeIn" parent="Control" instance=ExtResource( 8 )]
+[node name="NewGameContainer" type="MarginContainer" parent="TitleScene/TitleContainer/OptionsContainer"]
+margin_right = 299.0
+margin_bottom = 31.0
+rect_min_size = Vector2( 250, 0 )
+
+[node name="NewGameTextContainer" type="MarginContainer" parent="TitleScene/TitleContainer/OptionsContainer/NewGameContainer"]
+margin_right = 299.0
+margin_bottom = 31.0
+custom_constants/margin_left = 20
+
+[node name="NewGameLabel" type="Label" parent="TitleScene/TitleContainer/OptionsContainer/NewGameContainer/NewGameTextContainer"]
+margin_left = 20.0
+margin_right = 299.0
+margin_bottom = 31.0
+custom_fonts/font = ExtResource( 2 )
+text = "New Game"
+valign = 1
+uppercase = true
+
+[node name="NewGameBackground" type="ColorRect" parent="TitleScene/TitleContainer/OptionsContainer/NewGameContainer"]
 visible = false
+margin_right = 299.0
+margin_bottom = 31.0
+color = Color( 1, 1, 1, 0.392157 )
 
-[node name="ExitConfirmation" type="ConfirmationDialog" parent="Control"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -100.0
-margin_top = -35.0
-margin_right = 100.0
-margin_bottom = 35.0
-window_title = "Quit to Desktop"
-dialog_text = "Are you sure?"
-script = ExtResource( 9 )
-[connection signal="pressed" from="Control/MainMenu/InsideMargins/LeftTextBox/MenuButtons/NewGame" to="Control" method="_on_NewGame_pressed"]
-[connection signal="pressed" from="Control/MainMenu/InsideMargins/LeftTextBox/MenuButtons/Continue" to="Control" method="_on_Continue_pressed"]
-[connection signal="pressed" from="Control/MainMenu/InsideMargins/LeftTextBox/MenuButtons/Options" to="Control" method="_on_Options_pressed"]
-[connection signal="pressed" from="Control/MainMenu/InsideMargins/LeftTextBox/Exit" to="Control/ExitConfirmation" method="_on_Exit_pressed"]
-[connection signal="confirmed" from="Control/ExitConfirmation" to="Control" method="_on_ConfirmationDialog_confirmed"]
+[node name="OptionsContainer" type="MarginContainer" parent="TitleScene/TitleContainer/OptionsContainer"]
+margin_top = 46.0
+margin_right = 299.0
+margin_bottom = 77.0
+rect_min_size = Vector2( 250, 0 )
+
+[node name="OptionsTextContainer" type="MarginContainer" parent="TitleScene/TitleContainer/OptionsContainer/OptionsContainer"]
+margin_right = 299.0
+margin_bottom = 31.0
+custom_constants/margin_left = 20
+
+[node name="OptionsLabel" type="Label" parent="TitleScene/TitleContainer/OptionsContainer/OptionsContainer/OptionsTextContainer"]
+margin_left = 20.0
+margin_right = 299.0
+margin_bottom = 31.0
+custom_fonts/font = ExtResource( 2 )
+text = "Options"
+valign = 1
+uppercase = true
+
+[node name="OptionsBackground" type="ColorRect" parent="TitleScene/TitleContainer/OptionsContainer/OptionsContainer"]
+visible = false
+margin_right = 299.0
+margin_bottom = 31.0
+color = Color( 1, 1, 1, 0.392157 )
+
+[node name="QuitContainer" type="MarginContainer" parent="TitleScene/TitleContainer/OptionsContainer"]
+margin_top = 92.0
+margin_right = 299.0
+margin_bottom = 123.0
+rect_min_size = Vector2( 250, 0 )
+
+[node name="QuitTextContainer" type="MarginContainer" parent="TitleScene/TitleContainer/OptionsContainer/QuitContainer"]
+margin_right = 299.0
+margin_bottom = 31.0
+custom_constants/margin_left = 20
+
+[node name="QuitLabel" type="Label" parent="TitleScene/TitleContainer/OptionsContainer/QuitContainer/QuitTextContainer"]
+margin_left = 20.0
+margin_right = 299.0
+margin_bottom = 31.0
+custom_fonts/font = ExtResource( 2 )
+text = "Quit"
+valign = 1
+uppercase = true
+
+[node name="QuitBackground" type="ColorRect" parent="TitleScene/TitleContainer/OptionsContainer/QuitContainer"]
+visible = false
+margin_right = 299.0
+margin_bottom = 31.0
+color = Color( 1, 1, 1, 0.392157 )
