@@ -22,6 +22,7 @@ signal player_inventory_1
 signal player_inventory_2
 signal player_inventory_3
 signal player_inventory_4
+signal player_dodge
 
 var device
 var signals = [
@@ -221,6 +222,17 @@ var signals = [
 		],
 		"delay": 0
 	},
+	{
+		"name": "player_dodge",
+		"triggers": [
+			{
+				"inputs": [JOY_XBOX_A],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": 0
+	}
 ]
 
 func init(device):

@@ -53,7 +53,7 @@ func _ready():
 		player_data_node.player_datum[0] = {
 			"name": "DAAG",
 			"id": 0,
-			"texture": load("res://assets/sprites/player/player1.png"),
+			"texture": load("res://assets/Spritesheets/Rogue/Rogue_Idle.png"),
 			"controller": controllers[0]
 		}
 		

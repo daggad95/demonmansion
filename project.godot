@@ -46,6 +46,7 @@ run/main_scene="res://scenes/menu/title/TitleScene.tscn"
 Controllers="*res://scenes/controllers/Controllers.gd"
 PlayerData="*res://scenes/PlayerData/PlayerData.gd"
 EnemyFactory="*res://scenes/enemy/EnemyFactory.gd"
+ProjectileFactory="*res://scenes/projectile/ProjectileFactory.gd"
 
 [display]
 

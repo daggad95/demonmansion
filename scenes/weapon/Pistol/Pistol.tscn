@@ -9,16 +9,23 @@ atlas = ExtResource( 2 )
 region = Rect2( 48, 144, 14, 7 )
 
 [node name="Pistol" instance=ExtResource( 1 )]
+position = Vector2( -17.626, -8.92702 )
+scale = Vector2( 0.8, 0.8 )
 clip_size = 10000
 weapon_name = "Pistol"
-right_position = Vector2( 5, 2 )
+right_position = Vector2( 10, 5.5 )
 fire_rate = 5
 damage = 1
 proj_range = 1000
-proj_speed = 1000
+proj_speed = 500
 penetration = 3
 
 [node name="Sprite" parent="." index="2"]
-scale = Vector2( 0.5, 0.5 )
+position = Vector2( 2.46595, 0.747766 )
+scale = Vector2( 1, 1 )
 texture = SubResource( 1 )
+flip_h = true
 region_rect = Rect2( 48, 144, 14, 7 )
+
+[node name="EmissionPoint" parent="." index="3"]
+position = Vector2( 10.2336, -1.09646 )
