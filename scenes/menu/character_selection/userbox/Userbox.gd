@@ -30,6 +30,7 @@ func init(sprite_dict, ready_icons):
 	self.sprite_dict = sprite_dict
 	ready_icon = ready_icons[0]
 	not_ready_icon = ready_icons[1]
+	add_child(fsm)
 
 func link_controller(controller):
 	self.controller = controller
@@ -91,6 +92,8 @@ class Empty extends State:
 		if(input_name == "menu_select"):
 			model.NameSelector.reset()
 			return NameFocused.new()
+		if(input_name == "menu_back"):
+			model.get_tree().change_scene("res://scenes/menu/title/TitleScene.tscn")
 		return null
 		
 	func exit():

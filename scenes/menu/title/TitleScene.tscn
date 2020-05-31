@@ -39,9 +39,9 @@ uppercase = true
 
 [node name="OptionsContainer" type="VBoxContainer" parent="TitleScene/TitleContainer"]
 margin_left = 150.0
-margin_top = 373.0
+margin_top = 396.0
 margin_right = 449.0
-margin_bottom = 496.0
+margin_bottom = 473.0
 size_flags_vertical = 4
 custom_constants/separation = 15
 
@@ -70,36 +70,10 @@ margin_right = 299.0
 margin_bottom = 31.0
 color = Color( 1, 1, 1, 0.392157 )
 
-[node name="OptionsContainer" type="MarginContainer" parent="TitleScene/TitleContainer/OptionsContainer"]
+[node name="QuitContainer" type="MarginContainer" parent="TitleScene/TitleContainer/OptionsContainer"]
 margin_top = 46.0
 margin_right = 299.0
 margin_bottom = 77.0
-rect_min_size = Vector2( 250, 0 )
-
-[node name="OptionsTextContainer" type="MarginContainer" parent="TitleScene/TitleContainer/OptionsContainer/OptionsContainer"]
-margin_right = 299.0
-margin_bottom = 31.0
-custom_constants/margin_left = 20
-
-[node name="OptionsLabel" type="Label" parent="TitleScene/TitleContainer/OptionsContainer/OptionsContainer/OptionsTextContainer"]
-margin_left = 20.0
-margin_right = 299.0
-margin_bottom = 31.0
-custom_fonts/font = ExtResource( 2 )
-text = "Options"
-valign = 1
-uppercase = true
-
-[node name="OptionsBackground" type="ColorRect" parent="TitleScene/TitleContainer/OptionsContainer/OptionsContainer"]
-visible = false
-margin_right = 299.0
-margin_bottom = 31.0
-color = Color( 1, 1, 1, 0.392157 )
-
-[node name="QuitContainer" type="MarginContainer" parent="TitleScene/TitleContainer/OptionsContainer"]
-margin_top = 92.0
-margin_right = 299.0
-margin_bottom = 123.0
 rect_min_size = Vector2( 250, 0 )
 
 [node name="QuitTextContainer" type="MarginContainer" parent="TitleScene/TitleContainer/OptionsContainer/QuitContainer"]

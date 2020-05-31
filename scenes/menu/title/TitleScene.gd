@@ -3,6 +3,7 @@ export var skip_menu = false
 
 onready var options = find_node("OptionsContainer")
 
+var selection_screen = preload("res://scenes/menu/character_selection/SelectionScreen/SelectionScene.tscn")
 var active_idx = 0
 
 func _ready():
@@ -31,12 +32,10 @@ func _on_menu_down():
 	
 func _on_select():
 	if(active_idx == 0):
-		get_tree().change_scene("res://scenes/menu/character_selection/SelectionScreen/SelectionScene.tscn")
+		get_tree().change_scene_to(selection_screen)
 	elif(active_idx == 1):
-		get_tree().change_scene("res://scenes/menu/options/OptionsScene.tscn")
-	elif(active_idx == 2):
 		get_tree().quit()
-	
+		
 func _on_back():
 	#print("back")
 	pass
