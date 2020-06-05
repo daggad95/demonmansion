@@ -36,9 +36,9 @@ var base_position
 var base_sprite_position
 var base_emission_point
 var target_pos = Vector2(0, 0)
-var accel = 2000
+var accel = 1000
 var velocity = Vector2(0, 0)
-var max_speed = 300
+var max_speed = 200
 onready var proj_factory = get_node("/root/ProjectileFactory")
 
 func get_weapon_props():

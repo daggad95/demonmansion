@@ -61,11 +61,13 @@ func _ready():
 	equip_weapon(inventory[0])
 	_switch_sprite(SpriteType.IDLE)
 	
-func init(init_pos, init_name, init_id, init_texture):
+func init(init_pos, init_name, init_id, init_textures):
 	position = init_pos
 	player_name = init_name
 	player_id = init_id
-	player_texture = init_texture
+	$IdleSprite.texture = init_textures["idle"]
+	$WalkSprite.texture = init_textures["walk"]
+	$DodgeSprite.texture = init_textures["roll"]
 	add_to_group('player')
 
 func get_money():
@@ -200,7 +202,7 @@ func _dodge():
 		can_dodge = false
 		dodge_dir = dir
 		_switch_sprite(SpriteType.DODGE)
-		$DodgeTimer.start(0.5)
+		$DodgeTimer.start(0.3)
 
 func _switch_sprite(sprite_type):
 	if sprites[sprite_type] != current_sprite:

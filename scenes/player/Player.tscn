@@ -1,13 +1,10 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scenes/player/Player.gd" type="Script" id=1]
-[ext_resource path="res://assets/Spritesheets/Plague_Doctor/Plague_Doctor_Idle.png" type="Texture" id=2]
 [ext_resource path="res://assets/Fires/Small_Fireball_10x26.png" type="Texture" id=3]
 [ext_resource path="res://assets/misc/crosshair.png" type="Texture" id=4]
-[ext_resource path="res://assets/Spritesheets/Plague_Doctor/Plague_Doctor_Walk.png" type="Texture" id=5]
-[ext_resource path="res://assets/Spritesheets/Plague_Doctor/Plague_Doctor_Roll.png" type="Texture" id=6]
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=1]
 resource_name = "default"
 loop = true
 tracks/0/type = "value"
@@ -23,7 +20,7 @@ tracks/0/keys = {
 "values": [ 0, 2 ]
 }
 
-[sub_resource type="Animation" id=9]
+[sub_resource type="Animation" id=2]
 resource_name = "default"
 length = 0.7
 loop = true
@@ -40,7 +37,7 @@ tracks/0/keys = {
 "values": [ 0, 8 ]
 }
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id=3]
 resource_name = "default"
 length = 0.3
 loop = true
@@ -57,18 +54,18 @@ tracks/0/keys = {
 "values": [ 0, 4 ]
 }
 
-[sub_resource type="RectangleShape2D" id=2]
+[sub_resource type="RectangleShape2D" id=4]
 extents = Vector2( 6.06202, 9.32199 )
 
-[sub_resource type="DynamicFontData" id=3]
+[sub_resource type="DynamicFontData" id=5]
 font_path = "res://assets/fonts/source-code-pro/source-code-pro-2.010R-ro-1.030R-it/TTF/SourceCodePro-Semibold.ttf"
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=6]
 size = 9
 use_filter = true
-font_data = SubResource( 3 )
+font_data = SubResource( 5 )
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=7]
 length = 4.0
 loop = true
 tracks/0/type = "value"
@@ -84,7 +81,7 @@ tracks/0/keys = {
 "values": [ 0, 59 ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=8]
 length = 0.45
 loop = true
 step = 0.05
@@ -101,33 +98,28 @@ texture = ExtResource( 4 )
 
 [node name="IdleSprite" type="Sprite" parent="."]
 visible = false
-texture = ExtResource( 2 )
 hframes = 3
-frame = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="IdleSprite"]
-anims/default = SubResource( 8 )
+anims/default = SubResource( 1 )
 
 [node name="WalkSprite" type="Sprite" parent="."]
 visible = false
-texture = ExtResource( 5 )
 hframes = 9
-frame = 8
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="WalkSprite"]
-anims/default = SubResource( 9 )
+anims/default = SubResource( 2 )
 
 [node name="DodgeSprite" type="Sprite" parent="."]
 visible = false
-texture = ExtResource( 6 )
 hframes = 5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="DodgeSprite"]
-anims/default = SubResource( 10 )
+anims/default = SubResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
-shape = SubResource( 2 )
+shape = SubResource( 4 )
 
 [node name="NotInStoreMessage" type="Label" parent="."]
 visible = false
@@ -139,7 +131,7 @@ margin_left = -61.5
 margin_top = 1.5
 margin_right = 61.5
 margin_bottom = 34.5
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 6 )
 text = "Not in Store! "
 align = 1
 valign = 1
@@ -156,7 +148,7 @@ frame = 5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="FireSprite"]
 autoplay = "Burn"
-anims/Burn = SubResource( 5 )
+anims/Burn = SubResource( 7 )
 
 [node name="BurnTimer" type="Timer" parent="."]
 one_shot = true
@@ -168,7 +160,7 @@ one_shot = true
 
 [node name="HopPlayer" type="AnimationPlayer" parent="."]
 autoplay = "Hop"
-anims/Hop = SubResource( 6 )
+anims/Hop = SubResource( 8 )
 
 [node name="DodgeTimer" type="Timer" parent="."]
 wait_time = 0.5

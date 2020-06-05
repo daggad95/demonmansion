@@ -69,7 +69,7 @@ func reset_player_icon():
 
 func next_icon():
 	current_sprite_idx += 1
-	if current_sprite_idx == 12:
+	if current_sprite_idx == len(sprite_dict["icons"]):
 		current_sprite_idx = 0
 	var tex_subregion = sprite_dict["icons"][current_sprite_idx]
 	PlayerIcon.set_texture(tex_subregion)
@@ -77,7 +77,7 @@ func next_icon():
 func prev_icon():
 	current_sprite_idx += -1
 	if current_sprite_idx == -1:
-		current_sprite_idx = 11
+		current_sprite_idx = len(sprite_dict["icons"]) - 1
 	var tex_subregion = sprite_dict["icons"][current_sprite_idx]
 	PlayerIcon.set_texture(tex_subregion)
 
@@ -136,7 +136,7 @@ class PlayerFocused extends State:
 		if(input_name == "menu_select"):
 			model.hide_player_arrows()
 			model.single_player_data["icon"] = model.get_player_icon()
-			model.single_player_data["texture"] = model.sprite_dict["spritesheets"][model.current_sprite_idx]
+			model.single_player_data["textures"] = model.sprite_dict["spritesheets"][model.current_sprite_idx]
 			return Ready.new()
 		elif(input_name == "menu_back"):
 			model.hide_player_arrows()

@@ -27,7 +27,6 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-skip_menu = true
 
 [node name="MainMenu" type="MarginContainer" parent="Control"]
 anchor_right = 1.0

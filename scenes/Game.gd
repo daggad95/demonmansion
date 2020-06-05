@@ -48,14 +48,6 @@ func _ready():
 	var player_count = player_data_node.player_count
 	var controllers = get_node("/root/Controllers").get_controllers()
 	var spawns = $PlayerSpawns.get_children()
-	
-	if skip_menu:
-		player_data_node.player_datum[0] = {
-			"name": "DAAG",
-			"id": 0,
-			"texture": load("res://assets/Spritesheets/Rogue/Rogue_Idle.png"),
-			"controller": controllers[0]
-		}
 		
 	# player_data: dictionary with id, name, sprite
 	for player_data in player_data_node.player_datum:
@@ -63,7 +55,7 @@ func _ready():
 			var player = Player.instance()
 			var id = player_data["id"]
 			
-			player.init(spawns[id].position, player_data["name"], id, player_data["texture"])
+			player.init(spawns[id].position, player_data["name"], id, player_data["textures"])
 			player.link_controller(player_data["controller"])
 			player.connect("player_moved", camera, "_on_player_moved")
 
