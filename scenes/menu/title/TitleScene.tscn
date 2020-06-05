@@ -1,12 +1,25 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scenes/menu/title/TitleScene.gd" type="Script" id=1]
 [ext_resource path="res://assets/fonts/custom/sourcecodepro_24.tres" type="DynamicFont" id=2]
 [ext_resource path="res://assets/fonts/custom/source-code-pro_size38.tres" type="DynamicFont" id=3]
+[ext_resource path="res://scenes/menu/title/background/MenuBackground.tscn" type="PackedScene" id=4]
 
-[node name="CanvasLayer" type="CanvasLayer"]
+[node name="Root" type="Control"]
+margin_right = 1280.0
+margin_bottom = 720.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="TitleScene" type="MarginContainer" parent="."]
+[node name="Background" type="CanvasLayer" parent="."]
+
+[node name="Background" parent="Background" instance=ExtResource( 4 )]
+position = Vector2( 375.512, 642.382 )
+
+[node name="Foreground" type="CanvasLayer" parent="."]
+
+[node name="TitleScene" type="MarginContainer" parent="Foreground"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
@@ -14,19 +27,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="TitleScene"]
-margin_right = 1280.0
-margin_bottom = 720.0
-color = Color( 0.12549, 0.141176, 0.12549, 1 )
-
-[node name="TitleContainer" type="MarginContainer" parent="TitleScene"]
+[node name="TitleContainer" type="MarginContainer" parent="Foreground/TitleScene"]
 margin_right = 449.0
 margin_bottom = 720.0
 size_flags_horizontal = 0
 custom_constants/margin_top = 150
 custom_constants/margin_left = 150
 
-[node name="TitleLabel" type="Label" parent="TitleScene/TitleContainer"]
+[node name="TitleLabel" type="Label" parent="Foreground/TitleScene/TitleContainer"]
 margin_left = 150.0
 margin_top = 150.0
 margin_right = 449.0
@@ -37,7 +45,7 @@ custom_fonts/font = ExtResource( 3 )
 text = "Demon Mansion"
 uppercase = true
 
-[node name="OptionsContainer" type="VBoxContainer" parent="TitleScene/TitleContainer"]
+[node name="OptionsContainer" type="VBoxContainer" parent="Foreground/TitleScene/TitleContainer"]
 margin_left = 150.0
 margin_top = 396.0
 margin_right = 449.0
@@ -45,17 +53,17 @@ margin_bottom = 473.0
 size_flags_vertical = 4
 custom_constants/separation = 15
 
-[node name="NewGameContainer" type="MarginContainer" parent="TitleScene/TitleContainer/OptionsContainer"]
+[node name="NewGameContainer" type="MarginContainer" parent="Foreground/TitleScene/TitleContainer/OptionsContainer"]
 margin_right = 299.0
 margin_bottom = 31.0
 rect_min_size = Vector2( 250, 0 )
 
-[node name="NewGameTextContainer" type="MarginContainer" parent="TitleScene/TitleContainer/OptionsContainer/NewGameContainer"]
+[node name="NewGameTextContainer" type="MarginContainer" parent="Foreground/TitleScene/TitleContainer/OptionsContainer/NewGameContainer"]
 margin_right = 299.0
 margin_bottom = 31.0
 custom_constants/margin_left = 20
 
-[node name="NewGameLabel" type="Label" parent="TitleScene/TitleContainer/OptionsContainer/NewGameContainer/NewGameTextContainer"]
+[node name="NewGameLabel" type="Label" parent="Foreground/TitleScene/TitleContainer/OptionsContainer/NewGameContainer/NewGameTextContainer"]
 margin_left = 20.0
 margin_right = 299.0
 margin_bottom = 31.0
@@ -64,24 +72,24 @@ text = "New Game"
 valign = 1
 uppercase = true
 
-[node name="NewGameBackground" type="ColorRect" parent="TitleScene/TitleContainer/OptionsContainer/NewGameContainer"]
+[node name="NewGameBackground" type="ColorRect" parent="Foreground/TitleScene/TitleContainer/OptionsContainer/NewGameContainer"]
 visible = false
 margin_right = 299.0
 margin_bottom = 31.0
 color = Color( 1, 1, 1, 0.392157 )
 
-[node name="QuitContainer" type="MarginContainer" parent="TitleScene/TitleContainer/OptionsContainer"]
+[node name="QuitContainer" type="MarginContainer" parent="Foreground/TitleScene/TitleContainer/OptionsContainer"]
 margin_top = 46.0
 margin_right = 299.0
 margin_bottom = 77.0
 rect_min_size = Vector2( 250, 0 )
 
-[node name="QuitTextContainer" type="MarginContainer" parent="TitleScene/TitleContainer/OptionsContainer/QuitContainer"]
+[node name="QuitTextContainer" type="MarginContainer" parent="Foreground/TitleScene/TitleContainer/OptionsContainer/QuitContainer"]
 margin_right = 299.0
 margin_bottom = 31.0
 custom_constants/margin_left = 20
 
-[node name="QuitLabel" type="Label" parent="TitleScene/TitleContainer/OptionsContainer/QuitContainer/QuitTextContainer"]
+[node name="QuitLabel" type="Label" parent="Foreground/TitleScene/TitleContainer/OptionsContainer/QuitContainer/QuitTextContainer"]
 margin_left = 20.0
 margin_right = 299.0
 margin_bottom = 31.0
@@ -90,7 +98,7 @@ text = "Quit"
 valign = 1
 uppercase = true
 
-[node name="QuitBackground" type="ColorRect" parent="TitleScene/TitleContainer/OptionsContainer/QuitContainer"]
+[node name="QuitBackground" type="ColorRect" parent="Foreground/TitleScene/TitleContainer/OptionsContainer/QuitContainer"]
 visible = false
 margin_right = 299.0
 margin_bottom = 31.0
