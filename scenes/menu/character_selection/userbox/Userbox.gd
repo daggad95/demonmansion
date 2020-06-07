@@ -64,23 +64,29 @@ func get_player_icon():
 	
 func reset_player_icon():
 	current_sprite_idx = 0
-	var tex_subregion = sprite_dict["icons"][current_sprite_idx]
-	PlayerIcon.set_texture(tex_subregion)
+	update_icon()
 
 func next_icon():
 	current_sprite_idx += 1
-	if current_sprite_idx == len(sprite_dict["icons"]):
+	if current_sprite_idx == len(sprite_dict["spritesheets"]):
 		current_sprite_idx = 0
-	var tex_subregion = sprite_dict["icons"][current_sprite_idx]
-	PlayerIcon.set_texture(tex_subregion)
+	update_icon()
 	
 func prev_icon():
 	current_sprite_idx += -1
 	if current_sprite_idx == -1:
 		current_sprite_idx = len(sprite_dict["icons"]) - 1
-	var tex_subregion = sprite_dict["icons"][current_sprite_idx]
-	PlayerIcon.set_texture(tex_subregion)
+	update_icon()
 
+func update_icon():
+	idle_animation(0)
+
+func idle_animation(frame: int):
+	var tex_subregion = AtlasTexture.new()
+	tex_subregion.set_atlas(sprite_dict["spritesheets"][current_sprite_idx]["idle"])
+	tex_subregion.set_region(Rect2(8 + 48*frame,8,32,32))
+	PlayerIcon.set_texture(tex_subregion)
+	
 class Empty extends State:
 	func enter(model):
 		state_name = "Empty"
