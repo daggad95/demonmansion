@@ -195,7 +195,7 @@ var signals = [
 			{
 				"inputs": [JOY_AXIS_2, JOY_AXIS_3],
 				"eval_func": funcref(self, "_always_emit"),
-				"emit_func": funcref(self, "_flattened_data")
+				"emit_func": funcref(self, "_raw_data")
 			}
 		],
 		"delay": 0
@@ -294,5 +294,13 @@ func _flattened_data(signal_name, inputs, threshold := PLAYER_THRESHOLD):
 			value if abs(value) > threshold
 			else 0
 		)
+	emit_signal(signal_name, values)
+
+func _raw_data(signal_name, inputs, threshold := PLAYER_THRESHOLD):
+	var values = []
+	
+	for input in inputs:
+		var value = Input.get_joy_axis(device, input)
+		values.append(value)
 	emit_signal(signal_name, values)
 

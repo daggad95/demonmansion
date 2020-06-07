@@ -47,6 +47,7 @@ Controllers="*res://scenes/controllers/Controllers.gd"
 PlayerData="*res://scenes/PlayerData/PlayerData.gd"
 EnemyFactory="*res://scenes/enemy/EnemyFactory.gd"
 ProjectileFactory="*res://scenes/projectile/ProjectileFactory.gd"
+StatusEffectFactory="*res://scenes/StatusEffect/StatusEffectFactory.gd"
 
 [display]
 

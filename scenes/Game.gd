@@ -4,9 +4,6 @@ const Map = preload("res://scenes/map/Map.tscn")
 const Player = preload("res://scenes/player/Player.tscn")
 const PlayerHUD = preload("res://scenes/hud/PlayerHUD.tscn")
 const Zombie = preload("res://scenes/enemy/zombie/Zombie.tscn")
-const Imp = preload("res://scenes/enemy/Imp.tscn")
-const Ogre = preload("res://scenes/enemy/Ogre.tscn")
-const Hellhound = preload("res://scenes/enemy/Hellhound.tscn")
 const GameCamera = preload("res://scenes/camera/GameCamera.tscn")
 const Ammo = preload("res://scenes/items/Ammo/Ammo.tscn")
 const Money = preload("res://scenes/items/Money/Money.tscn")
@@ -83,7 +80,7 @@ func _process(delta):
 	elif Input.is_action_just_pressed("spawn_money"):
 		_spawn_money(get_global_mouse_position())
 	elif Input.is_action_just_pressed("spawn_enemy"):
-		_spawn_effect(get_global_mouse_position())
+		_spawn_enemy(get_global_mouse_position())
 	
 	$CanvasLayer/Label.set_text(str(Engine.get_frames_per_second()))
 
@@ -95,7 +92,8 @@ func _on_ExitConfirmation_confirmed():
 	get_tree().quit()
 
 func _spawn_enemy(pos):
-	var enemy = Imp.instance()
+	var enemy = Zombie.instance()
+	print("spawn enemy")
 	enemy.init($Map, players)
 	enemy.position = pos
 	add_child(enemy)

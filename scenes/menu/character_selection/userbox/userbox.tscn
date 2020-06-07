@@ -64,6 +64,7 @@ script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+skip = true
 
 [node name="Placeholder" type="MarginContainer" parent="."]
 margin_right = 387.0

@@ -42,7 +42,7 @@ func _ready():
 	self.add_child(timer)
 	
 # Get a dictionary of two lists
-func get_sprite_dict():
+static func get_sprite_dict():
 	# "icons":list of subregions, "spritesheets": list of full sized textures
 	var texture_dict = {}
 	texture_dict["spritesheets"] = []

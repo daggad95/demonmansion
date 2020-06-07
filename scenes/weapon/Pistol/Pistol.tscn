@@ -15,10 +15,10 @@ clip_size = 10000
 weapon_name = "Pistol"
 right_position = Vector2( 10, 5.5 )
 fire_rate = 5
-damage = 1
+damage = 25
 proj_range = 1000
 proj_speed = 500
-penetration = 3
+penetration = 1
 
 [node name="Sprite" parent="." index="2"]
 position = Vector2( 2.46595, 0.747766 )

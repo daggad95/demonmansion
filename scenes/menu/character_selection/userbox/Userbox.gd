@@ -1,4 +1,5 @@
 extends MarginContainer
+export var skip : bool
 
 const StateMachine = preload("res://scripts/StateMachine.gd")
 const State = preload("res://scripts/State.gd")

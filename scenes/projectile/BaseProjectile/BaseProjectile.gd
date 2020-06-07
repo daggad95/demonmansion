@@ -2,6 +2,9 @@ extends Area2D
 const PLAYER_COLLISION = 5
 const ENEMY_COLLISION = 6
 
+onready var SEFactory = get_node("/root/StatusEffectFactory")
+onready var EffectType = SEFactory.EffectType
+
 var direction
 var speed
 var prange
@@ -54,6 +57,7 @@ func init(
 	else:
 		set_collision_mask(PLAYER_COLLISION)
 	
+	$CollisionShape.shape.set_extents(Vector2(10, max(10, speed/10)))
 	rotation_degrees = rad2deg(Vector2(0,0).direction_to(direction).angle()) - 90
 	
 func _handle_collisions():
@@ -61,6 +65,7 @@ func _handle_collisions():
 		if not body in collided:
 			if body.is_in_group('player') or body.is_in_group('enemy'):
 				body.take_damage(damage - damage * damage_dropoff * float(dist_travelled)/prange)
+				body.apply_status_effect(EffectType.KNOCKBACK, {"dir": direction.normalized()})
 					
 				collided.append(body)
 				max_pen -= 1
