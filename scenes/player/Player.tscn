@@ -168,7 +168,7 @@ one_shot = true
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
 enabled = true
-collision_mask = 5
+collision_mask = 7
 collide_with_areas = true
 [connection signal="timeout" from="NotInStoreMessage/Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="BurnTimer" to="." method="_on_BurnTimer_timeout"]

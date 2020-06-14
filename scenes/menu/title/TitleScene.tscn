@@ -26,7 +26,6 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-skip_menu = true
 
 [node name="TitleContainer" type="MarginContainer" parent="Foreground/TitleScene"]
 margin_right = 449.0
