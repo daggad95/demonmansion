@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://scenes/menu/character_selection/userbox/NameSelector/NameSelector.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/UI/panel.png" type="Texture" id=2]
@@ -31,6 +31,30 @@ region = Rect2( 138, 278, 11, 10 )
 atlas = ExtResource( 3 )
 region = Rect2( 138, 468, 12, 12 )
 
+[sub_resource type="Animation" id=7]
+resource_name = "Idle"
+loop = true
+tracks/0/type = "method"
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "idle_animation"
+}, {
+"args": [ 1 ],
+"method": "idle_animation"
+}, {
+"args": [ 2 ],
+"method": "idle_animation"
+} ]
+}
+
 [node name="PlayerSelect" type="MarginContainer"]
 margin_right = 387.0
 margin_bottom = 721.0
@@ -40,6 +64,7 @@ script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+skip = true
 
 [node name="Placeholder" type="MarginContainer" parent="."]
 margin_right = 387.0
@@ -177,3 +202,7 @@ rect_min_size = Vector2( 0, 80 )
 size_flags_vertical = 0
 texture = SubResource( 6 )
 stretch_mode = 6
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "Idle"
+anims/Idle = SubResource( 7 )

@@ -1,5 +1,8 @@
 extends Control
 export var skip_menu = false
+onready var PlayerData = get_node("/root/PlayerData")
+onready var controllers = get_node("/root/Controllers").get_controllers()
+const SelectionScreen = preload("res://scenes/menu/character_selection/SelectionScreen/SelectionScene.gd")
 
 onready var options = find_node("OptionsContainer")
 
@@ -9,6 +12,12 @@ var active_idx = 0
 func _ready():
 	skip_menu = false
 	if skip_menu:
+		PlayerData.set_single_player_data({
+			"controller": controllers[0],
+			"name": "DAAG",
+			"id": 0,
+			"textures": SelectionScreen.get_sprite_dict()["spritesheets"][0]
+		})
 		get_tree().change_scene("res://scenes/Game.tscn")
 	link_controllers()
 	init()

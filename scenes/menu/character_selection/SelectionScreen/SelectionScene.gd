@@ -22,7 +22,7 @@ func _ready():
 	var controllers = get_node("/root/Controllers").get_controllers()
 	var sprite_dict = get_sprite_dict()
 	var ready_icons = get_ready_icons()
-	
+
 	for idx in range(4):
 		var new_userbox = Userbox.instance()
 		new_userbox.init(sprite_dict, ready_icons)
@@ -35,40 +35,52 @@ func _ready():
 			new_userbox.connect("countdown_cancelled",self,"_on_countdown_cancelled")
 			new_userbox.connect("player_exited",self,"_on_player_exited")
 		hbox_userboxes.add_child(new_userbox)
-	
+
 	timer = Timer.new()
 	timer.connect("timeout",self,"_on_timer_timeout")
 	timer.set_wait_time(1)
 	self.add_child(timer)
 	
 # Get a dictionary of two lists
-func get_sprite_dict():
+static func get_sprite_dict():
 	# "icons":list of subregions, "spritesheets": list of full sized textures
 	var texture_dict = {}
-	var icons = []
-	var spritesheets = []
+	texture_dict["spritesheets"] = []
+	texture_dict["icons"] = []
 	
 	var path = "res://assets/sprites/player/"
 	var dir = Directory.new()
 	dir.open(path)
 	dir.list_dir_begin()
 
-	while true:
-		var file_name = dir.get_next()
-		if file_name == "":
-			# break the while loop when get_next() returns ""
-			break
-		elif !file_name.begins_with(".") && !file_name.ends_with(".import"):
-			var tex_subregion = AtlasTexture.new()
-			tex_subregion.set_atlas(load(path + file_name))
-			tex_subregion.set_region(Rect2(0,0,64,128))
-			icons.append(tex_subregion)
+	var dir_name = dir.get_next()
+	while dir_name != "":
+		if dir_name != "." and dir_name != "..":
+			var sprite_dir = Directory.new()
+			sprite_dir.open(path + dir_name)
+			sprite_dir.list_dir_begin()
 			
-			var spritesheet = load(path + file_name)
-			spritesheets.append(spritesheet)
-	
-	texture_dict["icons"] = icons
-	texture_dict["spritesheets"] = spritesheets
+			var file_name = sprite_dir.get_next()
+			var spritesheets = {}
+			
+			while file_name != "":
+				if "Walk.png" in file_name and not "import" in file_name:
+					spritesheets["walk"] = load(path + dir_name + '/' + file_name)
+				elif "Idle.png" in file_name and not "import" in file_name:
+					spritesheets["idle"] = load(path + dir_name + '/' + file_name)
+				elif "Roll.png" in file_name and not "import" in file_name:
+					spritesheets["roll"] = load(path + dir_name + '/' + file_name)
+					
+				file_name = sprite_dir.get_next()
+			texture_dict["spritesheets"].append(spritesheets)
+			
+			var tex_subregion = AtlasTexture.new()
+			tex_subregion.set_atlas(spritesheets["walk"])
+			tex_subregion.set_region(Rect2(8,8,32,32))
+			texture_dict["icons"].append(tex_subregion)
+			
+		dir_name = dir.get_next()
+		
 	return texture_dict
 
 func get_ready_icons():
