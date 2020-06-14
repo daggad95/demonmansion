@@ -30,6 +30,7 @@ func init(sprite_dict, ready_icons):
 	self.sprite_dict = sprite_dict
 	ready_icon = ready_icons[0]
 	not_ready_icon = ready_icons[1]
+	add_child(fsm)
 
 func link_controller(controller):
 	self.controller = controller
