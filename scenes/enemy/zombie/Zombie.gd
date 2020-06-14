@@ -1,4 +1,6 @@
 extends Enemy
+export var animation_moving = false
+export var moving = false
 const ZombieAI = preload("res://scenes/enemy/zombie/ZombieAI.gd")
 onready var attack_range = 20
 onready var near_target  = false
@@ -6,20 +8,17 @@ onready var hit_damage = 10
 onready var can_hit = true
 onready var pause_after_hit = 1
 var ai
-export var animation_moving = false
-
-export var moving = false
+var attacking = false
 
 func _ready():
 	speed = 20
-	ai = ZombieAI.new()
-	ai.init(self, ZombieAI.ChasePlayer.new())
+	ai = ZombieAI.new(self, ZombieAI.CHASE_PLAYER)
 	add_child(ai)
 	
 
 func _finish_attack():
-	state_machine.travel("Walk")
 	$Timers/AttackTimer.start()
+	attacking = false
 	
 	if position.distance_to(target.position) <= attack_range:
 		target.take_damage(hit_damage)

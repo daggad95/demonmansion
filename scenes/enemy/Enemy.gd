@@ -33,7 +33,6 @@ var target_velocity
 var path_update_delay = 0.5
 var rng = RandomNumberGenerator.new()
 var dead = false
-onready var state_machine = $AnimationTree["parameters/playback"]
 export var show_nav_path = false
 
 func init(init_map, init_players):
@@ -43,7 +42,12 @@ func init(init_map, init_players):
 	
 func take_damage(damage):
 	health -= damage
+	
+	if health <= 0:
+		dead = true
+		
 	emit_signal("damaged")
+	
 
 func apply_status_effect(type, args):
 	self.add_child(
