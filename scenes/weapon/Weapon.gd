@@ -2,7 +2,7 @@ extends Sprite
 class_name Weapon
 const Z_INDEX_FRONT = 100
 const Z_INDEX_BACK = 1
-const Projectile = preload("res://scenes/projectile/Projectile.tscn")
+const PROJ_TYPE = preload("res://scenes/projectile/ProjectileFactory.gd").Type
 enum Ammo {RIFLE, SNIPER, SHOTGUN, NONE}
 enum {FORWARD, LEFT, RIGHT, BACKWARD}
 signal reload_finish
@@ -24,6 +24,7 @@ export var proj_range = 0
 export var proj_speed = 0
 export var penetration = 0
 export var damage_dropoff = 0
+export(PROJ_TYPE) var projectile_type
 var clip = 0
 var reloading = false
 var aim_dir = Vector2(1,0)
@@ -31,6 +32,14 @@ var img_offset = Vector2(-56, 0)
 var can_fire = true
 var reload_amount = 0
 var current_dir = RIGHT
+var base_position
+var base_sprite_position
+var base_emission_point
+var target_pos = Vector2(0, 0)
+var accel = 1000
+var velocity = Vector2(0, 0)
+var max_speed = 200
+onready var proj_factory = get_node("/root/ProjectileFactory")
 
 func get_weapon_props():
 	return {
@@ -48,13 +57,16 @@ func get_weapon_props():
 
 func _ready():
 	clip = clip_size
+	base_position = position
+	base_sprite_position = $Sprite.position
+	base_emission_point = $EmissionPoint.position
 
 func shoot(aim_dir, ammo):
-	self.aim_dir = aim_dir
+
 	if clip > 0 and can_fire:
 		for i in range(0, num_projectiles):
 			var projectile = _gen_projectile()
-			get_tree().get_root().add_child(_process_projectile(projectile))
+			get_tree().get_root().add_child(_gen_projectile())
 		clip -= 1
 		can_fire = false
 		$FireTimer.start(1.0/fire_rate)
@@ -87,44 +99,58 @@ func get_clip():
 func get_clip_size():
 	return clip_size
 
+func point_towards(point : Vector2):
+	var angle = global_position.angle_to_point(point)
+	
+	if current_dir == RIGHT:
+		angle -= PI
+	
+	rotation_degrees = rad2deg(angle)
+	aim_dir = $EmissionPoint.global_position.direction_to(point)
+
 func set_dir(dir):
 	if dir == LEFT:
-		$Sprite.set_position(Vector2(-right_position.x, right_position.y))
 		$Sprite.set_flip_h(false)
-		$Sprite.set_z_index(-1)
-		
+#		$Sprite.position = Vector2(
+#			-base_sprite_position.x,
+#			base_sprite_position.y
+#		)
+#		position = Vector2(-base_position.x, base_position.y)
+		$EmissionPoint.position = Vector2(
+			-base_emission_point.x,
+			base_emission_point.y
+		)
+
 	elif dir == RIGHT:
-		$Sprite.set_position(right_position)
 		$Sprite.set_flip_h(true)
-		$Sprite.set_z_index(1)
-		
-	elif dir == FORWARD:
-		if two_handed:
-			$Sprite.set_position(forward_position)
-		else:
-			$Sprite.set_position(Vector2(-right_position.x, right_position.y))
-			
-		$Sprite.set_flip_h(false)
-		$Sprite.set_z_index(1)
-		
-	elif dir == BACKWARD:
-		if two_handed:
-			$Sprite.set_position(forward_position)
-			
-		else:
-			$Sprite.set_position(right_position)
-		$Sprite.set_flip_h(true)
-		$Sprite.set_z_index(-1)
+#		$Sprite.position = base_sprite_position
+#		position = base_position
+		$EmissionPoint.position = base_emission_point
 		
 	current_dir = dir
 
-func _process_projectile(projectile):
-	projectile.rotate_dir(rand_range(-spread/2, spread/2))
-	projectile.scale_speed(rand_range(0.9, 1.1))
-	return projectile
+func _process(delta):
+	var desired_velocity
+	
+	var distance = position.distance_to(target_pos) 
 
+	desired_velocity = position.direction_to(target_pos) * min(max_speed * (distance / 25), max_speed)
+	
+	var steer_force = (
+		velocity.direction_to(desired_velocity) 
+		* min(accel * delta, velocity.distance_to(desired_velocity))
+	)
+	velocity += steer_force
+	position += velocity * delta
+
+func _on_player_moved(name, position):
+	if current_dir == RIGHT:
+		target_pos = position - Vector2(10, 10)
+	else:
+		target_pos = position + Vector2(10, -10)
+		
 func _gen_projectile():
-	var projectile = Projectile.instance()
+	var projectile = proj_factory.create(projectile_type)
 	projectile.init(
 		aim_dir, 
 		proj_speed,  
@@ -132,7 +158,8 @@ func _gen_projectile():
 		penetration,   
 		damage,  
 		damage_dropoff, 
-		global_position - position)
+		$EmissionPoint.global_position,
+		velocity)
 	return projectile
 
 func _on_ReloadTimer_timeout():

@@ -5,10 +5,17 @@ extends Node
 var model
 var state_name
 
-func enter(model):
+func init(model):
 	self.model = model
+	return self
+
+func enter():
+	pass
 	
 func handle_input(input_name):
+	pass
+
+func process(delta):
 	pass
 	
 func exit():

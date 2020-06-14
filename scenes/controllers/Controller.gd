@@ -22,6 +22,7 @@ signal player_inventory_1
 signal player_inventory_2
 signal player_inventory_3
 signal player_inventory_4
+signal player_dodge
 
 var device
 var signals = [
@@ -194,7 +195,7 @@ var signals = [
 			{
 				"inputs": [JOY_AXIS_2, JOY_AXIS_3],
 				"eval_func": funcref(self, "_always_emit"),
-				"emit_func": funcref(self, "_flattened_data")
+				"emit_func": funcref(self, "_raw_data")
 			}
 		],
 		"delay": 0
@@ -221,6 +222,17 @@ var signals = [
 		],
 		"delay": 0
 	},
+	{
+		"name": "player_dodge",
+		"triggers": [
+			{
+				"inputs": [JOY_XBOX_A],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": 0
+	}
 ]
 
 func init(device):
@@ -282,5 +294,13 @@ func _flattened_data(signal_name, inputs, threshold := PLAYER_THRESHOLD):
 			value if abs(value) > threshold
 			else 0
 		)
+	emit_signal(signal_name, values)
+
+func _raw_data(signal_name, inputs, threshold := PLAYER_THRESHOLD):
+	var values = []
+	
+	for input in inputs:
+		var value = Input.get_joy_axis(device, input)
+		values.append(value)
 	emit_signal(signal_name, values)
 

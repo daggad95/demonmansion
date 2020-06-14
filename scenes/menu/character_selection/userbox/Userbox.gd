@@ -1,6 +1,7 @@
 extends MarginContainer
+export var skip : bool
 
-const StateMachine = preload("res://scripts/StateMachine.gd")
+const UserBoxStateMachine = preload("res://scenes/menu/character_selection/userbox/UserBoxStateMachine.gd")
 const State = preload("res://scripts/State.gd")
 
 onready var NameSelector = $VBoxContainer/PlayerNameContainer/PlayerName
@@ -25,8 +26,7 @@ signal player_exited
 signal countdown_cancelled
 
 func init(sprite_dict, ready_icons):
-	fsm = StateMachine.new()
-	fsm.init(self, Empty.new())
+	fsm = UserBoxStateMachine.new(self, UserBoxStateMachine.EMPTY)
 	self.sprite_dict = sprite_dict
 	ready_icon = ready_icons[0]
 	not_ready_icon = ready_icons[1]
@@ -65,103 +65,25 @@ func get_player_icon():
 	
 func reset_player_icon():
 	current_sprite_idx = 0
-	var tex_subregion = sprite_dict["icons"][current_sprite_idx]
-	PlayerIcon.set_texture(tex_subregion)
+	update_icon()
 
 func next_icon():
 	current_sprite_idx += 1
-	if current_sprite_idx == 12:
+	if current_sprite_idx == len(sprite_dict["spritesheets"]):
 		current_sprite_idx = 0
-	var tex_subregion = sprite_dict["icons"][current_sprite_idx]
-	PlayerIcon.set_texture(tex_subregion)
+	update_icon()
 	
 func prev_icon():
 	current_sprite_idx += -1
 	if current_sprite_idx == -1:
-		current_sprite_idx = 11
-	var tex_subregion = sprite_dict["icons"][current_sprite_idx]
-	PlayerIcon.set_texture(tex_subregion)
+		current_sprite_idx = len(sprite_dict["icons"]) - 1
+	update_icon()
 
-class Empty extends State:
-	func enter(model):
-		state_name = "Empty"
-		.enter(model)
-		model.hide()
-		
-	func handle_input(input_name):
-		if(input_name == "menu_select"):
-			model.NameSelector.reset()
-			return NameFocused.new()
-		if(input_name == "menu_back"):
-			model.get_tree().change_scene("res://scenes/menu/title/TitleScene.tscn")
-		return null
-		
-	func exit():
-		model.show()
-		model.hide_player_arrows()
-		model.reset_player_icon()
-		model.StatusIcon.set_texture(model.not_ready_icon)
-		model.emit_signal("player_joined", model.single_player_data["id"])
-		
-class NameFocused extends State:
-	func enter(model):
-		state_name = "NameFocused"
-		.enter(model)
-		model.NameSelector.set_current_letter(0)
-	
-	func handle_input(input_name):
-		if(input_name == "menu_select"):
-			var last_letter = model.NameSelector.confirm_letter()
-			if(last_letter):
-				model.single_player_data["name"] = model.NameSelector.get_name()
-				return PlayerFocused.new()
-		elif(input_name == "menu_back"):
-			if(!model.NameSelector.is_input_started()):
-				model.emit_signal("player_exited", model.single_player_data["id"])
-				return Empty.new()
-			else:
-				model.NameSelector.reset()
-				model.reset_player_icon()
-				return NameFocused.new()
-		elif(input_name == "menu_up"):
-			model.NameSelector.decrement()
-		elif(input_name == "menu_down"):
-			model.NameSelector.increment()
-		return null
-		
-class PlayerFocused extends State:
-	func enter(model):
-		state_name = "PlayerFocused"
-		.enter(model)
-		model.show_player_arrows()
-		
-	func handle_input(input_name):
-		if(input_name == "menu_select"):
-			model.hide_player_arrows()
-			model.single_player_data["icon"] = model.get_player_icon()
-			model.single_player_data["texture"] = model.sprite_dict["spritesheets"][model.current_sprite_idx]
-			return Ready.new()
-		elif(input_name == "menu_back"):
-			model.hide_player_arrows()
-			return NameFocused.new()
-		elif(input_name == "menu_up"):
-			model.next_icon()
-		elif(input_name == "menu_down"):
-			model.prev_icon()
-			
-class Ready extends State:
-	func enter(model):
-		state_name = "Ready"
-		.enter(model)
-		model.hide_player_arrows()
-		model.StatusIcon.set_texture(model.ready_icon)
-		model.emit_signal("player_ready", model.single_player_data)
-		
-	func handle_input(input_name):
-		if(input_name == "menu_back"):
-			model.emit_signal("countdown_cancelled")
-			model.emit_signal("player_unready")
-			model.show_player_arrows()
-			model.StatusIcon.set_texture(model.not_ready_icon)
-			return PlayerFocused.new()
-			
+func update_icon():
+	idle_animation(0)
+
+func idle_animation(frame: int):
+	var tex_subregion = AtlasTexture.new()
+	tex_subregion.set_atlas(sprite_dict["spritesheets"][current_sprite_idx]["idle"])
+	tex_subregion.set_region(Rect2(8 + 48*frame,8,32,32))
+	PlayerIcon.set_texture(tex_subregion)

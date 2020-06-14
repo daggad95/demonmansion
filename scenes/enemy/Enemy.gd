@@ -1,13 +1,18 @@
 extends KinematicBody2D
 class_name Enemy
 signal dead
+signal damaged
 
 const Money = preload("res://scenes/items/Money/Money.tscn")
 const Health = preload("res://scenes/items/Health/Health.tscn")
 const Ammo = preload("res://scenes/items/Ammo/Ammo.tscn")
 const DROP_RATE = 0.25
 
+
 onready var Game = get_tree().get_root().get_node('Game')
+onready var SEFactory = get_node("/root/StatusEffectFactory")
+onready var EffectType = SEFactory.EffectType
+
 
 var speed = 50.0
 var steer_rate = 500.0
@@ -16,13 +21,14 @@ var knockback_speed = 50
 var knockback_duration = 0.1
 var base_hit = 10
 var face_right = true
+var can_control_movement = true
 var map
 var target
 var players
 var nav_path
 var nav_line
 var velocity = Vector2(0,0)
-var accel_rate = 100
+var accel_rate = 1000
 var target_velocity
 var path_update_delay = 0.5
 var rng = RandomNumberGenerator.new()
@@ -37,14 +43,27 @@ func init(init_map, init_players):
 func take_damage(damage):
 	health -= damage
 	
-	if health <= 0 and not dead:
-		_drop_item()
-		emit_signal("dead")
-		queue_free()
+	if health <= 0:
 		dead = true
+		
+	emit_signal("damaged")
+	
+
+func apply_status_effect(type, args):
+	self.add_child(
+		SEFactory.create(
+			type, self, args
+		)
+	)
+
+func die():
+	emit_signal("dead")
+	dead = true
+	$Hitbox.disabled = true
+	$Timers/DeathTimer.start()
 
 func _ready():
-	$PathUpdateTimer.start(
+	$Timers/PathUpdateTimer.start(
 		path_update_delay 
 		+ rng.randf_range(-path_update_delay/2, path_update_delay/2)
 	)
@@ -133,50 +152,52 @@ func _avoid_force():
 		
 	return avoid_force
 
-func _chase_target():
+func chase_target():
 	target_velocity = Vector2(0, 0)
 	target_velocity += _follow_path_force() 
 	target_velocity += _separate_force()
 	target_velocity += _avoid_force() 
 	target_velocity = target_velocity.normalized() * speed
+	
+	if target_velocity.x < 0:
+		$Sprite.flip_h = true
+	elif target_velocity.x > 0:
+		$Sprite.flip_h = false
+
+func brake():
+	target_velocity = Vector2(0, 0)
 
 func _set_path_to_target():
 	if target != null:
 		nav_path = map.get_nav_path(global_position, target.global_position)
 		
-func _shared_update(delta):
-	var accel_dir = velocity.direction_to(target_velocity)
-	var acceleration = accel_dir * min(accel_rate, velocity.distance_to(target_velocity))
-	velocity += acceleration * delta
-	
-	var clockwise = velocity.normalized().rotated(PI/4) * 20
-	var counter_clockwise = velocity.normalized().rotated(-PI/4) * 20
-	$ClockwiseFeeler.set_cast_to(clockwise)
-	$CounterClockwiseFeeler.set_cast_to(counter_clockwise)
-	$DesiredVelocity.set_cast_to(target_velocity)
-	
-	if show_nav_path:
-		_show_nav_path()
-	
-	move_and_slide(velocity)
-	
-#	for body in $Bubble.get_overlapping_bodies():
-#		if body.is_in_group('player'):
-#			body.apply_knockback(
-#				position.direction_to(body.get_position()),
-#				knockback_speed,
-#				knockback_duration)
-#			body.take_damage(base_hit)
+func _physics_process(delta):
+	if dead:
+		return 
 		
-#	if linear_velocity.x > 0:
-#		$Sprite.set_flip_h(!face_right)
-#	elif linear_velocity.x <  0:
-#		$Sprite.set_flip_h(face_right)
-
+	if can_control_movement and target_velocity != null:
+		var accel_dir = velocity.direction_to(target_velocity)
+		var acceleration = accel_dir * min(accel_rate, velocity.distance_to(target_velocity) / max(delta, 0.001))
+		velocity += acceleration * delta
+		
+#		var clockwise = velocity.normalized().rotated(PI/4) * 20
+#		var counter_clockwise = velocity.normalized().rotated(-PI/4) * 20
+#		$ClockwiseFeeler.set_cast_to(clockwise)
+#		$CounterClockwiseFeeler.set_cast_to(counter_clockwise)
+#		$DesiredVelocity.set_cast_to(target_velocity)
+		
+		if show_nav_path:
+			_show_nav_path()
+		
+	move_and_slide(velocity)
 
 func _on_PathUpdateTimer_timeout():
 	_set_path_to_target()
-	$PathUpdateTimer.start(
+	$Timers/PathUpdateTimer.start(
 		path_update_delay 
 		+ rng.randf_range(-path_update_delay/2, path_update_delay/2)
 	)
+
+func _on_DeathTimer_timeout():
+	queue_free()
+	_drop_item()

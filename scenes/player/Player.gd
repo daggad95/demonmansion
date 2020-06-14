@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 enum {FORWARD, LEFT, RIGHT, BACKWARD}
+enum SpriteType {IDLE, WALK, DODGE}
 const WEAPON_FACTORY = preload("res://scenes/weapon/WeaponFactory.gd")
 const WEAPON = preload("res://scenes/weapon/Weapon.gd")
 class_name Player
@@ -15,8 +16,13 @@ signal ammo_stock_change
 signal weapon_change
 signal inventory_change
 
-onready var PlayerSprite = $Sprite
+onready var sprites = {
+	SpriteType.IDLE: $IdleSprite,
+	SpriteType.WALK: $WalkSprite,
+	SpriteType.DODGE: $DodgeSprite
+}
 
+var current_sprite
 var max_health = 100.0
 var health = 80.0
 var money = 1000
@@ -35,28 +41,34 @@ var can_shoot = true # stop players from shooting when store open
 var aim_dir = Vector2(1, 0)
 var store_open = false
 var current_dir = FORWARD
+var aiming = false
 var ammo = {
 	WEAPON.Ammo.SNIPER: 100,
 	WEAPON.Ammo.RIFLE: 1000,
 	WEAPON.Ammo.SHOTGUN: 100
 }
+var dodging = false
+var dodge_dir
+var can_dodge = true
+var can_control_movement = true
 
 const TIMER_LIMIT = 0.5
 var timer = 0.0
 
 func _ready():
 	emit_signal('player_moved', player_name, position)
-	PlayerSprite.set_texture(player_texture)
+#	PlayerSprite.set_texture(player_texture)
+	add_weapon_to_inventory('Pistol')
+	equip_weapon(inventory[0])
+	_switch_sprite(SpriteType.IDLE)
 	
-func init(init_pos, init_name, init_id, init_texture):
+func init(init_pos, init_name, init_id, init_textures):
 	position = init_pos
 	player_name = init_name
 	player_id = init_id
-	player_texture = init_texture
-	
-	add_weapon_to_inventory('Pistol')
-	equip_weapon(inventory[0])
-
+	$IdleSprite.texture = init_textures["idle"]
+	$WalkSprite.texture = init_textures["walk"]
+	$DodgeSprite.texture = init_textures["roll"]
 	add_to_group('player')
 
 func get_money():
@@ -108,13 +120,17 @@ func add_ammo(ammo_type, amount):
 
 func equip_weapon(weapon):
 	if equipped_weapon != null:
+		get_tree().get_root().remove_child(equipped_weapon)
 		equipped_weapon.hide()
 		equipped_weapon.disconnect("reload_finish", self, "_on_reload_finish")
+		self.disconnect("player_moved", equipped_weapon, "_on_player_moved")
 		
 	equipped_weapon = weapon
+	get_tree().get_root().add_child(weapon)
 	equipped_weapon.set_dir(current_dir)
 	equipped_weapon.show()
 	equipped_weapon.connect("reload_finish", self, "_on_reload_finish")
+	self.connect("player_moved", equipped_weapon, "_on_player_moved")
 	emit_signal('ammo_change', equipped_weapon.clip, equipped_total_ammo_str())
 	
 func take_damage(damage):
@@ -131,14 +147,12 @@ func inflict_burn(damage_per_second, duration):
 		burn_damage = max(damage_per_second, burn_damage)
 		$BurnTimer.set_wait_time(max(duration, $BurnTimer.get_time_left()))
 
-# Takes a string weapon name and adds a weapon instance to the player inventory
-func add_weapon_to_inventory(weapon_name):
+func add_weapon_to_inventory(weapon_name : String):
 	for idx in len(inventory):
 		if inventory[idx] == null:
 			var weapon = WEAPON_FACTORY.create(weapon_name)
 			weapon.hide()
 			inventory[idx] = weapon
-			add_child(weapon)
 			emit_signal("inventory_change", inventory)
 			
 			return true
@@ -157,10 +171,6 @@ func remove_weapon_from_inventory(weapon_name):
 		inventory[match_idx].queue_free()
 		inventory[match_idx] = null
 
-func apply_knockback(dir, speed, duration):
-	knockback = dir * speed
-	$KnockbackTimer.start(duration)
-
 func link_store(store):
 	store.connect("open", self, "_on_store_change", [true])
 	store.connect("close", self, "_on_store_change", [false])
@@ -174,12 +184,42 @@ func link_controller(controller):
 	controller.connect("player_inventory_2", self, "_switch_weapon", [1])
 	controller.connect("player_inventory_3", self, "_switch_weapon", [2])
 	controller.connect("player_inventory_4", self, "_switch_weapon", [3])
+	controller.connect("player_dodge", self, "_dodge")
 
 func equipped_total_ammo_str():
 	if equipped_weapon.ammo_type != Weapon.Ammo.NONE:
 		return str(ammo[equipped_weapon.ammo_type])
 	else: 
 		return "∞"
+
+func showMessage():
+	$NotInStoreMessage.visible = true
+	$NotInStoreMessage/Timer.start(1)
+
+func apply_status_effect(type, args):
+	self.add_child(
+		StatusEffectFactory.create(
+			type, self, args
+		)
+	)
+
+func _dodge():
+	if not dodging and can_dodge:
+		dodging = true
+		can_dodge = false
+		dodge_dir = dir
+		_switch_sprite(SpriteType.DODGE)
+		$DodgeTimer.start(0.3)
+
+func _switch_sprite(sprite_type):
+	if sprites[sprite_type] != current_sprite:
+		if current_sprite != null:
+			current_sprite.hide()
+			current_sprite.get_node("AnimationPlayer").stop()
+	
+		current_sprite = sprites[sprite_type]
+		current_sprite.show()
+		current_sprite.get_node("AnimationPlayer").play("default")
 
 func _on_store_change(store_open):
 	self.store_open = store_open
@@ -190,11 +230,20 @@ func _switch_weapon(weapon_num):
 		emit_signal("weapon_change", weapon_num)
 
 func _aim(dir):
-	aim_dir = Vector2(dir[0], dir[1]).normalized()
+	aiming = false
+	
+	if abs(dir[0]) > 0 or abs(dir[1]) > 0:
+		aim_dir = Vector2(dir[0], dir[1]).normalized()
+		_set_sprite_dir(aim_dir)
+		aiming = true
+	elif current_dir == RIGHT:
+		aim_dir = Vector2(1, 0)
+	elif current_dir == LEFT:
+		aim_dir = Vector2(-1, 0)
+		
 	$Crosshairs.set_position(
-		aim_dir
-		* $Sprite.texture.get_size().x
-		* $Sprite.get_global_scale().x)
+			aim_dir * 100)
+	equipped_weapon.point_towards($Crosshairs.global_position)
 	
 func _set_dir(dir):
 	self.dir = Vector2(dir[0], dir[1]).normalized()
@@ -203,7 +252,7 @@ func _shoot():
 	if can_shoot and not store_open:
 		if equipped_weapon.shoot(aim_dir, ammo):
 			_set_sprite_dir(aim_dir)
-			$Sprite/FrameTimer.start()
+#			$Sprite/FrameTimer.start()
 			emit_signal('ammo_change', equipped_weapon.clip, equipped_total_ammo_str())
 		
 		if not equipped_weapon.is_automatic():
@@ -213,50 +262,35 @@ func _stop_shooting():
 	can_shoot = true
 
 func _physics_process(delta):
-	if burning:
-		take_damage(delta * burn_damage)
+	if can_control_movement:
+		if dodging:
+			velocity = dodge_dir * speed * 2
+		else:
+			velocity = dir * speed
+			
+			if velocity.length() > 0:
+				_switch_sprite(SpriteType.WALK)
+			else:
+				_switch_sprite(SpriteType.IDLE)
 	
-	if knockback:
-		move_and_collide(knockback*delta)
-		emit_signal('player_moved', player_name, position)
-	
-	velocity = dir * speed
 	if velocity.length() > 0:
 		move_and_slide(velocity)
 		emit_signal('player_moved', player_name, position)
 		
-		_animate_movement()
-
-func showMessage():
-	$NotInStoreMessage.visible = true
-	$NotInStoreMessage/Timer.start(1)
+		if not aiming:
+			_set_sprite_dir(dir)
 
 func _set_sprite_dir(dir_vector):
-	if abs(dir_vector.x) > abs(dir_vector.y):
-		if dir_vector.x < 0:
-			$Sprite.set_frame(LEFT)
-			equipped_weapon.set_dir(LEFT)
-			current_dir = LEFT
-		else:
-			$Sprite.set_frame(RIGHT)
-			equipped_weapon.set_dir(RIGHT)
-			current_dir = RIGHT
-#	else:
-#		if dir_vector.y < 0:
-#			$Sprite.set_frame(BACKWARD)
-#			equipped_weapon.set_dir(BACKWARD)
-#			current_dir = BACKWARD
-#		else:
-#			$Sprite.set_frame(FORWARD)
-#			equipped_weapon.set_dir(FORWARD)
-#			current_dir = FORWARD
-
-func _animate_movement():
-	if !$Sprite/AnimationPlayer.is_playing():
-		$Sprite/AnimationPlayer.play("Hop")
-	
-	if $Sprite/FrameTimer.get_time_left() == 0:
-		_set_sprite_dir(velocity)
+	if dir_vector.x < 0:
+		for sprite in sprites.values():
+			sprite.flip_h = true
+		equipped_weapon.set_dir(LEFT)
+		current_dir = LEFT
+	else:
+		for sprite in sprites.values():
+			sprite.flip_h = false
+		equipped_weapon.set_dir(RIGHT)
+		current_dir = RIGHT
 
 func _on_Timer_timeout():
 	$NotInStoreMessage.visible = false
@@ -271,4 +305,9 @@ func _on_KnockbackTimer_timeout():
 func _on_reload_finish():
 	emit_signal('ammo_change', equipped_weapon.clip, equipped_total_ammo_str())
 	
-
+func _on_DodgeTimer_timeout():
+	if dodging:
+		dodging = false
+		$DodgeTimer.start(1)
+	else:
+		can_dodge = true
