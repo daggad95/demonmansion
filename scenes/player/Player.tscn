@@ -165,6 +165,11 @@ anims/Hop = SubResource( 8 )
 [node name="DodgeTimer" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+enabled = true
+collision_mask = 5
+collide_with_areas = true
 [connection signal="timeout" from="NotInStoreMessage/Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="BurnTimer" to="." method="_on_BurnTimer_timeout"]
 [connection signal="timeout" from="KnockbackTimer" to="." method="_on_KnockbackTimer_timeout"]
