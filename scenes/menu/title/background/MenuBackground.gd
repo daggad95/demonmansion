@@ -16,7 +16,7 @@ func play_animation():
 	self.set_position(new_start_pos)
 	
 	random_angle = Vector2(rand_range(-1, 1), rand_range(-1, 1))
-	var new_end_pos = start_pos + random_angle.normalized() * distance
+	var new_end_pos = new_start_pos + random_angle.normalized() * distance
 	
 	var animation = $AnimationPlayer.get_animation("Move")
 	animation.track_set_key_value(0, 0, new_start_pos)

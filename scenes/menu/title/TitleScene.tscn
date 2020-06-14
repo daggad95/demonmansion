@@ -11,7 +11,6 @@ margin_bottom = 720.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
-skip_menu = true
 
 [node name="Background" type="CanvasLayer" parent="."]
 
