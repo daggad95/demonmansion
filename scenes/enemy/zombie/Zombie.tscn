@@ -1,16 +1,16 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://scenes/enemy/Enemy.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/enemy/zombie/Zombie.gd" type="Script" id=2]
 [ext_resource path="res://scenes/enemy/zombie/zombie_sprite.png" type="Texture" id=3]
 
-[sub_resource type="RectangleShape2D" id=17]
+[sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 5.9221, 9.20758 )
 
 [sub_resource type="CircleShape2D" id=2]
 radius = 8.10093
 
-[sub_resource type="Animation" id=18]
+[sub_resource type="Animation" id=3]
 resource_name = "Attack"
 length = 0.5
 tracks/0/type = "value"
@@ -32,7 +32,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0.5 ),
+"times": PoolRealArray( 0.4 ),
 "transitions": PoolRealArray( 1 ),
 "values": [ {
 "args": [  ],
@@ -40,7 +40,7 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=4]
 resource_name = "Die"
 length = 3.0
 step = 0.01
@@ -69,8 +69,24 @@ tracks/1/keys = {
 "values": [ Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 0 ) ]
 }
 
-[sub_resource type="Animation" id=3]
-resource_name = "Walk"
+[sub_resource type="Animation" id=5]
+resource_name = "Idle"
+length = 1.5
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.001, 0.7, 1.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 27, 28, 27 ]
+}
+
+[sub_resource type="Animation" id=6]
 length = 1.5
 loop = true
 step = 0.05
@@ -87,77 +103,84 @@ tracks/0/keys = {
 "values": [ 9, 10, 11, 12, 13, 9 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath(".:moving")
+tracks/1/path = NodePath("Sprite:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0.45, 1.05 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ true, false ]
-}
-tracks/2/type = "value"
-tracks/2/path = NodePath("Sprite:modulate")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 1 ) ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:animation_moving")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.4, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
 
-[sub_resource type="AnimationNodeAnimation" id=19]
+[sub_resource type="AnimationNodeAnimation" id=7]
 animation = "Attack"
 
-[sub_resource type="AnimationNodeAnimation" id=15]
-animation = "Die"
-
-[sub_resource type="AnimationNodeAnimation" id=11]
+[sub_resource type="AnimationNodeAnimation" id=8]
 animation = "Damage"
 
-[sub_resource type="AnimationNodeOneShot" id=12]
+[sub_resource type="AnimationNodeAnimation" id=9]
+animation = "Die"
 
-[sub_resource type="AnimationNodeAnimation" id=13]
+[sub_resource type="AnimationNodeAnimation" id=10]
+animation = "Damage"
+
+[sub_resource type="AnimationNodeOneShot" id=11]
+
+[sub_resource type="AnimationNodeAnimation" id=12]
 animation = "Walk"
 
-[sub_resource type="AnimationNodeBlendTree" id=14]
-graph_offset = Vector2( 0, -131.75 )
-nodes/Damage/node = SubResource( 11 )
+[sub_resource type="AnimationNodeBlendTree" id=13]
+graph_offset = Vector2( 0, -163.75 )
+nodes/Damage/node = SubResource( 10 )
 nodes/Damage/position = Vector2( 100, 200 )
-nodes/DamageOneShot/node = SubResource( 12 )
+nodes/DamageOneShot/node = SubResource( 11 )
 nodes/DamageOneShot/position = Vector2( 280, 80 )
-nodes/Walk/node = SubResource( 13 )
+nodes/Walk/node = SubResource( 12 )
 nodes/Walk/position = Vector2( 100, 80 )
 nodes/output/position = Vector2( 500, 80 )
 node_connections = [ "output", 0, "DamageOneShot", "DamageOneShot", 0, "Walk", "DamageOneShot", 1, "Damage" ]
 
+[sub_resource type="AnimationNodeStateMachineTransition" id=14]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=15]
+
 [sub_resource type="AnimationNodeStateMachineTransition" id=16]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=20]
+[sub_resource type="AnimationNodeStateMachineTransition" id=17]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=21]
-switch_mode = 2
+[sub_resource type="AnimationNodeStateMachineTransition" id=18]
 
-[sub_resource type="AnimationNodeStateMachine" id=9]
-states/Attack/node = SubResource( 19 )
-states/Attack/position = Vector2( 339, 146 )
-states/Die/node = SubResource( 15 )
-states/Die/position = Vector2( 339, 75 )
-states/Walk/node = SubResource( 14 )
+[sub_resource type="AnimationNodeStateMachine" id=19]
+states/Attack/node = SubResource( 7 )
+states/Attack/position = Vector2( 16, 99 )
+states/Damage/node = SubResource( 8 )
+states/Damage/position = Vector2( 100, -3 )
+states/Die/node = SubResource( 9 )
+states/Die/position = Vector2( 322, 99 )
+states/Walk/node = SubResource( 13 )
 states/Walk/position = Vector2( 178, 99 )
-transitions = [ "Walk", "Die", SubResource( 16 ), "Walk", "Attack", SubResource( 20 ), "Attack", "Walk", SubResource( 21 ) ]
-start_node = "Walk"
+transitions = [ "Walk", "Die", SubResource( 14 ), "Walk", "Attack", SubResource( 15 ), "Attack", "Damage", SubResource( 16 ), "Walk", "Damage", SubResource( 17 ), "Damage", "Walk", SubResource( 18 ) ]
+graph_offset = Vector2( -113.435, -110.138 )
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id=10]
+[sub_resource type="AnimationNodeStateMachinePlayback" id=20]
 
 [node name="Zombie" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
-moving = true
 
 [node name="Sprite" parent="." index="0"]
 modulate = Color( 1, 1, 1, 1 )
@@ -165,10 +188,10 @@ position = Vector2( 1.17902, -2.13152 )
 texture = ExtResource( 3 )
 vframes = 12
 hframes = 9
-frame = 11
+frame = 18
 
 [node name="Hitbox" parent="." index="1"]
-shape = SubResource( 17 )
+shape = SubResource( 1 )
 
 [node name="ClockwiseFeeler" parent="." index="2"]
 visible = false
@@ -190,15 +213,16 @@ shape = SubResource( 2 )
 visible = false
 
 [node name="AnimationPlayer" parent="." index="7"]
-anims/Attack = SubResource( 18 )
-anims/Die = SubResource( 8 )
-anims/Walk = SubResource( 3 )
+anims/Attack = SubResource( 3 )
+anims/Die = SubResource( 4 )
+anims/Idle = SubResource( 5 )
+anims/Walk = SubResource( 6 )
 
 [node name="AnimationTree" type="AnimationTree" parent="." index="9"]
-tree_root = SubResource( 9 )
+tree_root = SubResource( 19 )
 anim_player = NodePath("../AnimationPlayer")
 active = true
-parameters/playback = SubResource( 10 )
+parameters/playback = SubResource( 20 )
 parameters/Walk/DamageOneShot/active = false
 [connection signal="timeout" from="HitTimer" to="." method="_on_HitTimer_timeout"]
 [connection signal="timeout" from="Timers/AttackTimer" to="." method="_on_AttackTimer_timeout"]

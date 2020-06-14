@@ -12,6 +12,12 @@ func handle_input(input_name):
 	if(new_state != null):
 		change_state(new_state)
 
+func _process(delta):
+	var new_state = current_state.process(delta)
+
+	if(new_state != null):
+		change_state(new_state)
+
 func change_state(state):
 	if(current_state != null):
 		current_state.exit()

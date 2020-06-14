@@ -50,6 +50,7 @@ var ammo = {
 var dodging = false
 var dodge_dir
 var can_dodge = true
+var can_control_movement = true
 
 const TIMER_LIMIT = 0.5
 var timer = 0.0
@@ -146,8 +147,7 @@ func inflict_burn(damage_per_second, duration):
 		burn_damage = max(damage_per_second, burn_damage)
 		$BurnTimer.set_wait_time(max(duration, $BurnTimer.get_time_left()))
 
-# Takes a string weapon name and adds a weapon instance to the player inventory
-func add_weapon_to_inventory(weapon_name):
+func add_weapon_to_inventory(weapon_name : String):
 	for idx in len(inventory):
 		if inventory[idx] == null:
 			var weapon = WEAPON_FACTORY.create(weapon_name)
@@ -171,10 +171,6 @@ func remove_weapon_from_inventory(weapon_name):
 		inventory[match_idx].queue_free()
 		inventory[match_idx] = null
 
-func apply_knockback(dir, speed, duration):
-	knockback = dir * speed
-	$KnockbackTimer.start(duration)
-
 func link_store(store):
 	store.connect("open", self, "_on_store_change", [true])
 	store.connect("close", self, "_on_store_change", [false])
@@ -195,6 +191,17 @@ func equipped_total_ammo_str():
 		return str(ammo[equipped_weapon.ammo_type])
 	else: 
 		return "∞"
+
+func showMessage():
+	$NotInStoreMessage.visible = true
+	$NotInStoreMessage/Timer.start(1)
+
+func apply_status_effect(type, args):
+	self.add_child(
+		StatusEffectFactory.create(
+			type, self, args
+		)
+	)
 
 func _dodge():
 	if not dodging and can_dodge:
@@ -255,32 +262,23 @@ func _stop_shooting():
 	can_shoot = true
 
 func _physics_process(delta):
-	if burning:
-		take_damage(delta * burn_damage)
-	
-	if knockback:
-		move_and_collide(knockback*delta)
-		emit_signal('player_moved', player_name, position)
-	
-	if dodging:
-		velocity = dodge_dir * speed * 2
-	else:
-		velocity = dir * speed
-		
-		if velocity.length() > 0:
-			_switch_sprite(SpriteType.WALK)
+	if can_control_movement:
+		if dodging:
+			velocity = dodge_dir * speed * 2
 		else:
-			_switch_sprite(SpriteType.IDLE)
+			velocity = dir * speed
+			
+			if velocity.length() > 0:
+				_switch_sprite(SpriteType.WALK)
+			else:
+				_switch_sprite(SpriteType.IDLE)
 	
 	if velocity.length() > 0:
 		move_and_slide(velocity)
 		emit_signal('player_moved', player_name, position)
+		
 		if not aiming:
 			_set_sprite_dir(dir)
-
-func showMessage():
-	$NotInStoreMessage.visible = true
-	$NotInStoreMessage/Timer.start(1)
 
 func _set_sprite_dir(dir_vector):
 	if dir_vector.x < 0:
@@ -293,7 +291,6 @@ func _set_sprite_dir(dir_vector):
 			sprite.flip_h = false
 		equipped_weapon.set_dir(RIGHT)
 		current_dir = RIGHT
-
 
 func _on_Timer_timeout():
 	$NotInStoreMessage.visible = false

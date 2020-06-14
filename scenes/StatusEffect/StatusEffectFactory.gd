@@ -4,4 +4,4 @@ enum EffectType {KNOCKBACK}
 
 func create(effect, entity, args={}):
 	if effect == EffectType.KNOCKBACK:
-		return Knockback.new(entity, args["dir"])
+		return Knockback.new(entity, args["dir"], args["speed"], args["duration"])

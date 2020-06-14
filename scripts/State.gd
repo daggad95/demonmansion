@@ -10,6 +10,9 @@ func enter(model):
 	
 func handle_input(input_name):
 	pass
+
+func process(delta):
+	pass
 	
 func exit():
 	pass

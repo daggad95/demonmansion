@@ -1,14 +1,16 @@
 extends Node
 
-const speed = 1000
-const duration = 0.1
+var speed 
+var duration 
 var entity
 var dir
 var timer
 
-func _init(entity, dir):
+func _init(entity, dir, speed, duration):
 	self.entity = entity
 	self.dir = dir
+	self.speed = speed
+	self.duration = duration
 	
 	timer = Timer.new()
 	timer.connect("timeout", self, "_on_timeout")
@@ -16,11 +18,11 @@ func _init(entity, dir):
 
 func _ready():
 	timer.start(duration)
-	entity.can_move = false
+	entity.can_control_movement = false
 
 func _physics_process(delta):
-	entity.move_and_slide(dir * speed * delta)
+	entity.velocity = dir.normalized() * speed
 
 func _on_timeout():
-	entity.can_move = true
+	entity.can_control_movement = true
 	queue_free()

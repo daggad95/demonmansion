@@ -1,6 +1,7 @@
 extends KinematicBody2D
 class_name Enemy
 signal dead
+signal damaged
 
 const Money = preload("res://scenes/items/Money/Money.tscn")
 const Health = preload("res://scenes/items/Health/Health.tscn")
@@ -20,7 +21,7 @@ var knockback_speed = 50
 var knockback_duration = 0.1
 var base_hit = 10
 var face_right = true
-var can_move = true
+var can_control_movement = true
 var map
 var target
 var players
@@ -42,10 +43,7 @@ func init(init_map, init_players):
 	
 func take_damage(damage):
 	health -= damage
-	$AnimationTree["parameters/Walk/DamageOneShot/active"] = true
-	
-	if health <= 0 and not dead:
-		_die()
+	emit_signal("damaged")
 
 func apply_status_effect(type, args):
 	self.add_child(
@@ -54,18 +52,17 @@ func apply_status_effect(type, args):
 		)
 	)
 
+func die():
+	emit_signal("dead")
+	dead = true
+	$Hitbox.disabled = true
+	$Timers/DeathTimer.start()
+
 func _ready():
 	$Timers/PathUpdateTimer.start(
 		path_update_delay 
 		+ rng.randf_range(-path_update_delay/2, path_update_delay/2)
 	)
-
-func _die():
-	emit_signal("dead")
-	state_machine.travel("Die")
-	dead = true
-	$Hitbox.disabled = true
-	$Timers/DeathTimer.start()
 	
 func _get_nearest_player():
 	var min_dist = INF
@@ -151,7 +148,7 @@ func _avoid_force():
 		
 	return avoid_force
 
-func _chase_target():
+func chase_target():
 	target_velocity = Vector2(0, 0)
 	target_velocity += _follow_path_force() 
 	target_velocity += _separate_force()
@@ -163,33 +160,32 @@ func _chase_target():
 	elif target_velocity.x > 0:
 		$Sprite.flip_h = false
 
-func _brake():
+func brake():
 	target_velocity = Vector2(0, 0)
 
 func _set_path_to_target():
 	if target != null:
 		nav_path = map.get_nav_path(global_position, target.global_position)
 		
-func _shared_update(delta):
+func _physics_process(delta):
 	if dead:
 		return 
 		
-	if can_move:
+	if can_control_movement and target_velocity != null:
 		var accel_dir = velocity.direction_to(target_velocity)
-		var acceleration = accel_dir * min(accel_rate, velocity.distance_to(target_velocity) / delta)
+		var acceleration = accel_dir * min(accel_rate, velocity.distance_to(target_velocity) / max(delta, 0.001))
 		velocity += acceleration * delta
 		
-		var clockwise = velocity.normalized().rotated(PI/4) * 20
-		var counter_clockwise = velocity.normalized().rotated(-PI/4) * 20
-		$ClockwiseFeeler.set_cast_to(clockwise)
-		$CounterClockwiseFeeler.set_cast_to(counter_clockwise)
-		$DesiredVelocity.set_cast_to(target_velocity)
+#		var clockwise = velocity.normalized().rotated(PI/4) * 20
+#		var counter_clockwise = velocity.normalized().rotated(-PI/4) * 20
+#		$ClockwiseFeeler.set_cast_to(clockwise)
+#		$CounterClockwiseFeeler.set_cast_to(counter_clockwise)
+#		$DesiredVelocity.set_cast_to(target_velocity)
 		
 		if show_nav_path:
 			_show_nav_path()
 		
-		move_and_slide(velocity)
-
+	move_and_slide(velocity)
 
 func _on_PathUpdateTimer_timeout():
 	_set_path_to_target()
@@ -197,7 +193,6 @@ func _on_PathUpdateTimer_timeout():
 		path_update_delay 
 		+ rng.randf_range(-path_update_delay/2, path_update_delay/2)
 	)
-
 
 func _on_DeathTimer_timeout():
 	queue_free()

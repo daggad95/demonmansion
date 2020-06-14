@@ -65,7 +65,14 @@ func _handle_collisions():
 		if not body in collided:
 			if body.is_in_group('player') or body.is_in_group('enemy'):
 				body.take_damage(damage - damage * damage_dropoff * float(dist_travelled)/prange)
-				body.apply_status_effect(EffectType.KNOCKBACK, {"dir": direction.normalized()})
+				body.apply_status_effect(
+					EffectType.KNOCKBACK, 
+					{
+						"dir": direction,
+						"speed": 40,
+						"duration": 0.1
+					}
+				)
 					
 				collided.append(body)
 				max_pen -= 1
