@@ -25,14 +25,15 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 2.4, 8.4, 10 ),
+"times": PoolRealArray( 0, 2.5, 10, 12 ),
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 0,
 "values": [ Color( 0, 0, 0, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 0, 0, 0, 1 ) ]
 }
 
 [node name="Background" type="Node2D"]
-position = Vector2( -280.967, 1061.04 )
+modulate = Color( 0, 0, 0, 1 )
+position = Vector2( 491.862, 683.443 )
 scale = Vector2( 2, 2 )
 script = ExtResource( 2 )
 
