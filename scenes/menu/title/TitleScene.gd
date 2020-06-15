@@ -10,7 +10,6 @@ var selection_screen = preload("res://scenes/menu/character_selection/SelectionS
 var active_idx = 0
 
 func _ready():
-	skip_menu = false
 	if skip_menu:
 		PlayerData.set_single_player_data({
 			"controller": controllers[0],
