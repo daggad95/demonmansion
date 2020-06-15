@@ -136,7 +136,6 @@ position = Vector2( 1.17902, -2.13152 )
 texture = ExtResource( 3 )
 vframes = 12
 hframes = 9
-frame = 18
 
 [node name="Hitbox" parent="." index="1"]
 shape = SubResource( 1 )

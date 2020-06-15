@@ -12,9 +12,9 @@ var attacking = false
 
 func _ready():
 	speed = 20
-	ai = ZombieAI.new(self, ZombieAI.CHASE_PLAYER)
-	add_child(ai)
-	
+
+func set_ai(ai_kind):
+	add_child(ZombieAI.new(self, ai_kind))
 
 func _finish_attack():
 	$Timers/AttackTimer.start()
