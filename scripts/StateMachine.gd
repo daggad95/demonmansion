@@ -17,6 +17,10 @@ func change_state(state_name):
 
 func init(model, init_state):
 	self.model = model
+	
+	for state in states.keys():
+		add_child(states[state])
+		
 	change_state(init_state)
 	
 func _process(delta):
