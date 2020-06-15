@@ -21,6 +21,7 @@ damage = 100
 proj_range = 1000
 proj_speed = 1000
 penetration = 3
+crosshair_max_distance = 200
 
 [node name="Sprite" parent="." index="2"]
 position = Vector2( 0.00728607, 0.031723 )
