@@ -9,5 +9,6 @@ signal hit_target
 
 func _ready():
 	speed = 20
-	var ai = ZombieAI.new(self, ZombieAI.CHASE_PLAYER)
-	add_child(ai)
+
+func set_ai(ai_kind):
+	add_child(ZombieAI.new(self, ai_kind))

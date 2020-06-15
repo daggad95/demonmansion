@@ -110,4 +110,3 @@ class Dead extends State:
 
 	func process(delta):
 		model.brake()
-		
