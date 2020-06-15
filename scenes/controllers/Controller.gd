@@ -23,6 +23,9 @@ signal player_inventory_2
 signal player_inventory_3
 signal player_inventory_4
 signal player_dodge
+signal player_scope_increase
+signal player_scope_decrease
+
 
 var device
 var signals = [
@@ -227,6 +230,28 @@ var signals = [
 		"triggers": [
 			{
 				"inputs": [JOY_XBOX_A],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": 0
+	},
+	{
+		"name": "player_scope_decrease",
+		"triggers": [
+			{
+				"inputs": [JOY_L],
+				"eval_func": funcref(self, "_pressed"),
+				"emit_func": funcref(self, "_no_data")
+			}
+		],
+		"delay": 0
+	},
+	{
+		"name": "player_scope_increase",
+		"triggers": [
+			{
+				"inputs": [JOY_R],
 				"eval_func": funcref(self, "_pressed"),
 				"emit_func": funcref(self, "_no_data")
 			}

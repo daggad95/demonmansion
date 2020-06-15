@@ -8,12 +8,9 @@ const Health = preload("res://scenes/items/Health/Health.tscn")
 const Ammo = preload("res://scenes/items/Ammo/Ammo.tscn")
 const DROP_RATE = 0.25
 
-
 onready var Game = get_tree().get_root().get_node('Game')
 onready var SEFactory = get_node("/root/StatusEffectFactory")
 onready var EffectType = SEFactory.EffectType
-
-
 var speed = 50.0
 var steer_rate = 500.0
 var health = 100.0

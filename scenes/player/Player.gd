@@ -51,6 +51,8 @@ var dodging = false
 var dodge_dir
 var can_dodge = true
 var can_control_movement = true
+var crosshair_min_distance = 30
+var crosshair_distance = crosshair_min_distance
 
 const TIMER_LIMIT = 0.5
 var timer = 0.0
@@ -60,6 +62,7 @@ func _ready():
 #	PlayerSprite.set_texture(player_texture)
 	add_weapon_to_inventory('Pistol')
 	equip_weapon(inventory[0])
+	_init_crosshair_distance(inventory[0])
 	_switch_sprite(SpriteType.IDLE)
 	
 func init(init_pos, init_name, init_id, init_textures):
@@ -185,6 +188,8 @@ func link_controller(controller):
 	controller.connect("player_inventory_3", self, "_switch_weapon", [2])
 	controller.connect("player_inventory_4", self, "_switch_weapon", [3])
 	controller.connect("player_dodge", self, "_dodge")
+	controller.connect("player_scope_decrease", self, "_decrease_crosshair_distance", [3])
+	controller.connect("player_scope_increase", self, "_increase_crosshair_distance", [3])
 
 func equipped_total_ammo_str():
 	if equipped_weapon.ammo_type != Weapon.Ammo.NONE:
@@ -228,6 +233,7 @@ func _switch_weapon(weapon_num):
 	if inventory[weapon_num] != null and not store_open:
 		equip_weapon(inventory[weapon_num])
 		emit_signal("weapon_change", weapon_num)
+		_init_crosshair_distance(inventory[weapon_num])
 
 func _aim(dir):
 	aiming = false
@@ -240,11 +246,34 @@ func _aim(dir):
 		aim_dir = Vector2(1, 0)
 	elif current_dir == LEFT:
 		aim_dir = Vector2(-1, 0)
-		
-	$Crosshairs.set_position(
-			aim_dir * 100)
-	equipped_weapon.point_towards($Crosshairs.global_position)
+	# amplify by crosshair distance
+	var aim_dir_amplified = aim_dir * crosshair_distance
 	
+	var raycast = get_node("RayCast2D")
+	raycast.set_cast_to(aim_dir_amplified)
+	if(raycast.is_colliding()):
+		$Crosshairs.set_position(
+			to_local(raycast.get_collision_point()))
+	else:
+		$Crosshairs.set_position(
+				aim_dir_amplified)
+	equipped_weapon.point_towards($Crosshairs.global_position)
+
+func _decrease_crosshair_distance(amount):
+	if(crosshair_distance - amount > crosshair_min_distance):
+		crosshair_distance = crosshair_distance - amount
+	else:
+		crosshair_distance = crosshair_min_distance
+
+func _increase_crosshair_distance(amount):
+	if(equipped_weapon != null && crosshair_distance + amount < equipped_weapon.get_crosshair_max_distance()):
+		crosshair_distance = crosshair_distance + amount
+
+#called on switch weapon
+func _init_crosshair_distance(weapon):
+	crosshair_distance = weapon.get_crosshair_max_distance()
+	
+
 func _set_dir(dir):
 	self.dir = Vector2(dir[0], dir[1]).normalized()
 

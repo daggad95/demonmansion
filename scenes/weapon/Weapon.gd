@@ -24,6 +24,7 @@ export var proj_range = 0
 export var proj_speed = 0
 export var penetration = 0
 export var damage_dropoff = 0
+export var crosshair_max_distance = 0
 export(PROJ_TYPE) var projectile_type
 var clip = 0
 var reloading = false
@@ -98,6 +99,9 @@ func get_clip():
 
 func get_clip_size():
 	return clip_size
+	
+func get_crosshair_max_distance():
+	return crosshair_max_distance
 
 func point_towards(point : Vector2):
 	var angle = global_position.angle_to_point(point)

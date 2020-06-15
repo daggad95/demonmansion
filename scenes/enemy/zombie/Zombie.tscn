@@ -10,9 +10,8 @@ extents = Vector2( 5.9221, 9.20758 )
 [sub_resource type="CircleShape2D" id=2]
 radius = 8.10093
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=4]
 resource_name = "Attack"
-length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -20,7 +19,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5 ),
+"times": PoolRealArray( 0, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ 18, 23 ]
@@ -32,18 +31,17 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0.4 ),
+"times": PoolRealArray( 0.7 ),
 "transitions": PoolRealArray( 1 ),
 "values": [ {
-"args": [  ],
-"method": "_finish_attack"
+"args": [ "hit_target" ],
+"method": "emit_signal"
 } ]
 }
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=5]
 resource_name = "Die"
 length = 3.0
-step = 0.01
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -51,10 +49,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.11, 0.22, 0.35, 0.5 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
-"update": 1,
-"values": [ 36, 37, 38, 39, 40 ]
+"times": PoolRealArray( 0, 0.7 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 36, 40 ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("Sprite:modulate")
@@ -66,10 +64,10 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 0 ) ]
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=6]
 resource_name = "Idle"
 length = 1.5
 loop = true
@@ -80,16 +78,16 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.001, 0.7, 1.5 ),
-"transitions": PoolRealArray( 1, 1, 1, 1 ),
-"update": 1,
-"values": [ 0, 27, 28, 27 ]
+"times": PoolRealArray( 0, 1.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 45, 49 ]
 }
 
-[sub_resource type="Animation" id=6]
-length = 1.5
+[sub_resource type="Animation" id=3]
+resource_name = "Walk"
+length = 1.2
 loop = true
-step = 0.05
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -97,47 +95,42 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.2, 0.4, 0.6, 0.8, 1 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
-"update": 1,
-"values": [ 9, 10, 11, 12, 13, 9 ]
+"times": PoolRealArray( 0, 1.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 9, 13 ]
 }
-tracks/1/type = "value"
-tracks/1/path = NodePath("Sprite:modulate")
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 1 ) ]
-}
-tracks/2/type = "value"
-tracks/2/path = NodePath(".:animation_moving")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0.4, 1 ),
+"times": PoolRealArray( 0, 0.6 ),
 "transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ true, false ]
+"values": [ {
+"args": [ "end_sliding" ],
+"method": "emit_signal"
+}, {
+"args": [ "begin_sliding" ],
+"method": "emit_signal"
+} ]
 }
 
 [node name="Zombie" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
 [node name="Sprite" parent="." index="0"]
-modulate = Color( 1, 1, 1, 1 )
+self_modulate = Color( 1, 1, 1, 1 )
 position = Vector2( 1.17902, -2.13152 )
 texture = ExtResource( 3 )
 vframes = 12
 hframes = 9
+frame = 36
 
 [node name="Hitbox" parent="." index="1"]
+visible = false
 shape = SubResource( 1 )
 
 [node name="ClockwiseFeeler" parent="." index="2"]
@@ -159,10 +152,10 @@ shape = SubResource( 2 )
 [node name="DesiredVelocity" parent="." index="6"]
 visible = false
 
-[node name="AnimationPlayer" parent="." index="7"]
-anims/Attack = SubResource( 3 )
-anims/Die = SubResource( 4 )
-anims/Idle = SubResource( 5 )
-anims/Walk = SubResource( 6 )
+[node name="SpriteAnimations" type="AnimationPlayer" parent="." index="9"]
+anims/Attack = SubResource( 4 )
+anims/Die = SubResource( 5 )
+anims/Idle = SubResource( 6 )
+anims/Walk = SubResource( 3 )
 [connection signal="timeout" from="HitTimer" to="." method="_on_HitTimer_timeout"]
 [connection signal="timeout" from="Timers/AttackTimer" to="." method="_on_AttackTimer_timeout"]
