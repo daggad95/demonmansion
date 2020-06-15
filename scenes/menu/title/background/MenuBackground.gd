@@ -1,10 +1,10 @@
 extends Node2D
 
-const ZombieAI = preload("res://scenes/enemy/zombie/ZombieAI.gd")
+const Zombie = preload("res://scenes/enemy/zombie/Zombie.gd")
 
 onready var EnemyFactory = get_node("/root/EnemyFactory")
 
-var zombie_count = 300
+var zombie_count = 30
 var center_pos = self.get_position()
 var center_zone_radius = 500
 var distance = 600
@@ -25,7 +25,14 @@ func spawn_zombies():
 		var ypos = (randi() % int(size.y)) - (size.y/2) + centerpos.y
 		var position_in_area = Vector2(xpos, ypos)
 		
-		var zombie = EnemyFactory.create(EnemyFactory.EnemyType.ZOMBIE, {"ai_kind": Zombie})
+		var zombie = EnemyFactory.create(
+			EnemyFactory.EnemyType.ZOMBIE, 
+			{
+				"ai_kind": Zombie.ZombieAiType.MAIN_MENU, 
+				"bounds": Rect2(centerpos - size/2, size)
+			}
+		)
+			
 		zombie.position = position_in_area
 		add_child(zombie)
 

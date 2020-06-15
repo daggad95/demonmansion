@@ -10,7 +10,7 @@ extents = Vector2( 5.9221, 9.20758 )
 [sub_resource type="CircleShape2D" id=2]
 radius = 8.10093
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=3]
 resource_name = "Attack"
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
@@ -39,7 +39,7 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=4]
 resource_name = "Die"
 length = 3.0
 tracks/0/type = "value"
@@ -67,7 +67,7 @@ tracks/1/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=5]
 resource_name = "Idle"
 length = 1.5
 loop = true
@@ -84,8 +84,7 @@ tracks/0/keys = {
 "values": [ 45, 49 ]
 }
 
-[sub_resource type="Animation" id=3]
-resource_name = "Walk"
+[sub_resource type="Animation" id=6]
 length = 1.2
 loop = true
 tracks/0/type = "value"
@@ -127,7 +126,7 @@ position = Vector2( 1.17902, -2.13152 )
 texture = ExtResource( 3 )
 vframes = 12
 hframes = 9
-frame = 36
+frame = 18
 
 [node name="Hitbox" parent="." index="1"]
 visible = false
@@ -153,9 +152,9 @@ shape = SubResource( 2 )
 visible = false
 
 [node name="SpriteAnimations" type="AnimationPlayer" parent="." index="9"]
-anims/Attack = SubResource( 4 )
-anims/Die = SubResource( 5 )
-anims/Idle = SubResource( 6 )
-anims/Walk = SubResource( 3 )
+anims/Attack = SubResource( 3 )
+anims/Die = SubResource( 4 )
+anims/Idle = SubResource( 5 )
+anims/Walk = SubResource( 6 )
 [connection signal="timeout" from="HitTimer" to="." method="_on_HitTimer_timeout"]
 [connection signal="timeout" from="Timers/AttackTimer" to="." method="_on_AttackTimer_timeout"]

@@ -17,7 +17,10 @@ func create(enemy_type, args = {}):
 	var enemy
 	if enemy_type == EnemyType.ZOMBIE:
 		enemy = Zombie.instance()
-		enemy.set_ai(args["ai_kind"])
+		if "ai_kind" in args:
+			enemy.set_ai(args["ai_kind"])
+		if "bounds" in args:
+			enemy.bounding_box = args["bounds"]
 		
 	enemy.init(map, players)
 	return enemy

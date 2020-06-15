@@ -22,11 +22,14 @@ position = Vector2( 375.512, 642.382 )
 [node name="TitleScene" type="MarginContainer" parent="Foreground"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 1.73865
+margin_top = -1.73871
+margin_right = 1.73865
+margin_bottom = -1.73871
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-skip_menu = true
 
 [node name="TitleContainer" type="MarginContainer" parent="Foreground/TitleScene"]
 margin_right = 449.0
