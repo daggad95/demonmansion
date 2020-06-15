@@ -240,9 +240,17 @@ func _aim(dir):
 		aim_dir = Vector2(1, 0)
 	elif current_dir == LEFT:
 		aim_dir = Vector2(-1, 0)
-		
-	$Crosshairs.set_position(
-			aim_dir * 100)
+	# amplify for crosshair to be farther out
+	var aim_dir_amplified = aim_dir * 100
+	
+	var raycast = get_node("RayCast2D")
+	raycast.set_cast_to(aim_dir_amplified)
+	if(raycast.is_colliding()):
+		$Crosshairs.set_position(
+			to_local(raycast.get_collision_point()))
+	else:
+		$Crosshairs.set_position(
+				aim_dir_amplified)
 	equipped_weapon.point_towards($Crosshairs.global_position)
 	
 func _set_dir(dir):
