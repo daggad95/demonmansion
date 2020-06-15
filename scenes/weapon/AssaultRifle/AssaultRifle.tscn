@@ -4,3 +4,4 @@
 
 [node name="AssaultRifle" instance=ExtResource( 1 )]
 weapon_name = "Assault Rifle"
+crosshair_max_distance = 120
